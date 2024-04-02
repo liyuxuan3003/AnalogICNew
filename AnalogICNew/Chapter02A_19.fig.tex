@@ -1,0 +1,69 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}[scale=1.2]
+
+\newcounter{cnt}
+
+\xSetX
+\setcounter{cnt}{0}
+\foreach \x in {A,B,C,D,E,F}
+{
+    \xValDefine{x\x L}[\thecnt*1.8+0.0]
+    \xValDefine{x\x C}[\thecnt*1.8+0.5]
+    \xValDefine{x\x R}[\thecnt*1.8+1.0]
+    \stepcounter{cnt}
+}
+
+\xSetY
+\setcounter{cnt}{0}
+\foreach \x in {A,B,C,D,E,F}
+{
+    \xValDefine{y\x A}[-\thecnt*1.5+0.0]
+    \xValDefine{y\x C}[-\thecnt*1.5-0.5]
+    \xValDefine{y\x B}[-\thecnt*1.5-1.0]
+    \stepcounter{cnt}
+}
+
+\draw[fill=mnmP0] (xAL|-yAA) rectangle (xAR|-yAB);
+\draw[fill=mnmP1] (xBL|-yAA) rectangle (xBR|-yAB);
+\draw[fill=mnmP2] (xCL|-yAA) rectangle (xCR|-yAB);
+\draw[fill=mnmP3] (xDL|-yAA) rectangle (xDR|-yAB);
+
+\draw[fill=mnmN0] (xAL|-yBA) rectangle (xAR|-yBB);
+\draw[fill=mnmN1] (xBL|-yBA) rectangle (xBR|-yBB);
+\draw[fill=mnmN2] (xCL|-yBA) rectangle (xCR|-yBB);
+\draw[fill=mnmN3] (xDL|-yBA) rectangle (xDR|-yBB);
+
+\draw[fill=mnmSiO2] (xAL|-yCA) rectangle (xAR|-yCB);
+
+\draw[fill=mnmSi3N4] (xDL|-yCA) rectangle (xDR|-yCB);
+
+\draw[fill=mnmPolySi] (xAL|-yDA) rectangle (xAR|-yDB);
+
+\draw[fill=mnmTiSi2] (xDL|-yDA) rectangle (xDR|-yDB);
+
+\draw[fill=mnmAl] (xAL|-yEA) rectangle (xAR|-yEB);
+
+\draw[fill=mnmW] (xDL|-yEA) rectangle (xDR|-yEB);
+
+\draw[fill=mnmLig] (xAL|-yFA) rectangle (xAR|-yFB);
+
+\path (xEL|-yAC) node[right] {P\hspace{0.4em}型硅~~\cx{Si}};
+\path (xEL|-yBC) node[right] {N型硅~~\cx{Si}};
+
+\path (xBL|-yCC) node[right] {氧化硅~~\cx{SiO2}};
+\path (xEL|-yCC) node[right] {氮化硅~~\cx{Si3N4}};
+
+\path (xBL|-yDC) node[right] {多晶硅~~\cx{Poly-Si}};
+\path (xEL|-yDC) node[right] {硅化钛~~\cx{TiSi2}};
+
+\path (xBL|-yEC) node[right] {铝~~\cx{Al}};
+\path (xEL|-yEC) node[right] {钨~~\cx{W}};
+
+\path (xBL|-yFC) node[right] {光刻胶};
+
+\xValBorder{xAL}{xFR}{yFB}{yAA}*
+
+\end{tikzpicture}
+\end{document}

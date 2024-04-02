@@ -1,0 +1,100 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xSetX
+\xValDefine{xL}[-4]
+\xValDefine{xR}[+4]
+\xValMiddle{xC}{xL}{xR}
+\xValPropor{xWa}{xL}{xR}[0.05]
+\xValPropor{xWc}{xL}{xR}[0.90]
+\xValMiddle{xWb}{xWa}{xWc}
+\xValMiddle{xWP}{xWa}{xWb}
+\xValMiddle{xWN}{xWc}{xWb}
+
+\def\prb{0.18}
+\def\pra{0.20}
+\def\prpy{0.40}
+\def\prsw{0.35}
+
+\def\prmb{0.27}
+\def\prma{0.20}
+
+\xValPropor{xPLb}{xWa}{xWb}[\prb]
+\xValPropor{xPLa}{xWa}{xWb}[\pra]
+\xValPropor{xPLpy}{xWa}{xWb}[\prpy]
+\xValPropor{xPLsw}{xWa}{xWb}[\prsw]
+\xValMirror{xPRb}{xPLb}{xWP}
+\xValMirror{xPRa}{xPLa}{xWP}
+\xValMirror{xPRpy}{xPLpy}{xWP}
+\xValMirror{xPRsw}{xPLsw}{xWP}
+
+\xValPropor{xNLb}{xWb}{xWc}[\prb]
+\xValPropor{xNLa}{xWb}{xWc}[\pra]
+\xValPropor{xNLpy}{xWb}{xWc}[\prpy]
+\xValPropor{xNLsw}{xWb}{xWc}[\prsw]
+\xValMirror{xNRb}{xNLb}{xWN}
+\xValMirror{xNRa}{xNLa}{xWN}
+\xValMirror{xNRpy}{xNLpy}{xWN}
+\xValMirror{xNRsw}{xNLsw}{xWN}
+
+\foreach \pl/\pr/\alp in {xPLa/xPLsw/PS,xPRsw/xPRa/PD,xNLa/xNLsw/NS,xNRsw/xNRa/ND}
+{
+    \xValPropor{xLb\alp}{\pl}{\pr}[\prmb]
+    \xValPropor{xLa\alp}{\pl}{\pr}[\prma]
+    \xValPropor{xRb\alp}{\pr}{\pl}[\prmb]
+    \xValPropor{xRa\alp}{\pr}{\pl}[\prma]
+}
+
+\xValPropor{xLbP}{xWa}{xPLa}[0.32]
+\xValPropor{xRbP}{xWa}{xPLa}[0.68]
+\xValPropor{xLaP}{xWa}{xPLa}[0.28]
+\xValPropor{xRaP}{xWa}{xPLa}[0.72]
+
+\xValPropor{xLbN}{xNRa}{xWc}[0.32]
+\xValPropor{xRbN}{xNRa}{xWc}[0.68]
+\xValPropor{xLaN}{xNRa}{xWc}[0.28]
+\xValPropor{xRaN}{xNRa}{xWc}[0.72]
+
+\xSetY
+\xValDefine{yB}[0]
+\xValDefine{yA}[2]
+\xValPropor{yS}{yB}{yA}[1/3]
+\xValPropor{yW}{yS}{yA}[0.40]
+\xValPropor{yO}{yW}{yA}[0.50]
+\xValOffset{ySiO}{yA}[0.2]
+\xValOffset{ySiN}{ySiO}[0.2]
+\xValOffset{yGOX}{yA}[0.07]
+\xValOffset{yPoly}{yGOX}[0.40]
+\xValOffset{yLDD}{yA}[-0.05]
+\xValOffset{yISD}{yA}[-0.15]
+\xValOffset{yMSIa}{yPoly}[0.05]
+\xValOffset{yMSIb}{yA}[0.05]
+\xValOffset{yLIG}{yA}[1]
+\xValOffset{yIMPb}{yLIG}[0.2]
+\xValOffset{yIMPa}{yIMPb}[0.5]
+\xValOffset{yOA}{yA}[1.0]
+\xValOffset{yOB}{yOA}[0.7]
+\xValOffset{yPro}{yOB}[0.7]
+\xValOffset{yMA}{yOA}[0.3]
+\xValOffset{yMB}{yOB}[0.3]
+
+\draw[fill=mnmP1] (xL|-yB) rectangle node[white] {$p^{+}$ substrate} (xR|-yS);
+\draw[fill=mnmP3] (xL|-yS) rectangle (xR|-yA);
+\path (xR|-yS) node[above left,white] {$p^{-}$ epitaxy};
+\draw[fill=mnmLig] (xL|-yA) rectangle (xWa|-yLIG);
+\draw[fill=mnmLig] (xR|-yA) rectangle (xWb|-yLIG); 
+\draw[fill=mnmSiO2] (xL|-yA) rectangle (xR|-ySiO);
+
+\foreach \x in {0.02,0.06,...,0.98}
+{
+    \draw[-latex] ($(xL|-yIMPa)!\x!(xR|-yIMPa)$) -- ($(xL|-yIMPb)!\x!(xR|-yIMPb)$);
+}
+
+\path (xC|-yIMPa) node[above=0.25cm] {$p$ well implantation};
+
+\xValBorder{xL}{xR}{yB}{yPro}*
+
+\end{tikzpicture}
+\end{document}

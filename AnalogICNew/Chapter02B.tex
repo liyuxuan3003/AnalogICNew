@@ -1,0 +1,303 @@
+\section{PN结}
+
+\subsection{PN结的电荷密度、电场、电势}
+PN结特性的推导始于一组电学量间的导数关系：电荷密度、电场、电势。
+
+\begin{Figure}[PN结的电学特性分布]
+    \begin{FigureSub}[电荷密度]
+        \includegraphics[width=4.8cm]{build/Chapter02B_02.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[电场]
+        \includegraphics[width=4.8cm]{build/Chapter02B_03.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[电势]
+        \includegraphics[width=4.8cm]{build/Chapter02B_04.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+电荷密度$\rho(x)$、电场$E(x)$、电势$\phi(x)$分别是$\phi(x)$的二阶导、一阶导、零阶导，其中$\rho(x)$还包含系数$\esi$，$\esi$是硅的介电常数，$\esi=11.7\epsilon_0$，$\varepsilon_0=8.85\times 10^{-14}\si{F.cm^{-1}}$是真空介电常数\setpeq{PN结的三电分析}
+\begin{Equation}&[1]
+    \rho(x)=-\esi\dv[2]{\phi}{x}\qquad
+    E(x)=-\dv{\phi}{x}\qquad
+    \phi(x)=\phi(x)
+\end{Equation}
+电场$E(x)$的表达式中具有一个负号，这在计算中需要务必注意。
+
+关于PN结，我们先明确以下记号和事实
+\begin{itemize}
+    \item PN结垂直结界面的方向记为$x$，由P至N是$x$的正方向，$x=0$为结界面处。
+    \item P型区域的耗尽区带负电，N型区域的耗尽区带正电，这恰与它们的多子电性相反。
+    \item 在\hspace{0.37em}P\hspace{0.37em}型区域，耗尽区边界是$-x_p$，掺杂是$N_A$（A--Acceptor--受主--缺电子--P型）。
+    \item 在N型区域，耗尽区边界是$+x_n$，掺杂是$N_D$（D--Donor--施主--给电子--N型）。
+    \item 耗尽区的总长度是$x_d$，显然$x_d=x_n+x_p$。
+\end{itemize}
+首先，电中性意味着PN结两边的电荷量必定相等，左侧的负电荷量等于右侧的正电荷量
+\begin{Equation}&[2]
+    qN_Ax_p=qN_Dx_n
+\end{Equation}
+这也暗示了一个性质，PN结掺杂越多的侧耗尽区宽度越窄。
+
+电荷密度非常简单，在左侧是$-N_A$，在右侧是$+N_D$
+\begin{Equation}&[3]
+    \rho(x)=\begin{cases}
+        -N_A,&x<0\\
+        +N_D,&x>0
+    \end{cases}
+\end{Equation}
+电场的导数可以关联到电荷密度上
+\begin{Equation}&[4]
+    \rho(x)=-\esi\dv[2]{\phi}{x}=\esi\dv{E}{x}
+\end{Equation}
+
+换言之，电场可以由电荷密度的积分得到，这里边界条件是$E(-x_p)=E(+x_n)=0$，因为我们认为耗尽区外电场为零。但是，事实上，我们并不太关心$E(x)$，更关心的是在$x=0$处的最大电场$E_0$，它的计算就非常简单了，甚至可以直接通过观察\xref{fig:电荷密度}计算矩形面积得到。
+
+不过符号是值得我们注意的，$E_0$可以通过以下两种方式计算
+\begin{itemize}
+    \item 从$-x_p$\hspace{0.4em}至$0$对$\rho(x)$积分，长为$+x_p$\hspace{0.1em}，高为$-qN_A$，有向面积是$-qN_Ax_p$
+    \item 从$+x_n$至$0$对$\rho(x)$积分，长为$-x_n$，高为$+qN_D$，有向面积是$-qN_Dx_n$
+\end{itemize}
+在有向面积的基础上除$\esi$就可以得到$E_0$
+\begin{Equation}&[5]
+    E_0=-\frac{qN_Ax_p}{\esi}\qquad E_0=-\frac{qN_Dx_n}{\esi}
+\end{Equation}
+电场是一个负值，这表明PN结的内建电场是由N指向P的。
+
+接下来，让我们计算电势$\phi(x)$，它将是电场$E(x)$积分的负值，尽管我们没有计算$E(x)$，但我们可以肯定其会展现出\xref{fig:电场}中的线性分布，因此，我们仍然可以通过计算曲线下面积的方式计算积分。同样的，我们其实也不关心$\phi(x)$，而是关心电势差$\phi_0=\phi(x_n)-\phi(x_p)$，有
+\begin{Equation}&[6]
+    \phi_0=-\frac{E_0(x_n-x_p)}{2}
+\end{Equation}
+若考虑PN结上施加的电压$v_D$，这会将内建电势$\phi_0$削弱至$\phi_0-v_D$，重写上式
+\begin{Equation}&[7]
+    \phi_0-v_D=-\frac{E_0(x_n-x_p)}{2}
+\end{Equation}
+这里$\phi_0$是一个仅由掺杂$N_A,N_D$确定的常数，依据半导体物理
+
+\begin{BoxFormula}[PN结的内建电势]
+    PN结的内建电势可以表示为
+    \begin{Equation}&[]
+        \phi_0=V_t\ln\frac{N_AN_D}{n_i^2}
+    \end{Equation}
+\end{BoxFormula}
+
+其中$n_i=\SI{1.45e10}{cm^{-3}}$是硅室温下的本征载流子浓度，而$V_t$是热电压\setpeq{PN结的三电分析}
+\begin{Equation}&[8]
+    V_t=\frac{\kB T}{q}
+\end{Equation}
+其中$\kB=\SI{1.38e-23}{J.K^{-1}}$是玻尔兹曼常数，$q=\SI{1.60e-19}{C}$是元电荷，$T$是温度，通常取室温$T=\SI{300}{k}$，此时$V_t=\SI{0.0259}{V}$，注意区分热电压$V_t$和MOS的阈值电压$V_T$。
+
+\xref{fig:PN结的内建电势}是对$\phi_0$的可视化，我们可以直观看出
+\begin{itemize}
+    \item $\phi_0$会随$N_A,N_D$的增大而增大，掺杂越重，内建电势越大。
+    \item $\phi_0$的典型值在零点几伏左右。
+\end{itemize}
+
+\begin{Figure}[PN结的内建电势]
+    \begin{FigureSub}[三维图像;PN结的内建电势三维图像]
+        \includegraphics[scale=0.78]{build/Chapter02B_01b.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[二维图像;PN结的内建电势二维图像]
+        \includegraphics[scale=0.78]{build/Chapter02B_01a.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+\subsection{PN结的耗尽区宽度}
+
+至此，我们的推导尚存在一个小小的问题，我们一直在使用$x_p,x_n$但它们并非已知量，现在我们就要求出$x_p,x_n$的表达式。PN结的掺杂$N_A,N_D$和外加电压$v_D$都是可以指定的已知参量，我们联立\xrefpeq[PN结的三电分析]{2}和\xrefpeq[PN结的三电分析]{7}，其中$\phi_0$和$E_0$可以通过\xrefpeq[PN结的内建电势]{}和\xrefpeq[PN结的三电分析]{5}完全转换为已知参量$N_A,N_D,v_D$或未知量$x_p,x_n$，由此，两个方程对应两个未知量，故$x_p,x_n$一定可以解出。
+
+\begin{BoxFormula}[PN结的耗尽区宽度]
+    PN结在P区一侧的耗尽区宽度为
+    \begin{Equation}
+        x_p=\sqrt{\frac{2\esi N_D(\phi_0-v_D)}{qN_A(N_A+N_D)}}
+    \end{Equation}
+    PN结在N区一侧的耗尽区宽度为
+    \begin{Equation}
+        x_n=\sqrt{\frac{2\esi N_A(\phi_0-v_D)}{qN_D(N_A+N_D)}}
+    \end{Equation}
+    PN结的耗尽区总宽度为
+    \begin{Equation}
+        x_d=\sqrt{\frac{2\esi(N_A+N_D)(\phi_0-v_D)}{qN_AN_D}}
+    \end{Equation}
+\end{BoxFormula}
+
+\xref{fig:PN结的耗尽区宽度}是对$x_p,x_n$以及$x_d=x_p+x_n$的可视化，我们可以直观看出
+\begin{itemize}
+    \item 当$N_A\gg N_D$时，即P侧掺杂远大于N侧时，有$x_d\approx x_n$。
+    \item 当$N_A\ll N_D$时，即P侧掺杂远小于N侧时，有$x_d\approx x_p$。
+    \item 这类两侧掺杂浓度相差很大，可以明确区分重掺和轻掺的PN结，称为单边结。
+    \item 耗尽区主要分布在轻掺侧，耗尽区宽度主要由轻掺杂侧的浓度决定（对于单边结）。
+    \item 耗尽区宽度$x_d$的典型值在零点几微米左右。
+    \item 耗尽区宽度$x_d$在反偏时会略微增加，增加幅度不是很大。
+    \item 耗尽区宽度$x_d$在正偏时会迅速减小，尤其是$v_D$逼近$\phi_0$时$x_d$将趋于零。
+\end{itemize}
+
+\begin{Figure}[PN结的耗尽区宽度]
+    \begin{FigureSub}[$x_n$三维图;PN结的耗尽区宽度xn三维图]
+        \includegraphics[scale=0.78]{build/Chapter02B_01e.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[$x_p$三维图;PN结的耗尽区宽度xp三维图]
+        \includegraphics[scale=0.78]{build/Chapter02B_01f.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.5cm}
+    \begin{FigureSub}[$x_d$三维图;PN结的耗尽区宽度xd三维图]
+        \includegraphics[scale=0.78]{build/Chapter02B_01g.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.5cm}
+    \begin{FigureSub}[随掺杂变化;PN结的耗尽区宽度掺杂]
+        \includegraphics[scale=0.78]{build/Chapter02B_01c.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[随电压变化;PN结的耗尽区宽度掺杂]
+        \includegraphics[scale=0.78]{build/Chapter02B_01d.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+\subsection{PN结的耗尽区电场}\setpeq{PN结的耗尽区电场}
+我们可能会认为，\xref{subsec:PN结的电荷密度、电场、电势}中\xrefpeq[PN结的三电分析]{5}已经得到了$E_0$
+\begin{Equation}&[1]
+    E_0=\frac{qN_ax_p}{\esi}=\frac{qN_Dx_n}{\esi}
+\end{Equation}
+请注意，这里我们忽略了\xrefpeq[PN结的三电分析]{5}中表示的方向的负号，这里仅考虑电场的大小。然而，该公式中仍然包含了$x_n,x_p$，我们可以在其中代入\xref{fml:PN结的耗尽区宽度}的结论，从而得到完整的$E_0$表达式。
+
+\begin{BoxFormula}[PN结的耗尽区电场]
+    PN结界面处最大电场的大小是
+    \begin{Equation}
+        E_0=\sqrt{\frac{2\esi^{-1}qN_AN_D(\phi_0-v_D)}{N_A+N_D}}
+    \end{Equation}
+\end{BoxFormula}
+
+当反向电压较大时，PN结可能发生击穿。在一定的近似下可以认为，击穿与材料所能承受的最大电场有关，而与掺杂无关，对于硅，击穿电场$E_{\max}=\SI{3e15}{V.cm^{-1}}$。显然，PN结的击穿一定会发生在结的界面处，介于界面处电场强度$E_0$最大。因此，当$E_0=E_{\max}$成立时就有$v_D=-V_{BR}$，这里的$V_{BR}$就是击穿电压，其值为正。以下给出了$V_{BR}$与$E_{\max}$的关系。
+\begin{BoxFormula}[PN结的击穿电压]
+    PN结的击穿电压为
+    \begin{Equation}
+        V_{BR}=\frac{\esi(N_A+N_D)}{2qN_AN_D}E_{\max}^2
+    \end{Equation}
+\end{BoxFormula}
+\xref{fig:PN结的电场}是对$E_0$的可视化，其中\xref{fig:PN结的电场三维图像}中的分割线代表$E_{\max}$，注意到
+\begin{itemize}
+    \item \xref{fig:PN结的电场三维图像}绘制的是$v_D=0$零偏时的$E_0$，当$N_A,N_D$均很大（$>\SI{1e18}{cm^{-3}}$）时，注意到零偏时已有$E_0>E_{\max}$，该结果并不意味着PN结会被自身的内建电场击穿。原因有二，首先$E_{\max}$无关掺杂是一种近似，其仍然会随着掺杂的增加而较缓慢的增加。其次当两侧均重掺时，此时击穿类型将由雪崩击穿转换为齐纳击穿，上述分析不再适用。
+    \item $E_0$随着$N_A,N_D$的增大而增大，主要由轻掺侧确定。
+    \item $E_0$在零偏下的数量级在$\SI{e5}{V.cm^{-1}}$左右。
+    \item $E_0$反偏时将缓慢增加并最终超过击穿电场$E_{\max}$，发生击穿。
+    \item $E_0$在正偏时迅速减小，在$v_D$趋于$\phi_0$时趋近于零。
+    \item $N_A=\SI{e18}{cm^{-3}},N_D=\SI{e16}{cm^{-3}}$时，零偏$E_0<E_{\max}$仍然成立，符合预期。
+    \item $N_A=\SI{e18}{cm^{-3}},N_D=\SI{e16}{cm^{-3}}$时，击穿电压为$V_{BR}=\SI{-28.74}{V}$。
+\end{itemize}
+\begin{Figure}[PN结的电场]
+    \begin{FigureSub}[三维图像;PN结的电场三维图像]
+        \includegraphics[scale=0.78]{build/Chapter02B_01i.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[二维图像;PN结的电场二维图像]
+        \includegraphics[scale=0.78]{build/Chapter02B_01l.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+\xref{fig:PN结的击穿电压}是对$V_{BR}$的可视化，注意到
+\begin{itemize}
+    \item $V_{BR}$随$N_A,N_D$的增大而减小，换言之，较重的的掺杂意味着较低的击穿电压。
+    \item $V_{BR}$主要被轻掺侧确定，且对轻掺侧浓度相当敏感，观察\xref{fig:PN结的击穿电压二维图像}曲线右侧$N_A$重掺的部分，注意到，$N_D=\SI{e16}{cm^{-3}}$时$V_{BR}$约为$\SI{30}{V}$，$N_A=\SI{e17}{cm^{-3}}$时$V_{BR}$不足$\SI{5}{V}$。
+    \item $V_{BR}$的典型值在几十伏左右。
+\end{itemize}
+
+\begin{Figure}[PN结的击穿电压]
+    \begin{FigureSub}[三维图像;PN结的击穿电压三维图像]
+        \includegraphics[scale=0.78]{build/Chapter02B_01n.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[二维图像;PN结的击穿电压二维图像]
+        \includegraphics[scale=0.78]{build/Chapter02B_01o.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+\subsection{PN结的耗尽区电荷}\setpeq{PN结的耗尽区电荷}
+PN结在耗尽区单位面积的电荷可以表示为下式，这里仅记电荷量的大小，不分正负
+\begin{Equation}&[1]
+    Q_j=qN_Ax_p=qN_Dx_n
+\end{Equation}
+在上式中代入\xref{fml:PN结的耗尽区宽度}关于$x_p,x_n$的结论，即可得到
+\begin{BoxFormula}[PN结的耗尽区电荷]
+    PN结在耗尽区的单位面积电荷为
+    \begin{Equation}
+        Q_j=\sqrt{\frac{2\esi qN_AN_D(\phi_0-v_D)}{N_A+N_D}}
+    \end{Equation}
+\end{BoxFormula}
+无论从\xrefpeq[PN结的耗尽区电场]{1}和\xrefpeq[PN结的耗尽区电荷]{1}的对比，还是从\xref{fml:PN结的耗尽区电场}和\xref{fml:PN结的耗尽区电荷}结论上的的对比，我们都可以看出，电荷$Q_j$和最大电场$E_0$间仅相差一个$\esi$的系数，两者有$Q_j=\esi E_0$的关系成立。
+
+\xref{fig:PN结的击穿电压}是对$Q_{j}$的可视化，注意到
+\begin{itemize}
+    \item $Q_j$随着$N_A,N_D$的增大而增大，主要由轻掺侧确定。
+    \item $Q_j$在零偏下的数量级在$\SI{e-7}{C.cm^{-2}}$左右。    
+    \item $Q_j$反偏时将缓慢增加，$Q_j$在正偏时迅速减小，在$v_D$趋于$\phi_0$时趋近于零。
+\end{itemize}
+
+\begin{Figure}[PN结的电荷]
+    \begin{FigureSub}[三维图像;PN结的电荷三维图像]
+        \includegraphics[scale=0.78]{build/Chapter02B_01h.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[二维图像;PN结的电荷二维图像]
+        \includegraphics[scale=0.78]{build/Chapter02B_01k.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+\subsection{PN结的耗尽区电容}
+PN结的耗尽区的界面两侧，分别存在带正电和带负电的空间电荷，且电荷量$Q_j$会随外加电压$v_D$的变化而变化，这就构成了电容。电容被定义为电荷对电压的导数，即
+\begin{Equation}
+    C_j=\dv{Q_j}{v_D}
+\end{Equation}
+代入\xref{fml:PN结的耗尽区电荷}求导得到
+\begin{BoxFormula}[PN结的耗尽区电容]
+    PN结在耗尽区的单位面积电容为
+    \begin{Equation}&[1]
+        C_j=\sqrt{\frac{\esi qN_AN_D}{2(N_A+N_D)(\phi_0-v_D)}}
+    \end{Equation}
+    也可以表示为
+    \begin{Equation}&[2]
+        C_j=\frac{C_{j0}}{(1-v_D/\phi_0)^m}
+    \end{Equation}
+\end{BoxFormula}
+
+其中$C_{j0}$是$v_D=0$时的$C_j$。应指出的是，这里\xrefpeq{2}是对\xrefpeq{1}的扩展，其本应为
+\begin{Equation}
+    C_j=\frac{C_{j0}}{\sqrt{1-v_D/\phi_0}}
+\end{Equation}
+即对应\xrefpeq{1}中$m=1/2$的情形。这里$m$是梯度系数，其取值通常在$1/2$至$1/3$间，那么为何要引入该变量呢？以上讨论中，我们讨论的都是突变结，即$\rho(x)$是零次的，界面处瞬间从$-N_A$跳变至$+N_D$。但是实际情况未必如此理想，我们也可能遇到缓变结，即$\rho(x)$是一次的，界面处是P型到N型的线性过渡。而$C_j$的梯度系数$m$就是反映了电荷密度的梯度特性
+\begin{itemize}
+    \item 若为突变结，则梯度系数$m=1/2$。
+    \item 若为缓变结，则梯度系数$m=1/3$。
+\end{itemize}
+
+\xref{fig:PN结的电容}是对$C_j$的可视化，\xref{fig:PN结的电容三维图像}对应\xrefpeq{1}，\xref{fig:PN结的电容二维图像}对应\xrefpeq{2}
+\begin{itemize}
+    \item $C_j$随着$N_A,N_D$的增大而增大，主要由轻掺侧确定。
+    \item $C_j$在零偏下的数量级在$\SI{e-7}{F.cm^{-2}}$左右。    
+    \item $C_j$反偏时将缓慢减小，$C_j$在正偏时迅速增加，在$v_D$趋于$\phi_0$时趋近于无穷大。当然该结果和上述所有$v_D\to\phi_0$的结果一样显然是无效的，以此处$C_j$为例，电容趋于无穷大的原因是电荷减小至零，但是，在这种极端的条件下，上述推导的基础，即耗尽区不存在空间电荷以外的载流子的假设就不成立了，故基于此得出的结论当然也是不合理的。
+    \item 在反偏时，$m=1/2$的突变结将比$m=1/3$的缓变结具有更小的$C_j$。
+\end{itemize}
+\begin{Figure}[PN结的电容]
+    \begin{FigureSub}[三维图像;PN结的电容三维图像]
+        \includegraphics[scale=0.78]{build/Chapter02B_01j.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[二维图像;PN结的电容二维图像]
+        \includegraphics[scale=0.78]{build/Chapter02B_01m.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+\subsection{PN结的电流特性}
+PN结的电流特性可通过少子扩散得到，其结论我们很熟悉。下面还补充了反向击穿电流修正。
+\begin{BoxFormula}[PN结的电流特性]
+    PN结的理想电流特性为
+    \begin{Equation}
+        i_D=I_s\qty[\exp\qty(\frac{v_D}{V_t})-1]
+    \end{Equation}
+    PN结在$v_D<0$反偏时，适用以下击穿电流修正，实际电流$i_D'$相对理想电流$i_D$的关系
+    \begin{Equation}
+        i_D'=Mi_D=\qty[\frac{1}{1-(v_R/V_{BR})^n}]i_D
+    \end{Equation}
+\end{BoxFormula}
+其中，$I_s$是反向饱和电流，其典型值$I_s=\SI{e-15}{A}$，$M$是雪崩倍增因子，$M$反映了考虑击穿后的电流倍数，$n$是调节雪崩击穿时电流曲线拐弯处斜率的系数，$n$的典型值在$3$至$6$之间。
+
+\begin{Figure}[PN结的电流]
+    \begin{FigureSub}[PN结的理想电流特性]
+        \includegraphics[scale=0.78]{build/Chapter02B_01q.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[PN结的击穿电流特性]
+        \includegraphics[scale=0.78]{build/Chapter02B_01p.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+\xref{fig:PN结的理想电流特性}和\xref{fig:PN结的击穿电流特性}是对PN结理想电流和击穿电流的可视化，注意两者纵坐标的尺度。

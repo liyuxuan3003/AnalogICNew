@@ -1,0 +1,190 @@
+\section{半导体制造工艺}
+半导体技术是基于许多用于制造半导体器件的完整工艺流程之上的，要了解工艺流程，就要先了解工艺流程中的基本步骤，这包括：氧化、扩散、注入、沉积、刻蚀、光刻、平坦化。
+
+当然，所有的工艺都基于单晶硅材料，有两种方法可以生长单晶硅
+\begin{enumerate}
+    \item 直拉法（CZ, Czochralski Method）和磁控直拉法（MCZ）。
+    \item 浮融带法（FZ, Floating Zone Method），也可以称为悬浮区熔法。
+\end{enumerate}
+直拉法是较经典的单晶硅生长方法，由Czochralski在1917年提出。而相较于直拉法，浮融带法可以产生高纯度的硅锭，但是，浮融带法难以拉制大直径的硅锭，其通常用于功率器件。
+
+晶体通常而言是按$\<100>$或$\<111>$方位生长的，长成的晶体是直径$\SIrange{75}{300}{nm}$长度为$\SI{1}{m}$的圆柱。，随后，晶体被切成厚$\SIrange{0.5}{0.75}{mm}$的晶圆，晶圆的厚度主要由所需的物理强度决定。
+
+晶体在生长过程中，掺入相应杂质即可形成$n$型或$p$型衬底
+\begin{itemize}
+    \item 衬底的掺杂浓度近似为$\SI{e15}{cm^{-3}}$，是轻掺杂
+    \item 该浓度对应至$n$型衬底，电阻率为$\SIrange{3}{5}{\ohm.cm}$
+    \item 该浓度对应至\hspace{0.4em}$p$\hspace{0.4em}型衬底，电阻率为$\SIrange{14}{16}{\ohm.cm}$
+\end{itemize}
+除此之外，也可以在重掺杂的晶圆顶部外延生长轻掺杂层，在外延层形成器件。
+
+\subsection{氧化}
+氧化（Oxidation）是在硅晶圆表面形成二氧化硅的过程。请注意！氧化层在硅表面向上生长的同时也向下深入硅的内部（换言之，硅会损失一定的厚度），若记氧化层的厚度为$t_{ox}$，在典型情况下，有$0.56t_{ox}$的氧化层厚度在原表面之上，有$0.44t_{ox}$的氧化层厚度在原表面之下。
+
+氧化有干法氧化和湿法氧化两种方法
+\begin{itemize}
+    \item 干法氧化，氧化层致密，但生长较慢。
+    \item 湿法氧化，氧化层疏松，但生长较快。
+\end{itemize}
+氧化层的厚度，从低至$\SI{50}{nm}$以下的栅氧化层，到高至$\SI{1000}{nm}$以上的场氧化层（隔离）。
+
+氧化过程发生在$\SIrange{700}{1100}{\dc}$的温度范围内，氧化层的生长速率正比于生长时的温度。
+
+\subsection{扩散}
+扩散（Diffusion）是杂质原子从半导体表面向内部运动的过程，有两种基本扩散机制
+\begin{itemize}
+    \item 无限杂质源：假设表面的杂质源是无限的，是沉积扩散的典型情况。沉积扩散的目的是在材料表面面附近掺入高浓度的杂质，最大杂质浓度在$\SIrange{5e20}{2e21}{cm^{-3}}$间。
+    \item 有限杂质源：假定表面的杂质源是有限的，随时间减小，是渗透扩散的典型情况。渗透扩散是沉积扩散后的步骤，渗透扩散的目的是使位于表面附近的杂质更深入半导体内部。
+\end{itemize}
+
+扩散的深度，从沉积扩散的$\SI{0.1}{um}$以下，到渗透扩散的$\SI{10}{um}$以上。
+
+扩散发生在$\SIrange{800}{1400}{\dc}$的温度范围内。
+
+\subsection{注入}
+注入（Implantation）是杂质离子由电场加速后注入半导体材料的过程。然而，若离子注入时令离子笔直射入半导体晶格，有可能顺着晶格穿入过深，为避免这种不必要的深离子沟槽
+\begin{itemize}
+    \item 可以令注入偏离晶圆的轴向，离子能有机会与晶格发生碰撞。
+    \item 可以隔着一层二氧化硅进行注入，离子经过氧化层后方向被打乱，具有随机的注入方向。
+\end{itemize}
+
+注入的深度，平均在$\SIrange{0.1}{0.6}{um}$的范围内。
+
+注入是室温工艺，但由于离子注入过程中会对半导体晶格产生破坏，使许多离子停留在非电活性区域，需通过退火（高温“晃一晃”晶格，使离子就位）修复，退火时需要升温至$\SI{800}{\dc}$。
+
+注入和扩散的目的是一致的，都是令杂质掺入半导体材料内，因此可以用注入代替扩散
+\begin{enumerate}
+    \item 离子注入可以精确控制掺杂，误差在$\pm 5\%$以内，重复性好。
+    \item 离子注入是室温工艺，仅在退火过程中需要高温。
+    \item 离子注入可以隔着薄层进行，注入时和注入后材料不会暴露在污染物中。
+    \item 离子注入可以控制注入杂质的分布。
+\end{enumerate}
+
+\subsection{沉积}
+沉积（Deposit）是将多种不同材料的薄膜层沉积到半导体材料表面的过程，可以分为
+\begin{itemize}
+    \item 化学气相沉积（CVD）：主要用于多晶硅、氮化硅、二氧化硅的沉积。
+    \begin{itemize}
+        \item 常压化学气相沉积（APCVD）：温度控制在气相输运限制区，对浓度敏感。
+        \item 低压化学气相沉积（\hspace{0.1em}LPCVD）：温度控制在表面反应限制区，对温度敏感。
+        \item 等离子体增强化学气相沉积（PECVD）：使用等离子体代替热量为反应供能。
+    \end{itemize}
+    \item 物理气相沉积（PVD）：主要用于金属和金属硅化物的沉积。
+    \begin{itemize}
+        \item 蒸发沉积：材料置于真空中加热蒸发，蒸发出的分子在较冷的晶圆表面凝结。
+        \item 溅射沉积：材料置于阴极，利用正离子轰击，溅射出的分子运动至位于阳极的晶圆。
+    \end{itemize}
+\end{itemize}
+
+\subsection{刻蚀}
+刻蚀（Etching）是去除被暴露材料的过程，刻蚀有两个重要的指标：选择性和各向异性。
+
+选择性$S$反映了理想的刻蚀只应除去期望除去的层，既不会刻蚀目标层上方的掩膜层，也不会刻蚀目标层下方的底层。选择性$S$可以定义为期望层的刻蚀率和不期望层的刻蚀率之比
+\begin{Equation}
+    S=\frac{\text{期望层的刻蚀率}}{\text{不期望层的刻蚀率}}
+\end{Equation}
+
+各向异性$A$反映了理想的刻蚀只应垂直向下刻蚀，而不应有横向往两侧的刻蚀，其定义为
+\begin{Equation}
+    A=1-\frac{\text{横向刻蚀率}}{\text{纵向刻蚀率}}
+\end{Equation}
+\begin{itemize}
+    \item 完全的各向异性$A=1$，因为横向刻蚀率为零。
+    \item 完全的各向同性$A=0$，因为横向刻蚀和纵向刻蚀速率完全一致，比值为$1$。
+\end{itemize}
+刻蚀可以分为两类
+\begin{itemize}
+    \item 湿法刻蚀通过化学试剂进行刻蚀，接近于各向同性，很依赖温度和时间。
+    \begin{itemize}
+        \item 二氧化硅可以通过氢氟酸\cx{HF}刻蚀。
+        \item 氮化硅可以通过磷酸\cx{H3PO4}刻蚀。
+        \item 多晶硅可以通过硝酸\cx{HNO3}、乙酸\cx{CH3COOH}、氢氟酸\cx{HF}刻蚀。
+        \item 硅可以用氢氧化钾\cx{KOH}刻蚀。
+        \item 金属可以用磷酸混合物刻蚀。
+    \end{itemize}
+    \item 干法刻蚀通过射频等离子发生器产生具有化学活性的离子化气体进行刻蚀，接近于各向异性，较关注压力、气流率、气体混合度、射频关注。干法刻蚀和溅射在技术上非常相似，两者甚至可以用同种设备实现。典型的干法刻蚀技术有反应离子刻蚀（RIE）。
+\end{itemize}
+
+
+\subsection{平坦化}
+平坦化（Planarization）的常用技术是化学机械抛光（CMP），这可以使晶圆表面变得平整。
+
+\subsection{光刻}
+光刻（Photolithography）是将图像转移到晶圆上的过程，其赋予了其他工艺选择性。光刻的基本单元是光刻胶和光掩模版，光掩膜版上具有特定图案，使光刻胶一部分暴露在紫外光的照射下，而另一部分被遮掩。光刻胶是一种暴露在紫外光下就会改变特性的有机物
+\begin{itemize}
+    \item 正光刻胶是难溶的，照射后可溶，被刻蚀的是光掩模版上暴露的区域。
+    \item 负光刻胶是可溶的，照射后难溶，被刻蚀的是光掩膜版上遮蔽的区域。
+\end{itemize}
+
+光刻的方式分为三种
+\begin{itemize}
+    \item 接触式光刻：光掩模版与晶圆直接接触，这种方法简单且分辨率高，但问题是由于存在直接接触，光掩膜版存在损耗，使用$\numrange{10}{25}$次后就需要更换，同时也会污染晶圆。
+    \item 接近式光刻：光掩膜版与晶圆贴的很近，但留有一定间距，这种方法避免了直接接触带来的损耗和污染，但间距的存在也限制了分辨率，最小特征尺寸低于$\SI{2}{um}$时无法使用。
+    \item 投影式光刻：光掩膜版与晶圆拉开较大的距离，采用透镜或反光镜进行聚焦，但较复杂。
+\end{itemize}
+除此之外，一个常见的是疑惑是，光刻可以通过光掩膜版实现图案转移，那么，光掩模版自身是如何制造的呢？电子束曝光技术可以实现这一点。电子束曝光是具有直接刻写能力的，但显然效率很低，因此利用电子束曝光制造可以重复使用的光刻掩膜“母版”是再合适不过了。
+
+\subsection{双阱CMOS工艺流程}
+
+\xref{tab:双阱CMOS工艺流程}展示了适用于$\SI{0.25}{um}$以下的双阱CMOS工艺，使用浅槽隔离（STI）。
+
+\begin{TableLong}[双阱CMOS工艺流程]{|c|c|}
+<>()< >( )
+\xcell<c>{\includegraphics[scale=0.78]{build/Chapter02A_02.fig.pdf}}&
+\xcell<c>{\includegraphics[scale=0.78]{build/Chapter02A_03.fig.pdf}}\\* \hlinelig
+01&02\\ \hlinemid
+\xcell<c>{\includegraphics[scale=0.78]{build/Chapter02A_04.fig.pdf}}&
+\xcell<c>{\includegraphics[scale=0.78]{build/Chapter02A_05.fig.pdf}}\\* \hlinelig
+03&04\\ \hlinemid
+\xcell<c>{\includegraphics[scale=0.78]{build/Chapter02A_06.fig.pdf}}&
+\xcell<c>{\includegraphics[scale=0.78]{build/Chapter02A_07.fig.pdf}}\\* \hlinelig
+05&06\\ \hlinemid
+\xcell<c>{\includegraphics[scale=0.78]{build/Chapter02A_08.fig.pdf}}&
+\xcell<c>{\includegraphics[scale=0.78]{build/Chapter02A_09.fig.pdf}}\\* \hlinelig
+07&08\\ \hlinemid
+\xcell<c>{\includegraphics[scale=0.78]{build/Chapter02A_10.fig.pdf}}&
+\xcell<c>{\includegraphics[scale=0.78]{build/Chapter02A_11.fig.pdf}}\\* \hlinelig
+09&10\\ \hlinemid
+\xcell<c>{\includegraphics[scale=0.78]{build/Chapter02A_12.fig.pdf}}&
+\xcell<c>{\includegraphics[scale=0.78]{build/Chapter02A_13.fig.pdf}}\\* \hlinelig
+11&12\\ \hlinemid
+\xcell<c>{\includegraphics[scale=0.78]{build/Chapter02A_14.fig.pdf}}&
+\xcell<c>{\includegraphics[scale=0.78]{build/Chapter02A_15.fig.pdf}}\\* \hlinelig
+13&14\\ \hlinemid
+\xcell<c>{\includegraphics[scale=0.78]{build/Chapter02A_16.fig.pdf}}&
+\xcell<c>{\includegraphics[scale=0.78]{build/Chapter02A_17.fig.pdf}}\\* \hlinelig
+15&16\\ \hlinemid
+\xcell<c>{\includegraphics[scale=0.78]{build/Chapter02A_18.fig.pdf}}&
+\xcell<c>{\includegraphics[scale=0.78]{build/Chapter02A_01.fig.pdf}}\\* \hlinelig
+17&18\\ \hlinemid
+\end{TableLong}
+
+\xref{tab:双阱CMOS工艺流程}中的颜色图例如\xref{fig:图例}所示
+\begin{Figure}[图例]
+    \includegraphics[scale=0.65]{build/Chapter02A_19.fig.pdf}
+\end{Figure}
+
+\xref{tab:双阱CMOS工艺流程}中的各步骤如下
+\begin{enumerate}
+    \item 选择具有轻掺杂$p^{-}$外延层的重掺杂$p^{+}$晶圆，重掺杂晶圆的强度较高。
+    \item 生长一层薄氧化层，这将作为接下来阱区离子注入的保护层，避免沟道效应。
+    \item 通过光刻定义N阱区域，进行N型离子注入，形成N阱，随后去除光刻胶，如01所示。
+    \item 通过光刻定义\hspace{0.41em}P阱区域，进行\hspace{0.41em}P型离子注入，形成\hspace{0.41em}P阱，随后去除光刻胶，如02所示。
+    \item 移除氧化层，它作为离子注入的保护层的使命已经完成。
+    \item 生长一层新的氧化层，接着，沉积一层氮化层，这里氮化硅的目的是作为之后CMP阶段的停止层，而之所以沉积氮化硅前需要先生长一层二氧化硅，是因为氮化硅和硅间的应力较大，直接接触可能导致衬底损坏，二氧化硅作为中间层进行缓冲，如03所示。
+    \item 刻蚀浅槽，它们会被用作晶体管间的隔离，如04所示。
+    \item 沉积氧化物，如05所示，随后通过CMP去除多余的氧化物，在氮化物表面形成一个平面，至此浅槽中填充了二氧化硅，形成浅槽隔离（Shallow Trench Isolation），如06所示。
+    \item 移除氮化层和其下的氧化层，它们作为CMP停止层和缓冲层的使命已经完成。
+    \item 生长栅氧化层，沉积多晶硅，如07所示。
+    \item 刻蚀栅氧化层和多晶硅，形成栅极，如08所示。
+    \item 现代工艺中，在正式通过离子注入形成源漏区之前，需要先进行一次轻掺杂的源漏区扩散（LDD），如图09所示，LDD的目的是降低源漏附近的电场强度峰值，提升击穿。
+    \item 在多晶栅两侧形成氮化物侧墙，如10所示。侧墙原理如下，首先沉积氮化物，由于沉积过程是接近各向同性的，顶面和侧面都有相同厚度的氮化物。随后干法刻蚀氮化物，刻蚀深度与沉积厚度刚好相同，但是，刻蚀却是各向异性的，因此只有顶面的氮化物被刻蚀，这就留下了侧面的氮化物，形成侧墙。侧墙的意义在于减小栅和源漏的覆盖电容，若以栅为边界注入，源漏区将因为扩散不可避免的进入栅下方，侧墙可以补偿横向扩散。
+    \item 光刻胶掩蔽N阱，进行N型注入形成NMOS源漏区，栅和侧墙自校准，如11所示。
+    \item 光刻胶掩蔽\hspace{0.41em}P阱，进行\hspace{0.41em}P型注入形成\hspace{0.41em}PMOS源漏区，栅和侧墙自校准，如12所示。
+    \item 退火，激活注入的离子，如13所示。
+    \item 溅射钛\cx{Ti}至整个晶圆上，退火后，硅和多晶硅表面会形成硅化钛\cx{TiSi2}，硅化钛不会再氮化物或氧化物上形成，两者表面的钛可以通过湿法刻蚀去除，如14所所示。该过程在源、漏、栅的表面形成了一层金属硅化物，可以改善源、漏、栅与接触孔间的接触电阻。
+    \item 沉积后氧化层，并用CMP工艺使表面平滑，如15所示。
+    \item 刻蚀接触孔，沉积钨\cx{W}填充接触孔并进行CMP，沉积\cx{Al}形成电极，如16所示。之所以需要使用两种不同的金属，是因为导电性上铝优于钨，但是钨具有极好的填孔性能。
+    \item 至此，金属层1已完成，重复上面两步即可得到金属层2，实现进一步互联，如17所示。
+    \item 最终，在表面沉积一层氮化物作为钝化保护层，如18所示。
+\end{enumerate}
