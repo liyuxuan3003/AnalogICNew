@@ -1,0 +1,52 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+    
+\xSetX
+\xValDefine{xL}[-5]
+\xValDefine{xR}[+5]
+\xValMiddle{xC}{xL}{xR}
+\xValPropor{xLB}{xL}{xC}[0.28]
+\xValPropor{xLA}{xL}{xC}[0.18]
+\xValPropor{xLC}{xL}{xC}[0.38]
+\xValMirror{xRB}{xLB}{xC}
+\xValMirror{xRA}{xLA}{xC}
+\xValMirror{xRC}{xLC}{xC}
+\xValPropor{xChA}{xLC}{xRC}[1/3]
+\xValPropor{xChB}{xLC}{xRC}[2/3]
+
+\xSetY
+\xValDefine{yB}[-3.5]
+\xValDefine{yA}[+3.5]
+\xValPropor{yRon}{yA}{yB}[1/3]
+\xValPropor{yRoff}{yA}{yRon}[1/2]
+\xValPropor{yCA}{yRon}{yB}[0.3]
+\xValPropor{yCB}{yRon}{yB}[0.6]
+\xValPropor{yCx}{yCB}{yB}[0.3]
+
+\draw (xL|-yRon) node[ocirc] {} node[left] {$A$} -- (xLC|-yRon) to[R=$r_{ON}$] (xChA|-yRon) to[switch] (xChB|-yRon) to[vsource=$V_{OS}$] (xRC|-yRon) -- (xR|-yRon)  node[ocirc] {} node[right] {$B$};
+
+\draw (xLB|-yRon) node[circ] {} -- (xLB|-yA) to[isource,l=$I_{OFF}$] (xRB|-yA) -- (xRB|-yRon) node[circ] {};
+
+\draw (xLB|-yRoff) node[circ] {} to[R=$r_{OFF}$] (xRB|-yRoff) node[circ] {};
+
+\draw (xLA|-yB) -- (xRA|-yB);
+
+\draw (xLA|-yRon) node[circ] {} to[isource,l_=$I_A$] (xLA|-yB);
+\draw (xRA|-yRon) node[circ] {} to[isource,l=$I_B$] (xRA|-yB);
+
+\draw (xLC|-yRon) node[circ] {} -- (xLC|-yCB) to[C=$C_A$] (xLC|-yB) node[circ] {};
+\draw (xRC|-yRon) node[circ] {} -- (xRC|-yCB) to[C,l_=$C_B$] (xRC|-yB) node[circ] {};
+
+\draw (xLC|-yCA) node[circ] {} to[C=$C_{AB}$] (xRC|-yCA) node[circ] {};
+\draw (xLC|-yCB) node[circ] {} to[C=$C_{AC}$] (xC|-yCB) to[C=$C_{BC}$] (xRC|-yCB) node[circ] {};
+
+\draw (xC|-yCB) to[short,*-o] (xC|-yCx) node[below] {$C$};
+
+\path (xC|-yB) node[circ] {} node[ground] {};
+
+\xValBorder{xL}[-0.7]{xR}[+0.7]{yB}[-0.8]{yA}[+1.0]*
+
+\end{tikzpicture}
+\end{document}

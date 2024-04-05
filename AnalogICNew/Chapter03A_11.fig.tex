@@ -1,0 +1,36 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xSetX
+\xValDefine{xL}[-2.5]
+\xValDefine{xR}[+2.5]
+\xValMiddle{xC}{xL}{xR}
+
+\xSetY
+\xValDefine{yB}[-2]
+\xValDefine{yA}[+2]
+\xValPropor{yC}{yA}{yB}[0.4]
+\xValMirror{yAx}{yA}{yC}
+\xValOffset{yCN}{yC}[0.3]
+\xValMirror{yCP}{yCN}{yC}
+
+\path (xC|-yCN) node[nmos,rotate=-90,yscale=-1] (M1) {} ++(-0.3,0) node[above left] {$M_1$};
+\path (xC|-yCP) node[pmos,rotate=+90] (M2) {}  ++(-0.3,0) node[below left] {$M_2$};
+
+\draw (M1.D) -- (M2.S);
+\draw (M1.S) -- (M2.D);
+
+\draw (M1.G) -- (xC|-yA) node[ocirc] {} node[above] {$v_{\phi}$};
+\draw (M2.G) -- (xC|-yAx) node[ocirc] {} node[below] {$\bar{v_{\phi}}$};
+\draw (xL|-yB) to[vsource=$v_{in}$] (xL|-yC) to[short] (M1.D|-yC);
+\draw (M1.S|-yC) to[short] (xR|-yC) to[C=$C_L$,v=$v_{out}$] (xR|-yB);
+\draw (xL|-yB) -- (xR|-yB);
+\path (xC|-yB) node[circ] {} node[ground] {}; 
+
+\xValBorder{xL}[-1.25]{xR}[+1.25]{yB}[-0.7]{yA}[+0.6]*
+
+
+\end{tikzpicture}
+\end{document}

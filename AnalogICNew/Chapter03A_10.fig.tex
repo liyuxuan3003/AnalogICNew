@@ -1,0 +1,28 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xSetX
+\xValDefine{xL}[-2.5]
+\xValDefine{xR}[+2.5]
+\xValMiddle{xC}{xL}{xR}
+
+\xSetY
+\xValDefine{yB}[-2]
+\xValDefine{yA}[+2]
+\xValPropor{yC}{yA}{yB}[0.4]
+
+\path (xC|-yC) node[nmos,rotate=-90,yscale=-1] (M1) {} node[below] {$M_1$};
+
+\draw (M1.G) -- (xC|-yA) node[ocirc] {} node[above] {$v_{\phi}$};
+\draw (xL|-yB) to[vsource=$v_{in}$] (xL|-yC) to[short] (M1.D);
+\draw (M1.S) to[short] (xR|-yC) to[C=$C_L$,v=$v_{out}$] (xR|-yB);
+\draw (xL|-yB) -- (xR|-yB);
+\path (xC|-yB) node[circ] {} node[ground] {}; 
+
+\xValBorder{xL}[-1.25]{xR}[+1.25]{yB}[-0.7]{yA}[+0.6]*
+
+
+\end{tikzpicture}
+\end{document}

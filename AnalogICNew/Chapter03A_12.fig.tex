@@ -1,0 +1,40 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xSetX
+\xValDefine{xL}[-2.5]
+\xValDefine{xR}[+2.5]
+\xValMiddle{xC}{xL}{xR}
+\xValPropor{xLA}{xL}{xC}[0.2]
+\xValPropor{xLB}{xL}{xC}[0.7]
+\xValMirror{xRA}{xLA}{xC}
+\xValMirror{xRB}{xLB}{xC}
+
+\xSetY
+\xValDefine{yB}[-2]
+\xValDefine{yA}[+2]
+\xValPropor{yC}{yA}{yB}[0.4]
+\xValPropor{yCx}{yC}{yA}[0.7]
+
+\path (xC|-yC) node[genericshape,xscale=3] (M1) {} node[below=0.2cm] {$R_{ch}$};
+
+\draw (xC|-yA) node[above] {$v_{\phi}$} to[short,o-] (xC|-yCx);
+\draw (xLA|-yCx) -- (xRA|-yCx);
+\draw (xLB|-yCx) to[C,capacitors/scale=0.5] (xLB|-M1.north);
+\draw (xRB|-yCx) to[C=$C_{ch}$,capacitors/scale=0.5] (xRB|-M1.north);
+\draw (xC|-yCx) to[C,capacitors/scale=0.5] (xC|-M1.north);
+
+\draw (xLA|-yCx) to[C,l_=$C_{gdo}$,capacitors/scale=0.5] (xLA|-yC);
+\draw (xRA|-yCx) to[C,l=$C_{gso}$,capacitors/scale=0.5] (xRA|-yC);
+
+\draw (xL|-yB) to[vsource=$v_{in}$] (xL|-yC) to[short] (M1.west);
+\draw (M1.east) to[short] (xR|-yC) to[C=$C_L$,v=$v_{out}$] (xR|-yB);
+\draw (xL|-yB) -- (xR|-yB);
+\path (xC|-yB) node[circ] {} node[ground] {}; 
+
+\xValBorder{xL}[-1.25]{xR}[+1.25]{yB}[-0.7]{yA}[+0.6]*
+
+\end{tikzpicture}
+\end{document}

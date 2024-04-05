@@ -114,13 +114,7 @@ cyv={
 	xVerrorSlow//.Join[rval,{U->cxv[[4]]}]};
 
 
-cyv
-
-
-Point[Inner[List,Log[cxv[[1;;2]]],cyv[[1;;2]],List]]
-
-
-LogLinearPlot[Evaluate[{xVerrorSlow,xVerrorFast}//.rval],{U,10^7,10^11},PlotRange->{-2m,42m},
+fig1=LogLinearPlot[Evaluate[{xVerrorSlow,xVerrorFast}//.rval],{U,10^7,10^11},PlotRange->{-2m,42m},
 FrameTicks->{xTicksLog[{7,11,1}],xTicksProp[{0.00,0.04,0.005},{4,3},1]},
 GridLines->{xGridsLog[{7,11,1},{10^7,10^11}],xGrids[{0.00,0.04,0.005}]},
 PlotStyle->{Blue,Red},
@@ -141,11 +135,14 @@ Prolog->
 	Line/@(Outer[{#1,#2}&,Log[cxv[[3;;3]]],{-0.01,0.05}]),
 	Line/@(Outer[{#2,#1}&,cyv[[3;;3]],Log[{10^6,10^12}]])
 },
+PlotLegends->Placed[LineLegend[{
+	xLaTeX["v_{\\phi,slow}",0.8],
+	xLaTeX["v_{\\phi,fast}",0.8]},
+	LegendFunction->"Panel",LegendLayout -> {"Column",1},
+	LegendMargins->1,
+	LegendMarkerSize->{22,1}],{Left,Top}],
 Evaluate@xFigLabel["U~(\\si{V\\cdot s^{-1}})","V_{error}~(\\si{V})"],
 Evaluate@xFigConfig]
-
-
-xtdown//.{U->xUmid}//.rval
 
 
 ff2=Evaluate[xtdown//.rval];
@@ -176,10 +173,7 @@ Evaluate@xFigLabel["U~(\\si{V\\cdot s^{-1}})","t_{HL}~(\\si{s})"],
 Evaluate@xFigConfig]
 
 
-
-
-
-fig={}
+fig={fig1,fig2}
 
 
 figWithName=Transpose[{fig,nbPDFNameList[[1;;Length[fig]]]}];

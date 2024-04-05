@@ -117,7 +117,7 @@ for id in range(graphNum):
 
     axes.set_xlim(-0.02e-6,0.52e-6)
     axes.xaxis.set_major_locator(ticker.MultipleLocator(0.1e-6))
-    axes.xaxis.set_major_formatter(lambda x, pos:"$"+"{:.0f}".format(x/1e-6)+"$")
+    axes.xaxis.set_major_formatter(lambda x, pos:"$"+"{:.1f}".format(x/1e-6)+"$")
     axes.set_xlabel(r"$t~(\si{us})$")
 
     axes.set_ylim(-0.2,5.2)

@@ -1,0 +1,25 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xSetX
+\xValDefine{xL}[-2]
+\xValDefine{xR}[+2]
+\xValMiddle{xC}{xL}{xR}
+
+\xSetY
+\xValDefine{yB}[0.0]
+\xValDefine{yA}[1.5]
+
+\path (xC|-yB) node[nmos,rotate=-90,yscale=-1] (M1) {};
+
+\draw (M1.D) -- (xL|-yB) node[ocirc] {} node[left] {$A$};
+\draw (M1.S) -- (xR|-yB) node[ocirc] {} node[right] {$B$};
+\draw (M1.G) -- (xC|-yA) node[ocirc] {} node[above] {$C$};
+
+\xValBorder{xL}[-0.7]{xR}[+0.7]{yB}[-0.5]{yA}[+0.7]*
+
+
+\end{tikzpicture}
+\end{document}

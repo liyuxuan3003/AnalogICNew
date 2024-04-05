@@ -1,0 +1,223 @@
+\section{MOS开关}
+
+开关在集成电路设计中有很多作用。在模拟电路中，开关被用于连接各种结构的电容，这类电容称为开关电容电路。在数字电路中，开关可以作为传输门。本节我们就将研究MOS开关。
+
+\subsection{非理想开关模型}
+\xref{fig:非理想开关模型}展示了一个非理想开关特性，注意到
+\begin{itemize}
+    \item $C$端的电压$V_C$控制$A,B$端之间开关的通断。
+    \item 参量$r_{ON}$是导通电阻，理想状态下$r_{ON}$应为零，即导通时$A,B$间短路。
+    \item 参量$r_{OFF}$是关断电阻，理想状态下$r_{OFF}$应为无穷大。
+    \item 参量$V_{OS}$表示开关导通且电流为零时，$A,B$之间存在的小幅值电压。
+    \item 参量$I_{OFF}$表示开关断开时的漏电流。
+    \item 参量$I_A,I_B$表示开关的$A,B$端与地之间的漏电流。
+    \item 参量$C_{AB}$是开关的$A,B$端之间的电容。
+    \item 参量$C_{AC},C_{BC}$是开关的$A,B$端与控制端$C$间的寄生电容。
+    \item 参量$C_{A},C_{B}$是开关的$A,B$端与地之间的寄生电容。
+\end{itemize}
+\begin{Figure}[非理想开关模型]
+    \includegraphics[scale=0.8]{build/Chapter03A_08.fig.pdf}
+\end{Figure}
+
+\subsection{MOS开关}
+
+MOS技术的优点就是可以提供一个性能良好的开关，\xref{fig:MOS开关}展示了如何应用NMOS管作为开关，显然，栅作为电压控制端$C$，漏和源作为$A,B$端。当然这并不绝对，对于NMOS管，漏源并没有实质性区别，电压较低的一方是源，电压较高的一方是漏，当漏端电压比源端更低时漏也就变成了源，这个事实对于MOS开关而言是特别重要的，开关对于连接的两侧是对称的。
+\begin{Figure}[MOS开关]
+    \includegraphics[scale=0.8]{build/Chapter03A_09.fig.pdf}
+\end{Figure}
+
+MOS开关对应至\xref{fig:非理想开关模型}上，各参量的对应关系如下
+\begin{itemize}
+    \item 导通电阻$r_{ON}$包含漏源的接触电阻$r_D,r_S$和沟道电阻$r_{ds}$，主要为沟道电阻。
+    \item 关断电阻$r_{OFF}$近乎无穷大，故MOS开关的关断特性主要由漏电流决定。
+    \item $I_A,I_B$即漏--体和源--体间的PN结漏电流。
+    \item $I_{AB}$即漏--源之间的亚阈值电流。
+    \item $V_{OS}$模拟的失调电压在MOS开关中不存在，无需考虑。
+    \item $C_A,C_B,C_{AC},C_{BC}$对应$C_{BD},C_{BS},C_{GD},C_{GS}$。
+    \item $C_{AB}$对应$C_{DS}$，但MOS管的$C_{DS}$很小无需考虑。
+\end{itemize}
+
+\subsection{MOS开关的导通电阻的特性}
+在本小节，我们将具体研究MOS开关的导通电阻。试想，作为开关，在导通时开关两端的电压$v_{DS}$相较$v_{GS}$应当是较小的，故可以假设$v_{DS}<v_{GS}-V_{T}$即认为MOS管工作于线性区
+\begin{Equation}
+    i_D=\beta\qty[(v_{GS}-V_T)v_{DS}-\frac{v_{DS}^2}{2}]
+\end{Equation}
+其沟道电阻为
+\begin{Equation}
+    r_{ds}=\frac{1}{g_{ds}}=\frac{1}{\pdv*{i_D}{v_{DS}}}=\frac{1}{\beta(V_{GS}-V_T-V_{DS})}
+\end{Equation}
+如前所述，这里我们认为导通电阻$r_{ON}$主要就由沟道电阻$r_{ds}$构成
+\begin{BoxFormula}[MOS开关的导通电阻]
+    MOS开关的导通电阻$r_{ON}$为
+    \begin{Equation}
+        r_{ON}=\frac{1}{\beta(V_{GS}-V_T-V_{DS})}
+    \end{Equation}
+\end{BoxFormula}
+关于导通电阻，我们想要了解什么？考虑\xref{fig:MOS开关对电容充电}的例子，我们用开关为电容进行充电
+\begin{itemize}
+    \item $v_{\phi}$是控制开关的信号，通常而言是时钟信号，在高电平$V_H$和低电平$V_L$间切换。
+    \item $v_{in}=V_S$是电源，$v_{out}$是输出端电容$C_L$上的电压。
+\end{itemize}
+
+\begin{Figure}[MOS开关对电容充电]
+    \includegraphics[scale=0.8]{build/Chapter03A_10.fig.pdf}
+\end{Figure}
+
+现在考虑两种情况
+\begin{enumerate}
+    \item 当时钟信号$v_{\phi}$在高电平$V_H$和低电平$V_L$之间变化时，当两端处于$v_{in}=v_{out}=0$的平衡态下时，导通电阻$r_{ON}$如何随$v_{\phi}$变化？例如，当$v_{\phi}$减小时，开关能否有效的关断？
+    \item 当时钟信号$v_{\phi}$保持高电平，电源$v_{in}=V_S$向电容充电，考察充电开始$v_{out}=0$和充电结束$v_{out}=v_{in}$的两个重要端点处，导通电阻$r_{ON}$将会如何随电源电压$v_{in}$变化？
+\end{enumerate}
+
+\begin{Figure}[MOS开关的导通电阻]
+    \begin{FigureSub}[随时钟变化]
+        \includegraphics[scale=0.6]{build/Chapter03A_07_0.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[随电源变化]
+        \includegraphics[scale=0.6]{build/Chapter03A_05_0.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+我们对\xref{fig:MOS开关的导通电阻}中的结果分析如下
+\begin{itemize}
+    \item 在\xref{fig:随时钟变化}中，我们看到，当$v_{\phi}=\SI{5}{V}$时导通电阻为$r_{ON}=\SI{2}{k\ohm}$左右的一个比较小的值，而随着$v_{\phi}$的减小，导通电阻$r_{ON}$会迅速增大，这表明栅端可以有效控制关断。
+    \item 在\xref{fig:随电源变化}中，对于我们关注的两种情况（其中$v_{\phi}=V_H=\SI{5}{V}$）
+    \begin{enumerate}
+        \item 充电开始时，有$v_{GS}=v_{\phi}$和$v_{DS}=v_{in}$成立。
+        \item 充电结束后，有$v_{GS}=v_{\phi}-v_{in}$和$v_{DS}=0$成立。
+    \end{enumerate}
+    \item 而事实上，我们最关注的是充电结束时的情况，此时导通电阻$r_{ON}$是整个电容充电过程中最大的。因为随着$v_S=v_{out}$端电压的升高，尽管$v_G=v_{\phi}$保持不变，但$v_{GS}$却逐渐减小了，这导致了导通电阻的增加。然而，\xref{fml:MOS开关的导通电阻}指出$r_{ON}\propto (v_{GS}-v_{DS}-V_T)^{-1}$，而整个过程中$(v_{GS}-v_{DS})$实际并没有变化，那为何\xref{fig:随电源变化}显示在$v_{in}$较大时，充电结束时的$r_{ON}$要远大于充电开始时的$r_{ON}$？这其实是因为，较大的$v_{in}$使电容充电开始时有$v_{DS}>v_{GS}-V_T$，导致MOS管实际工作在饱和区，使\xref{fml:MOS开关的导通电阻}的线性区假设失效。
+\end{itemize}
+
+简而言之，使用NMOS管构成的MOS开关无法导通过高的电压。随着充电过程的进行，源端的电压的抬升使$v_{GS}$越来越小（使$r_{ON}$越来越大）并最终减小至$v_{GS}<V_T$使开关发生关断，这就限制了MOS开关的动态范围。提升动态范围的方法是采用CMOS技术，如\xref{fig:MOS开关采用CMOS技术的改进}。
+
+\begin{Figure}[MOS开关采用CMOS技术的改进]
+    \includegraphics[scale=0.8]{build/Chapter03A_11.fig.pdf}
+\end{Figure}
+
+应用CMOS技术之后，MOS开关由一对并联的NMOS管和PMOS管构成，且一对相反的时钟信号$v_{\phi}$和$\bar{v_{\phi}}$分别连接到NMOS管和PMOS管的栅端。\xref{fig:MOS开关采用CMOS技术后的导通电阻}展示了$v_{\phi}$保持高电平时的导通电阻，其中取NMOS管$(W/L)=1$而取PMOS管$(W/L)=3$使两者在相同端口条件下具有等效的电阻。注意到，NMOS管在$v_{in}$较小时导通，PMOS管在$v_{in}$较大时导通，两者并联就使$r_{ON}$呈现双峰性能。由此可见，应用CMOS技术后，MOS开关在$v_{in}$全域的导通电阻$r_{ON}$都不太大，这就论证了CMOS技术可以显著扩展MOS开关的动态范围的提法。
+\begin{Figure}[MOS开关采用CMOS技术后的导通电阻]
+    \begin{FigureSub}[随电源变化;随电源变化CMOS开关]
+        \includegraphics[scale=0.6]{build/Chapter03A_06_0.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+\subsection{MOS开关的导通电阻的意义}
+那么，我们如此关心的导通电阻$r_{ON}$究竟有什么意义呢？回到\xref{fig:MOS开关对电容充电}用MOS开关对电容充电的情景，这里存在一个时间常数$\tau=r_{ON} C_L$，通常而言，我们认为需要经历$5\tau$的时间才能达到稳定，即需要$5\tau$的时间才能完成充电。由于$v_{\phi}$是一个时钟信号，我们必须要确保$5\tau$是远小于$v_{\phi}$处于高电平的时间$T$的，否则电容尚未充电完成，时钟的高电平就结束了。而为了减小时间常数$\tau=r_{ON} C_L$，就要尽可能减小开关的导通电阻$r_{ON}$，这就是$r_{ON}$很重要的原因。
+
+\begin{Figure}[MOS开关充电时的时域仿真]
+    \begin{FigureSub}[$W=L=\SI{0.8}{um}$;MOS开关充电WL0.8]
+        \includegraphics[scale=0.6]{build/Chapter03A_02_1.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[$W=L=\SI{8.0}{um}$;MOS开关充电WL8.0]
+        \includegraphics[scale=0.6]{build/Chapter03A_02_0.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+在\xref{fig:MOS开关充电WL0.8}中，高电平时间$T=\SI{0.1}{us}$，电容$C_L=\SI{1}{pF}$，记$V_H,V_L$分别为$v_{\phi}$的高电平和低电平，而$V_S$为$v_{in}$的电平：$V_H=\SI{5}{V}$、$V_L=\SI{0}{V}$、$V_S=\SI{2}{V}$。我们已经可以看出$v_{out}$在时钟信号$v_{\phi}$的高电平来临后需要一段时间才能达到$v_{in}$并稳定。做一些定量分析，要求$5\tau<T$即$\tau=r_{ON}C_L<T/5$，因而$r_{ON}<T/(5C_L)$，这个例子中$r_{ON}<\SI{20}{k\ohm}$。介于$r_{ON}$在整个充电过程中是变化的，作为保守估计，取最坏的情况，也就是充电完成时的$r_{ON}$进行分析。若通过公式计算，在\xref{fml:MOS开关的导通电阻}在中代入$v_{GS}=V_{H}-V_S$和$v_{DS}=0$即可，不过这里我们可以基于已有的可视化成果来分析，在\xref{fig:随电源变化}中，其$v_{\phi}$的高电平$V_H=\SI{5}{V}$和这里一致，我们观察到当$v_{in}=V_S=\SI{2}{V}$时$v_{out}=v_{in}$曲线上$r_{ON}=\SI{17}{k\ohm}$左右，符合$r_{ON}<\SI{20}{k\ohm}$的要求。
+
+\subsection{MOS开关的电荷注入}
+\xref{fig:MOS开关充电WL8.0}相较\xref{fig:MOS开关充电WL0.8}只是将宽长从$W=L=\SI{0.8}{um}$放大了十倍变为$W=L=\SI{8.0}{um}$，由于宽长比不变，照道理瞬态响应应完全相同，但注意到\xref{fig:MOS开关充电WL8.0}中，在$v_{\phi}$的下降沿时$v_{out}$发生了一定的陷落，即$v_{out}$在关断后变得略小于$v_{in}$了。我们容易联想到，这一定是和MOS的寄生电容有关。因为等比例放大宽和长唯一会影响的就是电容，而更大的电容会使漏电更显著。
+
+在开始前，我们有必要先明确一下这里到底是什么电容在影响
+\begin{itemize}
+    \item 栅电容：包含$C_{GD}$和$C_{GS}$。
+    \item 体电容：包含$C_{BD}$和$C_{BS}$。
+\end{itemize}
+这里起主要影响的是是栅电容，而栅电容又可以分为交叠电容和沟道电容。如\xref{fig:MOS开关的电容模型}所示
+\begin{itemize}
+    \item 交叠电容是指，栅极由于工艺原因无法完全与源漏边界对其，栅总是会略微与源漏区产生一定交叠，这部分面积导致的电容就是交叠电容，其值分别为$WC_{gso}$和$WC_{gdo}$。
+    \item 沟道电容是指，栅极与沟道间的电容，其值为$WLC_{ox}$，严格来说，沟道电容$C_{ch}$和沟道电阻$R_{ch}$一样均是分布参数，但简单的考虑中，我们可以将$C_{ch}=WLC_{ox}$按一定比例划给$C_{GS}$和$C_{GD}$，比例与工作区有关，例如，在线性区，这个比例是$0.5$和$0.5$。
+\end{itemize}
+\begin{Figure}[MOS开关的电容模型]
+    \includegraphics[scale=0.8]{build/Chapter03A_12.fig.pdf}
+\end{Figure}
+这里保持交叠电容和沟道电容的差别是有意义的，它们的电荷注入原理是略有差异的
+\begin{itemize}
+    \item 沟道注入：沟道电容导致的电荷注入。开关导通时，沟道中存在一定量的电荷，开关关断时这些电荷必须流出，具体而言，一半流至漏极，一半流至源极。在这个例子中，漏级连接了电源故流向漏极的电荷无影响，但是，源极连接了负载电容$C_L$，因此流向漏极的那一半电荷（带负电）就会使$C_L$上产生一个额外的负的压降，使$v_{out}$发生陷落。
+    \item 时钟馈通：交叠电容导致的电荷注入。开关的栅端发生快速变化时，会直接通过交叠电容$C_{gso}$和$C_{gdo}$影响源和漏的电压，这就是时钟馈通（“时钟”是因为栅常接时钟信号）。
+\end{itemize}
+简而言之，沟道注入在沟道关闭时发生，时钟馈通在栅极电压发生变化时发生。例如，如果栅极电压发生变化，但是这种变化并未使沟道转为关断（并不是由高电平向低电平的跳变），此时，沟道注入不发生，时钟馈通发生。由此可见，这里保持两种电容的差别是很有必要的。
+
+这里简要对沟道注入做一些定量分析，时钟馈通与版图特征有关，较为复杂，不做讨论。
+
+开关导通后，存储在沟道中的电荷为
+\begin{Equation}
+    Q_{ch}=-WLC_{ox}(V_H-V_S-V_T)
+\end{Equation}
+重申一下符号，$v_{in}=V_S$，$v_{\psi}$在高电平$V_H$和低电平$V_L$间变化，$V_T$是阈值电压。
+
+开关关断后，其中的一半电荷$Q_{ch}/2$将流入源端的$C_L$，造成的电压变化量是
+\begin{Equation}
+    \delt v_{out}=\frac{Q_{ch}}{2C_L}=-\frac{WL C_{ox}(V_H-V_S-V_T)}{2C_L}
+\end{Equation}
+下面，我们直接给出一个结论，其给出了综合考虑沟道注入和时钟馈通后，由电荷注入引起的误差$V_{error}$的表达式（即$v_{\phi}$下降沿后实际的$v_{out}$和其理想值$v_{out}=v_{in}$的差）。我们考虑栅极电压$v_{\phi}$在下降沿从高电平$V_H$到低电平$V_L$的变化，在时域中该过程可以表示为
+\begin{Equation}
+    v_{\phi}=V_H-Ut
+\end{Equation}
+其中$U$表示$v_{\phi}$变化的斜率，根据斜率$U$的大小，误差$V_{error}$被分为两种情况\footnote{参考书\cite{主参考书}公式在此有误，$(V_H-V_L+V_T)$在参考书中被错误的写为$(V_S-V_L+V_T)$。}。
+
+\begin{BoxFormula}[MOS开关在慢开关下的误差电压]
+    慢开关条件是
+    \begin{Equation}
+        U\ll \frac{\beta V_{HST}^2}{2C_L}
+    \end{Equation}
+    慢开关下，误差电压可以表示为
+    \begin{Equation}
+        \qquad\qquad
+        V_{error}=\qty(\frac{W C_{gdo}+WLC_{ox}/2}{C_L})\sqrt{\frac{\pi U C_L}{2\beta}}+\frac{W C_{gdo}}{C_L}\qty(V_H-V_L+V_T)
+        \qquad\qquad
+    \end{Equation}
+\end{BoxFormula}
+\begin{BoxFormula}[MOS开关在快开关下的误差电压]
+    快开关条件是
+    \begin{Equation}
+        U\gg \frac{\beta V_{HST}^2}{2C_L}
+    \end{Equation}
+    快开关下，误差电压可以表示为
+    \begin{Equation}
+        \qquad
+        V_{error}=\qty(\frac{W C_{gdo}+WLC_{ox}/2}{C_L})\qty(V_{HST}-\frac{\beta V_{HST}^2}{6UC_L})+\frac{W C_{gdo}}{C_L}\qty(V_H-V_L+V_T)
+        \qquad
+    \end{Equation}
+\end{BoxFormula}
+其中$V_{HST}$是一个定义量，其定义如下
+\begin{BoxDefinition}[$V_{HST}$][VHST]
+    $V_{HST}$定义为
+    \begin{Equation}
+        V_{HST}=V_H-V_S-V_T
+    \end{Equation}
+\end{BoxDefinition}
+现在，我们具体计算这样一种情况，$V_H=\SI{5}{V}$，$V_L=\SI{0}{V}$，$V_S=\SI{1}{V}$，$C_L=\SI{0.2}{pF}$
+\begin{itemize}
+    \item 慢开关情形：下降沿$t_{HL}=\SI{10.0}{ns}$，此时斜率满足$U=\SI{5.0e8}{V.s^{-1}}$。
+    \item 快开关情形：下降沿$t_{HL}=\SI{0.20}{ns}$，此时斜率满足$U=\SI{2.5e10}{V.s^{-1}}$。
+\end{itemize}
+在该计算中，请注意$V_T\neq V_{T0}=\SI{0.7}{V}$，我们需要考虑到$v_{BS}=-V_S=\SI{-1}{V}$的体效应影响并依据$V_{T}=V_{T0}+\qty(\sqrt{-2\phi_F-v_{BS}}-\sqrt{-2\phi_F})$计算得出正确的阈值电压为$V_T=\SI{0.887}{V}$。
+
+\xref{fig:电荷注入--时钟信号曲线}展示了$v_{in}$电平以及快开关和慢开关两种情况下对应的$v_{\phi}$曲线
+\begin{Figure}[电荷注入--时钟信号曲线]
+    \includegraphics[scale=0.6]{build/Chapter03A_03_0.fig.pdf}
+\end{Figure}
+
+\xref{fig:电荷注入--理论分析}是对\xref{fml:MOS开关在慢开关下的误差电压}和\xref{fml:MOS开关在快开关下的误差电压}的理论公式的可视化
+\begin{itemize}
+    \item 慢开关意味着$t_{HL}$很大或$U$很小，快开关意味着$t_{HL}$很小或$U$很大。
+    \item \xref{fig:电荷注入--理论分析}中，红虚线标定了$U=\beta V_{HST}^2/2C_L$的快慢开关界限，我们可以看出，给定的声称为“慢开关”和“快开关”参数确实分别符合“慢开关”和“快开关”的条件。
+    \item \xref{fig:斜率与误差电压}中可以看出，$V_{error}$随斜率$U$的增大和增大，越过分界线由慢开关变为快开关后，$V_{error}$将继续增大并最终趋于饱和。简而言之，跃变越快，误差电压$V_{error}$越大。
+    \item \xref{fig:斜率与误差电压}中，读出该例中慢开关下$V_{error}=\SI{0.01095}{V}$。
+    \item \xref{fig:斜率与误差电压}中，读出该例中快开关下$V_{error}=\SI{0.01969}{V}$。
+\end{itemize}
+
+\begin{Figure}[电荷注入--理论分析]
+    \begin{FigureSub}[斜率与下降沿时间]
+        \includegraphics[scale=0.8]{build/Chapter03A_04B.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[斜率与误差电压]
+        \includegraphics[scale=0.8]{build/Chapter03A_04A.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+\xref{fig:电荷注入--输出电压曲线}是仿真得到的快慢开关下$v_{out}$曲线，可以看出与理论预期的$V_{error}$基本相符。
+\begin{Figure}[电荷注入--输出电压曲线]
+    \includegraphics[scale=0.6]{build/Chapter03A_03_1.fig.pdf}
+\end{Figure}

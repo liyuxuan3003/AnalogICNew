@@ -286,7 +286,7 @@
     %该tcolorbox的标题格式取决于该环境调用时的四个参数
     %左侧：<值><族计数器>\label{<键>:<标题>}
     %右侧：<标题>
-    \newtcolorbox{#1}[4]{
+    \newtcolorbox{#1}[5]{
         arc=0.1mm,
         colframe=#2,
         colback=black!3!white,
@@ -295,9 +295,9 @@
         right=0.2cm,
         toptitle=0.05cm,
         bottomtitle=0.05cm,
-        title={##2\textnormal{##3\label{##1:##4}}\hfill ##4}}
+        title={##2\textnormal{##3\label{##1:##5}}\hfill ##4}}
     %定义一个名为“m<族环境名>”作为“<族环境名>”的可跨页版
-    \newtcolorbox{m#1}[4]{
+    \newtcolorbox{m#1}[5]{
         breakable,
         arc=0.1mm,
         colframe=#2,
@@ -307,7 +307,7 @@
         right=0.2cm,
         toptitle=0.05cm,
         bottomtitle=0.05cm,
-        title={##2\textnormal{##3\label{##1:##4}}\hfill ##4}}
+        title={##2\textnormal{##3\label{##1:##5}}\hfill ##4}}
 }%
 
 \labelboxstyle{boxdef}{gray!80!green!80!black}             %定义族 绿色
@@ -330,16 +330,16 @@
 \NewDocumentCommand{\labelboxgen}{mmmmm}
 {%
     \xrefcreate{#1}{#2}%                创建<键>:<值>标签解析对
-    \NewDocumentEnvironment{#5}{O{}s}%  创建<环境实例名>，带有可选参数[<标题>]和布尔参数<是否断页>
+    \NewDocumentEnvironment{#5}{O{}O{##1}s}%  创建<环境实例名>，带有可选参数[<标题>]和布尔参数<是否断页>
     {%
         \gdef\prefixeq{##1}%            将该环境的<标题>作为公式标签的自动前缀
         \gdef\proplast{#1}%             将该环境的<键>记录在宏中
         %调用族环境\begin{<环境名>}{<键>}{<值>}{<族计数器>}{<标题>}
-        \begin{\IfBooleanT{##2}{m}#3}{#1}{#2}{#4}{##1}%    
+        \begin{\IfBooleanT{##3}{m}#3}{#1}{#2}{#4}{##1}{##2}%    
             \setlength{\parskip}{6pt}%
     }%      %...
     {%      %...
-        \end{\IfBooleanT{##2}{m}#3}%
+        \end{\IfBooleanT{##3}{m}#3}%
     }%
 }%
 

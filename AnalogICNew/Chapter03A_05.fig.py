@@ -116,7 +116,7 @@ for id in range(graphNum):
         axes.set_ylim(-1e3,26e3)
         axes.yaxis.set_major_locator(ticker.MultipleLocator(5e3))
         axes.yaxis.set_major_formatter(lambda x, pos:"$"+"{:.0f}".format(x/1e3)+"$")
-        axes.set_ylabel(r"$r_{on}~(\si{k\ohm})$")
+        axes.set_ylabel(r"$r_{ON}~(\si{k\ohm})$")
         axes.legend(loc="upper right")
     plt.savefig(fileExport(id),bbox_inches ='tight')
 
