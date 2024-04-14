@@ -1,0 +1,27 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xSetX
+\xValDefine{xL}[-1.2]
+\xValDefine{xR}[+1.2]
+\xValPropor{xC}{xL}{xR}[0.75]
+
+\xSetY
+\xValDefine{yB}[-2]
+\xValDefine{yA}[+2]
+\xValMiddle{yC}{yA}{yB}
+
+\path (xC|-yC) node[pmos] (M1) {$M_1$};
+
+\draw (M1.D) to[short,-o,f_=$i_{OUT}$] (M1.D|-yB) node[below] {$v_{OUT}$};
+
+\draw (M1.S) to[short] (M1.S|-yA) node[vdd,anchor=north] {$V_{DD}$};
+
+\draw (M1.G) node[ocirc] {} node[left] {$V_{G}$};
+
+\xValBorder{xL}{xR}{yB}[-0.7]{yA}[+0.7]*
+
+\end{tikzpicture}
+\end{document}

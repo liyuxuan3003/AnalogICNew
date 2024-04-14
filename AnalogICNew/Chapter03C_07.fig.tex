@@ -1,0 +1,30 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xSetX
+\xValDefine{xL}[-2]
+\xValDefine{xR}[+2]
+\xValOffset{xO}{xR}[2]
+\xValMiddle{xC}{xL}{xR}
+
+\xSetY
+\xValDefine{yB}[0]
+\xValDefine{yA}[+1.5]
+
+\draw (xC|-yB) -- (xR|-yB);
+
+\draw (xO|-yA) node[right] {$v_{out}$} to[short,o-,f_=$i_{out}$] (xR|-yA);
+\draw (xR|-yA) to[cisource,l=$g_{ds}$] (xR|-yB);
+
+\draw (xC|-yB) node[ground] {};
+
+\path (xC|-yB) node[above right] {\tiny S} node[below right] {\tiny B,G};
+
+\path (xR|-yA) node[above] {\tiny D};
+
+\xValBorder{xL}[-0.8]{xO}[+1]{yB}[-0.9]{yA}[0.9]*
+
+\end{tikzpicture}
+\end{document}
