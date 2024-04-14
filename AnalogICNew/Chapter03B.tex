@@ -1,0 +1,70 @@
+\section{MOS二极管}
+本节将介绍MOS二极管。MOS二极管是指将MOS管的栅和漏短接后构成的二端器件，将其称为“二极管”是因为其特性与通常的PN结二极管有相似之处，都具备整流特性，不过这种相似性并不是研究的重点。MOS二极管有NMOS和PMOS两种类型，如\xref{fig:MOS二极管}所示。
+
+\begin{Figure}[MOS二极管]
+    \begin{FigureSub}[NMOS二极管]
+        \qquad
+        \includegraphics[scale=0.8]{build/Chapter03B_02.fig.pdf}
+        \qquad
+    \end{FigureSub}
+    \begin{FigureSub}[PMOS二极管]
+        \qquad
+        \includegraphics[scale=0.8]{build/Chapter03B_03.fig.pdf}
+        \qquad
+    \end{FigureSub}
+\end{Figure}
+以下我们均以NMOS二极管为例进行研究。
+
+第一步，分析MOS二极管的大信号特征，由于$v_{DS}=v_{GS}$，显然恒有$v_{DS}>v_{GS}-V_T$，故采用二极管接法的MOS管始终工作在饱和区。令饱和区方程中$i_D=i_{OUT}$和$v_{GS}=v_{OUT}$，得
+\begin{BoxFormula}[MOS二极管的大信号特性]
+    MOS二极管的大信号特性为
+    \begin{Equation}
+        i_{OUT}=\frac{\beta}{2}(v_{OUT}-V_T)^2(1+\lambda v_{OUT})
+    \end{Equation}
+\end{BoxFormula}
+\xref{fig:MOS二极管的大信号特性}展示了MOS二极管的大信号特性
+\begin{Figure}[MOS二极管的大信号特性]
+    \includegraphics[scale=0.6]{build/Chapter03B_01_0.fig.pdf}
+\end{Figure}
+
+第二步，分析MOS二极管的小信号特征，这主要就是其输出电阻$r_{out}=v_{out}/i_{out}$，由于源接地故$g_{bs}$可忽略，由于栅漏短接故跨导$g_{m}$现在实质上也和$g_{ds}$一样成为了电导，如\xref{fig:MOS二极管的小信号电路}
+
+\begin{Figure}[MOS二极管的小信号电路]
+    \includegraphics{build/Chapter03B_04.fig.pdf}
+\end{Figure}
+列出方程\setpeq{MOS二极管小信号}
+\begin{Equation}&[1]
+    i_{out}=g_mv_{gs}+g_{ds}v_{ds}
+\end{Equation}
+这里端电压可以表示为
+\begin{Equation}&[2]
+    \begin{pmatrix}
+        v_{gs}\\
+        v_{bs}\\
+        v_{ds}
+    \end{pmatrix}=
+    \begin{pmatrix}
+        v_{out}\\
+        0\\
+        v_{out}
+    \end{pmatrix}
+\end{Equation}
+将\xrefpeq{2}代入\xrefpeq{1}
+\begin{Equation}
+    i_{out}=g_mv_{out}+g_{ds}v_{out}
+\end{Equation}
+整理得到
+\begin{Equation}
+    i_{out}=(g_m+g_{ds})v_{out}
+\end{Equation}
+因此
+\begin{Equation}
+    r_{out}=\frac{v_{out}}{i_{out}}=(g_m+g_{ds})^{-1}
+\end{Equation}
+这一结果最为精辟的展示了MOS二极管“栅漏短接”使“跨导变为电导”的特性。
+\begin{BoxFormula}[MOS二极管的输出电阻]
+    MOS二极管的输出电阻为
+    \begin{Equation}
+        r_{out}=(g_m+g_{ds})^{-1}
+    \end{Equation}
+\end{BoxFormula}
