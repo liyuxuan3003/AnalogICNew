@@ -97,6 +97,7 @@ for id in range(graphNum):
     axes=plt.gca()
     axes.grid(linewidth=0.25)
     axes.tick_params(labeltop=True,labelright=True,top=True,right=True,direction="in",width=0.3)
+    axes.vlines(2.0,-10,+10,colors='gray',lw=0.8,ls='dashed')
     if id in [idIV,idVmid]:
         axes.set_xlim(-0.1,5.1)
         axes.xaxis.set_major_locator(ticker.MultipleLocator(0.5))
@@ -105,6 +106,7 @@ for id in range(graphNum):
             axes.set_ylim(-0.005e-3,0.085e-3)
             axes.yaxis.set_major_locator(ticker.MultipleLocator(0.01e-3))
             axes.yaxis.set_major_formatter(lambda x, pos:"$"+"{:.2f}".format(x/1e-3)+"$")
+            axes.text(2.1,0.075e-3,r"$v_{OUT}\geq 2V_{ON}$",ha="left",va="center")
             axes.set_ylabel(r"$i_{OUT}~(\si{mA})$")
         if id in [idVmid]:
             axes.set_ylim(-0.1,5.1)

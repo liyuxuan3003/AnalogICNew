@@ -1,0 +1,207 @@
+\section{MOS电流漏}
+
+\subsection{简单电流漏}
+本节将介绍MOS电流漏和MOS电流源，这种名称的区别取决于使用NMOS还是PMOS
+\begin{itemize}
+    \item 电流漏对应NMOS器件，其位于最下方，是电流“漏出”的地方。
+    \item 电流源对应PMOS器件，其位于最上方，是电流“源起”的地方。
+\end{itemize}
+\begin{Figure}[MOS电流漏或电流源]
+    \begin{FigureSub}[NMOS电流漏]
+        \qquad
+        \includegraphics[scale=0.8]{build/Chapter03C_03.fig.pdf}
+        \qquad
+    \end{FigureSub}
+    \begin{FigureSub}[PMOS电流源]
+        \qquad
+        \includegraphics[scale=0.8]{build/Chapter03C_04.fig.pdf}
+        \qquad
+    \end{FigureSub}
+\end{Figure}
+以下我们均以NMOS电流漏为例进行研究。
+
+简单来说，电流漏能在一定栅压$v_G=V_G$偏置下，在漏源两端间提供一个相对稳定的电流。当然，前提是MOS管必须处于饱和区，因此输出端电压最小为$v_{OUT}\geq V_G-V_T$。电流漏是最直观反映“饱和区MOS管相当于电流源\footnote{这里的“电流源”是通常意义上的电流源，与“电压源”相对，不应当与“PMOS电流源”混淆。}”的CMOS子电路，我们可以很容易的写出其方程
+\begin{BoxFormula}[MOS电流漏的大信号特性]
+    MOS电流漏的大信号特性为
+    \begin{Equation}
+        i_{OUT}=\frac{\beta}{2}(V_{G}-V_T)^2(1+\lambda v_{OUT})\qquad v_{OUT}\geq V_G-V_T
+    \end{Equation}
+\end{BoxFormula}
+
+\xref{fig:MOS电流漏的大信号特性}展示了MOS电流漏的大信号特性，取$V_{G}=\SI{1.7}{V}$，对应过驱电压$V_{ON}=\SI{1.0}{V}$
+\begin{Figure}[MOS电流漏的大信号特性]
+    \includegraphics[scale=0.6]{build/Chapter03C_01_0.fig.pdf}
+\end{Figure}
+若我们对比一下MOS二极管的\xref{fig:MOS二极管的大信号特性}和\xref{fig:MOS电流漏的大信号特性}，某种意义上，我们可以称
+\begin{itemize}
+    \item MOS二极管的特性曲线，代表了MOS的转移特性曲线。
+    \item MOS电流漏的特性曲线，代表了MOS的输出特性曲线。
+\end{itemize}
+
+\xref{fig:MOS电流漏的小信号电路}是MOS电流漏的小信号电路，由于栅接偏置且漏接地，其仅包含$g_{ds}$
+\begin{Figure}[MOS电流漏的小信号电路]
+    \includegraphics[scale=0.8]{build/Chapter03C_07.fig.pdf}
+\end{Figure}
+
+列出方程\setpeq{MOS电流漏小信号}
+\begin{Equation}&[1]
+    i_{out}=g_{ds}v_{ds}
+\end{Equation}
+这里端电压可以表示为
+\begin{Equation}&[2]
+    \begin{pmatrix}
+        v_{gs}\\
+        v_{bs}\\
+        v_{ds}
+    \end{pmatrix}=
+    \begin{pmatrix}
+        0\\
+        0\\
+        v_{out}
+    \end{pmatrix}
+\end{Equation}
+将\xrefpeq{2}代入\xrefpeq{1}
+\begin{Equation}
+    i_{out}=g_{ds}v_{out}
+\end{Equation}
+因此
+\begin{Equation}
+    r_{out}=\frac{v_{out}}{i_{out}}=g_{ds}^{-1}
+\end{Equation}
+这一结论是符合常识的，若不考虑沟道调制$g_{ds}=0$则$r_{out}=\infty$，构成理想电流源。
+
+\begin{BoxFormula}[MOS电流漏的输出电阻]
+    MOS电流漏的输出电阻为
+    \begin{Equation}
+        r_{out}=g_{ds}^{-1}
+    \end{Equation}
+\end{BoxFormula}
+
+
+
+\subsection{共源共栅电流漏}
+\xref{fig:NMOS电流漏}所示的简单电流漏存在诸多问题，从\xref{fig:MOS电流漏的大信号特性}中我们可以看出即便在$v_{OUT}\geq V_G-V_T$的饱和区，由于沟道调制，电流$i_{OUT}$仍明显随电压$v_{OUT}$增大而增大，或者，从\xref{fml:MOS电流漏的输出电阻}中亦可以看出简单电流漏的输出电阻$r_{out}$仅为$g_{ds}^{-1}$级数，这是远远不够的。由此可见，眼下电流漏的改进方向就是，如何增大输出电阻$r_{OUT}$的值？本小节的共源共栅电流漏将给出答案。
+\begin{Figure}[MOS共源共栅电流漏]
+    \includegraphics[scale=0.8]{build/Chapter03C_05.fig.pdf}
+\end{Figure}
+
+\xref{fig:MOS共源共栅电流漏}展示了共源共栅电流漏的结构，不必过分从组态的角度纠结这个结构为什么被称为“共源共栅”，只需要知道“共源共栅”往往与这样堆叠的MOS管联系起来即可。现在让我们考虑一下大信号的问题，这里我们不再列写大信号特性的表达式，这很复杂且毫无必要，而是将简单的思考一下这个电路是怎么工作的。\xref{subsec:简单电流漏}的经验告诉我们，若忽略沟道调制，在饱和区，$i_{OUT}$取决于过驱动电压$V_{ON}=V_G-V_{T}$，$i_{OUT}=\beta V_{ON}^2/2$。而在这里的共源共栅电流漏中，$M_1$和$M_2$串联，两者上的电流$i_{OUT}$相同，因此，两者的过驱电压必然是相等的
+\begin{Equation}
+    v_{GS1}=V_{ON}+V_{T}\qquad 
+    v_{GS2}=V_{ON}+V_{T}
+\end{Equation}
+
+由于$v_{GS1}=V_{G1}$，故$V_{G1}=V_{ON}+V_T$被确定。假如和之前一样，取$V_{ON}=\SI{1.0}{V}$并考虑到阈值电压$V_{T0}=\SI{0.7}{V}$，那么，我们就可以得到$V_{G1}=\SI{1.7}{V}$，和之前的$V_G=\SI{1.7}{V}$完全一样。\goodbreak
+
+现在的问题是：$M_2$的偏置$V_{G2}$应当取什么值？$M_1$如何保证其自身处于饱和区？这两个问题的共通基础问题是，显然输出节点$v_{D2}=v_{OUT}$，但中间节点$v_{D1}$的值该如何确定？唔，这是很难的问题。然而为了令$M_1$处于饱和区，我们可以确定至少应有$v_{D1}\geq V_{ON}$，而我们又知道$v_{GS2}=V_{G2}-v_{D1}$和$v_{GS2}=V_{ON}+V_T$，即得$V_{G2}\geq 2V_{ON}+V_T$。那如果我们令$M_1$恰好处于饱和区边缘，即有$V_{G2}=2V_{ON}+V_T$成立，这就得到$V_{G2}$可取的最小值是$V_{G2}=\SI{2.7}{V}$。
+
+现已知道$v_{D1}\geq V_{ON}$能令$M_1$饱和，那么$v_{D2}=v_{OUT}\geq 2V_{ON}$才能确保$M_2$也饱和。
+
+至此，我们稍稍总结一下已有的经验
+\begin{itemize}
+    \item 简单电流漏输出电压需满足$v_{OUT}\geq V_{ON}$。
+    \item 共源共栅电流漏及输出电压需满足$v_{OUT}\geq 2V_{ON}$，注意到$v_{OUT}$所需的最小值抬升了。
+    \item 共源共栅电流漏中$M_1$的偏置$V_{G1}=V_{ON}+V_T$，$V_{G1}$直接确定$V_{ON}$。
+    \item 共源共栅电流漏中$M_2$的偏置$V_{G2}\geq 2V_{ON}+V_T$，$V_{G2}$的最小值保证$M_1$饱和。
+\end{itemize}
+
+那么，共源共栅需要付出这么多的代价：更多的管子，更高的最低输出电压，更复杂的电路分析，其到底换来了什么补偿优势呢？如\xref{fig:MOS电流漏的大信号特性--电流特性}所示，相较\xref{fig:MOS电流漏的大信号特性}，可以看出共源共栅电流漏在饱和后，电流$i_{OUT}$几乎不会随电压$v_{OUT}$变化了！这实际是因为，共源共栅电流漏具有比简单电流漏大的多的输出电阻$r_{out}$，这一点我们稍后会证明。另外，如\xref{fig:MOS电流漏的大信号特性--漏极电压情况}所示，我们注意到中间节点$v_{D1}$是一个略小于$\SI{1.0}{V}$的值，但按理论分析$v_{D1}$应精确等于$\SI{1.0}{V}$，尽管仿真与理论分析相差不多，但这一误差是怎么来的呢？这是因为，$M_2$管的源未接地，$M_2$存在一定的体效应，其$V_T$实际比$V_{T0}=\SI{0.7}{V}$大，故$v_{D1}=V_{G2}-V_{ON}-V_T$必然是比我们所预期的$\SI{1.0}{V}$要小的。这一问题其实是相当重要的，由于$v_{D1}=\SI{1.0}{V}$是令$M_1$管饱和的下限，实际上按当前设计，$M_1$管工作在线性区。因此，若考虑体效应的影响，$M_2$管的偏置$V_{G2}$需要比$2V_{ON}+V_{T0}=\SI{2.7}{V}$更大一些，才能令$M_1$管饱和。这一问题稍后我们还会再一次遇到。
+\begin{Figure}[MOS电流漏的大信号特性]
+    \begin{FigureSub}[电流特性;MOS电流漏的大信号特性--电流特性]
+        \includegraphics[scale=0.6]{build/Chapter03C_02_0.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[漏极电压情况;MOS电流漏的大信号特性--漏极电压情况]
+        \includegraphics[scale=0.6]{build/Chapter03C_02_1.fig.pdf}
+    \end{FigureSub}
+\end{Figure}\goodbreak
+
+\xref{fig:MOS共源共栅电流漏的小信号电路}是MOS共源共栅电流漏的小信号电路，其中$v_{1}$是$M_1$管漏端电压
+\begin{Figure}[MOS共源共栅电流漏的小信号电路]
+    \includegraphics[scale=0.8]{build/Chapter03C_06.fig.pdf}
+\end{Figure}
+列出方程\setpeq{MOS共源共栅电流漏的小信号电路}
+\begin{Gather}
+    i_{out}=g_{ds1}v_{ds1}\xlabelpeq{1a} \\
+    i_{out}=g_{m2}v_{gs2}+g_{bs2}v_{bs2}+g_{ds2}v_{ds2}
+    \xlabelpeq{1b}
+\end{Gather}
+这里端电压可以表示为
+\begin{Equation}&[2]
+    \begin{pmatrix}
+        v_{gs1}&v_{gs2}\\
+        v_{bs1}&v_{bs2}\\
+        v_{ds1}&v_{ds2}
+    \end{pmatrix}=
+    \begin{pmatrix}
+        0&-v_1\\
+        0&-v_1\\
+        v_{1}&v_{out}-v_1
+    \end{pmatrix}
+\end{Equation}
+将\xrefpeq{2}代入\xrefpeq{1a}和\xrefpeq{1b}
+\begin{Gather}
+    i_{out}=g_{ds1}v_{1}\xlabelpeq{3a} \\
+    i_{out}=g_{m2}(-v_{1})+g_{bs2}(-v_{1})+g_{ds2}(v_{out}-v_1)
+    \xlabelpeq{3b}
+\end{Gather}
+就\xrefpeq{3b}整理得到
+\begin{Equation}&[4]
+    i_{out}=g_{ds2}v_{out}-(g_{m2}+g_{bs2}+g_{ds2})v_1
+\end{Equation}
+在\xrefpeq{4}中代入由\xrefpeq{3a}得到的$v_1=i_{out}g_{ds1}^{-1}$
+\begin{Equation}
+    i_{out}\qty[1+g_{ds1}^{-1}(g_{m2}+g_{bs2}+g_{ds2})]=g_{ds2}v_{out}
+\end{Equation}
+因此
+\begin{Equation}
+    r_{out}=\frac{v_{out}}{i_{out}}=g_{ds2}^{-1}\qty[1+g_{ds1}^{-1}(g_{m2}+g_{bs2}+g_{ds2})]
+\end{Equation}
+这一结果也可以由$r_{out}=g_{ds2}^{-1}\qty[1+g_{ds1}^{-1}(g_{m2}+g_{bs2}+g_{ds2})]$近似为$r_{out}=g_{ds1}^{-1}g_{ds2}^{-1}g_{m2}$，这是通过$g_{m2}\gg g_{bs2},g_{ds2}$以及$1$很小的假设完成的。若对比一下简单电流漏的$r_{out}=g_{ds}^{-1}$的输出电阻，我们可以看出，共源共栅电流漏中$M_2$将$M_1$的输出电阻$g_{ds1}^{-1}$放大了$g_{ds2}^{-1}g_{m2}$倍，这一倍数是很可观的，也因此，共源共栅电流漏具有比简单电流漏好的多的大信号特性。由此可以归纳出的一个普遍原理是：MOS管会放大其源端的电阻至原先的$g_{ds}^{-1}g_m$倍。事实上，这里即便将$M_2$源端从$M_1$（相当于$r=g_{ds1}^{-1}$）换成一个普通的电阻$r$，该放大原理同样是生效的。
+\begin{BoxFormula}[MOS共源共栅电流漏的输出电阻]
+    MOS共源共栅电流漏的输出电阻为
+    \begin{Equation}
+        r_{out}=g_{ds2}^{-1}\qty[1+g_{ds1}^{-1}(g_{m2}+g_{bs2}+g_{ds2})]
+    \end{Equation}
+    近似式为
+    \begin{Equation}
+        r_{out}=g_{ds1}^{-1}g_{ds2}^{-1}g_{m2}
+    \end{Equation}
+\end{BoxFormula}
+
+\subsection{MOS器件的偏置原理}
+在\xref{subsec:共源共栅电流漏}中，曾讨论过应如何确定$V_{G1},V_{G2}$的偏置，本小节会将这种偏置原理一般化。
+
+我们知道$v_{GS}$可以拆分为阈值电压$V_T$和过驱电压$V_{ON}$两部分
+\begin{Equation}
+    v_{GS}=V_{ON}+V_T
+\end{Equation}
+关于过驱电压$V_{ON}$，我们要认识到两点
+\begin{itemize}
+    \item 过驱电压$V_{ON}$是$v_{GS}$超过阈值电压的那一部分，有$V_{ON}=v_{GS}-V_T$成立。
+    \item 过驱电压$V_{ON}$是$v_{DS}$能令其工作在饱和区的最小电压。
+\end{itemize}
+现在，试想有两个工作在饱和区的MOS管$M_1,M_2$，它们的电流分别可以表示为
+\begin{Equation}
+    i_{D1}=\frac{1}{2}\beta_1V_{ON1}^2\qquad
+    i_{D2}=\frac{1}{2}\beta_2V_{ON2}^2
+\end{Equation}
+以$\beta=K'(W/L)$展开，假设两管类型一致具有相同的$K'$
+\begin{Equation}
+    i_{D1}=\frac{1}{2}K'(W_1/L_1)V_{ON1}^2\qquad
+    i_{D2}=\frac{1}{2}K'(W_2/L_2)V_{ON2}^2
+\end{Equation}
+若$M_1,M_2$管“串联”，即具有相同的沟道电流，满足$i_{D1}=i_{D2}$，则有
+\begin{BoxFormula}[串联MOS管的特性关系]
+    两个串联的MOS管，尺寸之比等于过驱电压平方之反比
+    \begin{Equation}
+        \frac{(W_1/L_1)}{(W_2/L_2)}=\frac{V_{ON2}^2}{V_{ON1}^2}
+    \end{Equation}
+\end{BoxFormula}
+若$M_1,M_2$管“并联”，即具有相同的栅源电压，假定$V_T$相同则等效于$V_{ON1}=V_{ON2}$，则有
+\begin{BoxFormula}[并联MOS管的特性关系]
+    两个并联的MOS管，尺寸之比等于沟道电流之比
+    \begin{Equation}
+        \frac{(W_1/L_1)}{(W_2/L_2)}=\frac{i_{D1}}{i_{D2}}
+    \end{Equation}
+\end{BoxFormula}
+请注意！上述“串联”和“并联”并不一定要求两个管子是物理的连接在一起，即便不是连接在一起，电压和电流也可以设置为相等。\xref{fml:串联MOS管的特性关系}和\xref{fml:并联MOS管的特性关系}是一组非常重要的设计原理。

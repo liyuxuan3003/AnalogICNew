@@ -115,12 +115,12 @@ plt.plot(d["Vout"],d["VD4"],c='r',label="$v_{D4}$")
 plt.plot(d["Vout"],d["VD2"],c='b',label="$v_{D2}$")
 
 plt.figure(idVSAT2)
-plt.plot(d["Vout"],d["VGT2"],c='g',label="$v_{GS2}-V_{T}$")
 plt.plot(d["Vout"],d["VDS2"],c='purple',label="$v_{DS2}$")
+plt.plot(d["Vout"],d["VGT2"],c='g',label="$v_{GS2}-V_{T}$")
 
 plt.figure(idVSAT4)
-plt.plot(d["Vout"],d["VGT4"],c='g',label="$v_{GS4}-V_{T}$")
 plt.plot(d["Vout"],d["VDS4"],c='purple',label="$v_{DS4}$")
+plt.plot(d["Vout"],d["VGT4"],c='g',label="$v_{GS4}-V_{T}$")
 
 for id in range(graphNum):
     plt.figure(id)

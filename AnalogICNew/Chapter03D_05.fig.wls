@@ -85,7 +85,7 @@ xvGlist
 ffK1={xperraprr}//.{Kx->xKx,VT->xVT,dVT->0};
 fig1=Plot[Evaluate@ffK1,{dKx,-5 10^-6,5 10^-6},PlotRange->{-0.17,0.17},PlotStyle->Black,
 FrameTicks->{xTicksProp[{-5,5,1},{2,1},u],xTicks[{-0.14999,0.15001,0.05},{3,2}]},
-Evaluate@xFigLabel["\\Delta K'~(\\si{uA\\cdot V^{-1}})","(i_O/i_I)-1"],
+Evaluate@xFigLabel["\\Delta K'~(\\si{uA\\cdot V^{-1}})","(i_{OUT}/i_{REF})-1"],
 Evaluate@xFigConfig]
 
 
@@ -93,13 +93,13 @@ ffV1=Table[{xperraprr}//.{Kx->xKx,VT->xVT,dKx->0},{vGS,xvGlist}];
 fig2=Plot[Evaluate@ffV1,{dVT,-0.01,0.01},PlotRange->{-0.17,0.17},
 FrameTicks->{xTicksProp[{-10,10,2},{2,0},m],xTicks[{-0.14999,0.15001,0.05},{3,2}]},
 PlotLegends->Placed[LineLegend[{
-	xLaTeX["i_I=\\SI{1}{uA}",0.7],
-	xLaTeX["i_I=\\SI{10}{uA}",0.7],
-	xLaTeX["i_I=\\SI{100}{uA}",0.7]},
+	xLaTeX["I_{REF}=\\SI{1}{uA}",0.7],
+	xLaTeX["I_{REF}=\\SI{10}{uA}",0.7],
+	xLaTeX["I_{REF}=\\SI{100}{uA}",0.7]},
 	LegendFunction->"Panel",LegendLayout -> {"Column",1},
 	LegendMargins->0.3,
 	LegendMarkerSize->{22,1}],{Left,Bottom}],
-Evaluate@xFigLabel["\\Delta V_T~(\\si{mV})","(i_O/i_I)-1"],
+Evaluate@xFigLabel["\\Delta V_T~(\\si{mV})","(i_{OUT}/i_{REF})-1"],
 Evaluate@xFigConfig]
 
 
@@ -107,13 +107,13 @@ ffD1=Table[{xperrvd}//.{lambda->xlambda,vDS2->(vDS1+dvDS)},{vDS1,xvGlist}];
 fig3=Plot[Evaluate@ffD1,{dvDS,-xVT,4},PlotRange->{-0.17,0.17},
 FrameTicks->{Join[xTicks[{0,5,1},{2,1}],xTicks[{-0.7,-0.7,1},{2,1}]],xTicks[{-0.14999,0.15001,0.05},{3,2}]},
 PlotLegends->Placed[LineLegend[{
-	xLaTeX["i_I=\\SI{1}{uA}",0.7],
-	xLaTeX["i_I=\\SI{10}{uA}",0.7],
-	xLaTeX["i_I=\\SI{100}{uA}",0.7]},
+	xLaTeX["I_{REF}=\\SI{1}{uA}",0.7],
+	xLaTeX["I_{REF}=\\SI{10}{uA}",0.7],
+	xLaTeX["I_{REF}=\\SI{100}{uA}",0.7]},
 	LegendFunction->"Panel",LegendLayout -> {"Column",1},
 	LegendMargins->0.3,
 	LegendMarkerSize->{22,1}],{Right,Bottom}],
-Evaluate@xFigLabel["v_{DS2}-v_{DS1}~(\\si{V})","(i_O/i_I)-1"],
+Evaluate@xFigLabel["v_{DS2}-v_{DS1}~(\\si{V})","(i_{OUT}/I_{REF})-1"],
 Evaluate@xFigConfig]
 
 

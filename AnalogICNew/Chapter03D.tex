@@ -1,0 +1,292 @@
+\section{MOS电流镜}
+
+\subsection{简单电流镜}
+电流镜是由\xref{sec:MOS二极管}中的MOS二极管和\xref{sec:MOS电流漏}中的MOS电流漏组合而成的简单应用，电流镜的用途是将参考电流$I_{REF}$复制到输出支路电流$i_{OUT}$上并期望$i_{OUT}$尽可能不随$v_{OUT}$变化，如\xref{fig:简单电流镜}所示。电流镜的工作原理可以直接用\xref{fml:并联MOS管的特性关系}解释：两个过驱电压相等且尺寸相同的MOS管具有相同的电流。不过为充分考虑二阶效应和失配的影响，这里重做一遍分析。
+
+\begin{Figure}[简单电流镜]
+    \includegraphics[scale=0.8]{build/Chapter03D_07.fig.pdf}
+\end{Figure}
+
+我们可以将电流比$i_O/I_{REF}$写作
+\begin{Equation}[电流镜的基本关系]
+    \frac{i_{OUT}}{I_{REF}}=\frac{K_2'(W_2/L_2)(v_{GS}-V_{T2})^2(1+\lambda v_{DS2})}{K_1'(W_1/L_1)(v_{GS}-V_{T1})^2(1+\lambda v_{DS1})}
+\end{Equation}
+假如$K_1'=K_2'$且$V_{T1}=V_{T2}$并忽略沟道调制，即有
+\begin{Equation}
+    \frac{i_{OUT}}{I_{REF}}=\frac{(W_2/L_2)}{(W_1/L_1)}
+\end{Equation}
+这就是电流镜的基本原理，$M_2$与$M_1$的尺寸比确定了$i_O/I_{REF}$的复制比
+\begin{BoxFormula}[MOS电流镜的大信号特性]
+    MOS电流镜的大信号特性为
+    \begin{Equation}
+        \frac{i_{OUT}}{I_{REF}}=\frac{(W_2/L_2)}{(W_1/L_1)}
+    \end{Equation}
+\end{BoxFormula}
+在电流镜中，过驱动电压$V_{ON}$是通过MOS二极管由参考电流$I_{REF}$确定的，通过\xref{fig:MOS二极管的大信号特性}或者\xref{fig:MOS电流漏的大信号特性}都可以看出：$V_{ON}=\SI{1.0}{V}$的过驱电压大致对应$\SI{0.06}{mA}$的电流。由于先前\xref{sec:MOS电流漏}的仿真都是按$V_{ON}=\SI{1.0}{V}$进行，为了保持$V_{ON}$的一致性以及确保$V_{ON}$是$\SI{1.0}{V}$这样的一个简单整数，这里的仿真取参考电流为$I_{REF}=\SI{0.06}{mA}$（而不是$\SI{0.05}{mA}$或$\SI{0.10}{mA}$的整数）。
+
+\xref{fig:简单电流镜的大信号特性}是对\xref{fig:简单电流镜}所示电路取$I_{REF}=\SI{0.6}{mA}$的仿真，其中，令$M_1,M_2$管的宽长比相等。
+
+解读仿真结果前，我们先阐释下为什么用这三张图像分析电流镜特性
+\begin{itemize}
+    \item \xref{fig:简单电流镜--电流特性}展示了$I_{REF}$和$i_{OUT}$随$v_{OUT}$的变化趋势，这直观反映了电流特性。
+    \item \xref{fig:简单电流镜--漏极电压}展示了各管的漏端电压$v_D$，这恰好覆盖了电流镜中所有节点。
+    \item \xref{fig:简单电流镜--M2管工作区分析}展示了非二极管接法（因为二极管接法的MOS管始终处于饱和区，无分析的必要）的MOS管的$v_{DS}$和$v_{GS}-V_T$，分别用紫线和绿线表示。若紫线高于绿线，则表明处于饱和区，这有助于我们掌握工作区的变化。更复杂的电流镜中这种图像不止一张。
+\end{itemize}
+之后，我们将总是用这三种图像分析电流镜的大信号特性。
+\begin{Figure}[简单电流镜的大信号特性]
+    \begin{FigureSub}[电流特性;简单电流镜--电流特性]
+        \includegraphics[scale=0.6]{build/Chapter03D_01_0.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[漏极电压;简单电流镜--漏极电压]
+        \includegraphics[scale=0.6]{build/Chapter03D_01_1.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.25cm}
+    \begin{FigureSub}[$M_2$管工作区分析;简单电流镜--M2管工作区分析]
+        \includegraphics[scale=0.6]{build/Chapter03D_01_2.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+\xref{fig:简单电流镜的大信号特性}中，我们注意到
+\begin{itemize}
+    \item 简单电流镜输出端$v_{out}$的最小电压$V_{\min}=V_{ON}=\SI{1}{V}$，该值恰好能使$M_2$饱和。
+    \item 简单电流镜和简单电流漏类似，其特性受到沟道调制效应的影响，并不是特别理想。我们知道，只有当$v_{DS2}=v_{DS1}$时才有$i_{OUT}=I_{REF}$。这里$v_{DS1}=V_{ON}+V_T=\SI{1.7}{V}$，而我们确实观察到$v_{DS2}=v_{OUT}=V_{ON}=\SI{1.0}{V}$取最小值时$i_{OUT}$是略小于$I_{REF}$的，只有当$v_{DS2}=v_{OUT}$增大到$\SI{1.7}{V}$时$i_{OUT}$才与$I_{REF}$线相交（电流相等不在$V_{\min}$时取）。
+    \item \xref{fig:简单电流镜--漏极电压} $v_{D1}$恒定为$\SI{1.7}{V}$是$V_{ON}+V_T$，$v_{D2}$就是$v_{OUT}$。
+\end{itemize}
+\begin{BoxFormula}[简单电流镜的最小输出电压]
+    简单电流镜的最小输出电压为
+    \begin{Equation}
+        V_{\min}=V_{ON}
+    \end{Equation}
+\end{BoxFormula}
+
+我们或许会关心电流镜在小信号下的输出电阻$r_{out}$是多少？不过，由于电流镜的左右两侧是完全独立的，电流镜的$r_{out}$就是其右侧电流漏的$r_{out}$，可直接引用\xref{fml:MOS电流漏的输出电阻}的结果。
+
+在改进简单电流镜前，我们还想就其讨论下各类非理想因素对电流镜工作的影响。
+
+\subsection{简单电流镜中的非理想因素}
+使电流镜偏离\xref{fml:MOS电流镜的大信号特性}的理想特性的影响因素，有以下三种
+\begin{enumerate}
+    \item 沟长调制，即考虑$\lambda$时$v_{DS1}\neq v_{DS2}$的影响。
+    \item 参数失配，即考虑两管具有不相同的阈值电压$V_{T}$和跨导增益$K'$。
+    \item 几何失配，即考虑两管具有偏离预设的宽长比$(W/L)$。
+\end{enumerate}
+我们主要对沟长调制和参数调制做定量分析，分析时，均假定$M_1,M_2$具有相同的宽长比。
+
+\subsubsection{沟长调制}
+分析沟长调制的影响，根据\xref{eq:电流镜的基本关系}
+\begin{Equation}
+    \frac{i_{OUT}}{I_{REF}}=\frac{1+\lambda v_{DS2}}{1+\lambda v_{DS1}}
+\end{Equation}
+整理如下
+\begin{BoxFormula}[电流镜受沟长调制的影响]
+    电流镜受沟长调制的影响可以表示为
+    \begin{Equation}
+        \frac{i_{OUT}}{I_{REF}}=\frac{1+\lambda v_{DS2}}{1+\lambda v_{DS1}}
+    \end{Equation}
+\end{BoxFormula}
+\xref{fig:沟长调制对电流镜的影响}展示了电流比误差$(i_{OUT}/I_{REF})-1$和漏极电压差$v_{DS2}-v_{DS1}$的关系，请注意，这仍然与$I_{REF}$有关，因为$I_{REF}$会决定$v_{GS1}$而$v_{GS1}=v_{DS1}$。从图像中我们可以看出
+\begin{itemize}
+    \item $I_{REF}$的影响很小，这是因为$\lambda$很小的缘故。换言之，电流镜因沟道调制造成的电流比误差$(i_{OUT}/I_{REF})-1$几乎只由电压差$v_{DS2}-v_{DS1}$决定，而与$v_{DS1}$即$I_{REF}$关系不大。
+    \item 电流比误差$(i_{OUT}/I_{REF})-1$随$v_{DS2}-v_{DS1}$的增大而增大。
+    \item 电压差$v_{DS2}-v_{DS1}$的下限是$-V_T$即$\SI{-0.7}{V}$，低于这个值后$M_2$将无法饱和。
+\end{itemize}
+\begin{Figure}[沟长调制对电流镜的影响]
+    \includegraphics[scale=0.8]{build/Chapter03D_05c.fig.pdf}
+\end{Figure}
+
+\subsubsection{参数失配}\setpeq{电流镜参数失配}
+分析参数失配的影响，根据\xref{eq:电流镜的基本关系}
+\begin{Equation}&[1]
+    \frac{i_{OUT}}{I_{REF}}=\frac{K_2'(v_{GS}-V_{T2})^2}{K_1'(v_{GS}-v_{T1})^2}
+\end{Equation}
+诚然，这个公式已经正确的表达了$K_1'\neq K_2'$以及$V_{T1}\neq V_{T2}$的影响了，但是我们期望这样一个公式：已知$K'$和$V_T$因工艺可能的波动范围，估测其对电流比误差的总影响。这就要求我们进行一些代换和近似。第一步要做的，是应用差分的方式重新表示$K_1',K_2'$以及$V_{T1},V_{T2}$
+\begin{Gather}
+    K_1'=K'-0.5\delt{K'}\xlabelpeq{2a}\\
+    K_2'=K'+0.5\delt{K'}\xlabelpeq{2b}\\
+    V_{T1}=V_T-0.5\delt{V_T}\xlabelpeq{2c}\\
+    V_{T2}=V_T+0.5\delt{V_T}\xlabelpeq{2d}
+\end{Gather}
+其中，$K',\delt{K'}$是$K_2,K_1$的均值和差，$V_T,\delt{V_T}$是$V_{T2},V_{T1}$的均值和差。作为估计，我们可以认为这里的$K',V_T$取相应默认参数，而$\delt{K}',\delt{V_T}$是波动范围，基于此考察电流比误差。
+
+将\xrefpeq{2a},\xrefpeq{2b},\xrefpeq{2c},\xrefpeq{2d}代入\xrefpeq{1}，得到
+\begin{Equation}
+    \frac{i_{OUT}}{I_{REF}}=\frac{(K'+0.5\delt K')(v_{GS}-V_T-0.5\delt{V_T})}{(K'-0.5\delt K')(v_{GS}-V_T+0.5\delt{V_T})}
+\end{Equation}
+提出$K'$和$v_{GS}-V_T$并约掉
+\begin{Equation}
+    \frac{i_{OUT}}{I_{REF}}=\frac{[1+0.5\delt{K'}/K'][1-0.5\delt V_T/(v_{GS}-V_T)]^2}{[1-0.5\delt{K'}/K'][1+0.5\delt V_T/(v_{GS}-V_T)]^2}
+\end{Equation}
+由于$1$后面的变量都很小，适用$1/(1-x)\approx 1+x$和$1/(1+x)\approx 1-x$的近似
+\begin{Equation}
+    \frac{i_{OUT}}{I_{REF}}=\qty[1+\frac{\delt{K'}}{2K'}]^2\qty[1-\frac{\delt{V_T}}{2(v_{GS}-V_T)}]^4
+\end{Equation}
+仅保留一阶项，我们知道$(1+x)^2=x^2+2x+1$和$(1+x)^4=x^4+4x^3+4x^2+1$
+\begin{Equation}
+    \frac{i_{OUT}}{I_{REF}}=1+\frac{\delt{K'}}{K'}-\frac{2\delt{V_T}}{v_{GS}-V_T}
+\end{Equation}
+\begin{BoxFormula}[电流镜受参数失配的影响]
+    电流镜受参数失配的影响可以表示为
+    \begin{Equation}
+        \frac{i_{OUT}}{I_{REF}}=1+\frac{\delt{K'}}{K'}-\frac{2\delt{V_T}}{v_{GS}-V_T}
+    \end{Equation}
+\end{BoxFormula}
+
+至此，如果已知$\delt{K'}$和$\delt{V_T}$的值，估算误差就变得很容易了。
+
+\begin{Figure}[参数失配对电流镜的影响]
+    \begin{FigureSub}[跨导增益失配]
+        \includegraphics[scale=0.8]{build/Chapter03D_05a.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[阈值电压失配]
+        \includegraphics[scale=0.8]{build/Chapter03D_05b.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+\xref{fig:参数失配对电流镜的影响}展示了参数失配的影响
+\begin{itemize}
+    \item 当$\delt{K}'$为正时，电流比误差为正，电流会偏大。
+    \item 当$\delt{V_T}$为正时，电流比误差为负，电流会偏小。
+    \item 当$\delt{V_T}$一定时，越大的参考电流$I_{REF}$意味着越大的误差。
+\end{itemize}
+
+\subsubsection{几何失配}
+关于几何失配，即宽长比的失配，更具体的分析需要考虑版图，不展开讨论。只需了解一个事实：对于$W,L$大于$\SI{10}{um}$的晶体管，几何失配的误差相较沟长调制和参数失配可以忽略。
+
+\subsection{共源共栅电流镜}
+共源共栅电流镜是对简单电流镜的改进，其输出侧 改用了共源共栅电流漏，电路如\xref{fig:共源共栅电流镜}所示。\goodbreak
+
+\begin{Figure}[共源共栅电流镜]
+    \includegraphics{build/Chapter03D_08.fig.pdf}
+\end{Figure}
+
+我们先来推定所有节点的电压$v_D$，这会最终给出输出电压$v_{OUT}$的最小值$V_{\min}$
+\begin{enumerate}
+    \item $M_1,M_2,M_3,M_4$栅源电压均为$v_{GS}=V_{ON}+V_T$。
+    \item $v_{D1}=V_{ON}+V_T$：$M_1$二极管连接，故$v_{DS1}=v_{GS1}=V_{ON}+V_T$，$v_{D1}=v_{DS1}$。
+    \item $v_{D3}=2V_{ON}+2V_T$：$M_3$二极管连接，故$v_{DS3}=v_{GS3}=V_{ON}+V_T$，$v_{D3}=v_{DS3}-v_{D1}$。
+    \item $v_{D2}=V_{ON}+V_T$：$M_4$满足$v_{GS4}=V_{ON}+V_T$，$v_{D2}=v_{D3}-v_{GS4}$。
+    \item $v_{D4}=2V_{ON}+V_T$：$M_4$饱和所需的最小$v_{DS4}=V_{ON}$，$v_{D4}=v_{D2}+v_{DS4}$。
+\end{enumerate}
+由此可见，应有$V_{\min}=2V_{ON}+V_T$，然而，这个$V_{\min}$值太高了。我们知道，共源共栅电流漏只需要$V_{\min}=2V_{ON}$，共源共栅电流镜明显浪费了一个阈值电压$V_T$，这是为什么呢？我们还记得，共源共栅电流漏中，$V_{G1}=V_{ON}+V_T$，$V_{G2}\geq 2V_{ON}+V_T$，这里的$V_{G1},V_{G2}$是由左侧二极管连接的MOS管提供，但我们注意到，这里$V_{G2}=v_{D3}=2V_{ON}+2V_T$，这就将$v_{D2}$钳至$v_{D2}=V_{ON}+V_T$，而$v_{D2}$所需的令$M_2$饱和的最低值是$v_{D2}=V_{ON}$，相应的，其上的$v_{D4}$需要的最低值也由$2V_{ON}$上升至$2V_{ON}+V_T$，这就是为何$V_{\min}$浪费了一个阈值$V_T$的原因。
+\begin{BoxFormula}[共源共栅电流镜的最小输出电压]
+    共源共栅电流镜的最小输出电压为
+    \begin{Equation}
+        V_{\min}=2V_{ON}+V_T
+    \end{Equation}
+\end{BoxFormula}
+因此，下一步的改进，就是要想办法将$v_{D3}=2V_{ON}+2V_T$减小至$v_{D3}=2V_{ON}+V_T$。
+
+\begin{Figure}[共源共栅电流镜的大信号特性]
+    \begin{FigureSub}[电流特性;共源共栅电流镜--电流特性]
+        \includegraphics[scale=0.6]{build/Chapter03D_02_0.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[漏极电压;共源共栅电流镜--漏极电压]
+        \includegraphics[scale=0.6]{build/Chapter03D_02_1.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.25cm}
+    \begin{FigureSub}[$M_2$管工作区分析;共源共栅电流镜--M2管工作区分析]
+        \includegraphics[scale=0.6]{build/Chapter03D_02_2.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[$M_4$管工作区分析;共源共栅电流镜--M4管工作区分析]
+        \includegraphics[scale=0.6]{build/Chapter03D_02_3.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+\xref{fig:共源共栅电流镜的大信号特性}展示了共源共栅电流镜的大信号特性
+\begin{itemize}
+    \item 共源共栅电流镜的最小电压$V_{\min}=2V_{ON}+V_T=\SI{2.7}{V}$，与理论相符。
+    \item 共源共栅电流镜在$v_{OUT}=V_{\min}$时$M_4$饱和，$M_2$饱和先于其发生。
+    \item 共源共栅电流镜的电流特性改善了很多，这是得益于共源共栅电流漏的高输出阻抗。
+\end{itemize}
+
+\subsection{高摆幅共源共栅电流镜--基础型}
+共源共栅电流镜的问题主要是$V_{\min}$过高，且理论上有一个阈值$V_T$的改进空间，这一小节提出的高摆幅共源共栅电流镜就试图解决这个问题，其电路如\xref{fig:高摆幅共源共栅电流镜--基础型}所示，相较\xref{fig:共源共栅电流镜}，其变化在于将$M_1,M_3$管分别置于两个独立的$I_{REF}$支路上，且将$M_3$的宽长比改为$1/4$
+\begin{itemize}
+    \item 按照\xref{fml:串联MOS管的特性关系}，尺寸之比（宽长比之比）等于过驱电压平方之反比。
+    \item $M_1$宽长比为$1/1$，设其有$V_{ON}$过驱电压，故$v_{GS1}=V_{ON}+V_T$。
+    \item $M_3$宽长比为$1/4$，则应有$2V_{ON}$过驱电压，故$v_{GS3}=2V_{ON}+V_T$。
+\end{itemize}
+现在，弄清$v_{GS3}$的变化后，我们推定所有节点的电压$v_D$
+\begin{enumerate}
+    \item $M_1,M_2,M_4$的$v_{GS}=V_{ON}+V_T$，$M_3$的$v_{GS}=2V_{ON}+V_T$。
+    \item $v_{D1}=V_{ON}+V_T$：$M_1$二极管连接，故$v_{DS1}=v_{GS1}=V_{ON}+V_T$，$v_{D1}=v_{DS1}$。
+    \item $v_{D3}=2V_{ON}+V_T$：$M_3$二极管连接，故$v_{DS3}=v_{GS3}=2V_{ON}+V_T$，$v_{D3}=v_{DS3}$。
+    \item $v_{D2}=V_{ON}$：$M_4$满足$v_{GS4}=V_{ON}+V_T$，$v_{D2}=v_{D3}-v_{GS4}$。
+    \item $v_{D4}=2V_{ON}$：$M_4$饱和所需的最小$v_{DS4}=V_{ON}$，$v_{D4}=v_{D2}+v_{DS4}$。
+\end{enumerate}
+\begin{Figure}[高摆幅共源共栅电流镜--基础型]
+    \includegraphics[scale=0.8]{build/Chapter03D_09.fig.pdf}
+\end{Figure}
+由此可见，高摆幅共源共栅电流镜实现高摆幅的思路，就是将$M_3$和$M_1$分离，通过调节$M_3$的尺寸使其具有能使$M_2$饱和所需的最小的$v_{D3}=2V_{ON}+V_T$，从而降低至$V_{\min}=2V_{ON}$。
+
+\begin{BoxFormula}[高摆幅共源共栅电流镜的最小输出电压]
+    高摆幅共源共栅电流镜的最小输出电压为
+    \begin{Equation}
+        V_{\min}=2V_{ON}
+    \end{Equation}
+\end{BoxFormula}
+
+\xref{fig:共源共栅电流镜的大信号特性}展示了高摆幅共源共栅电流镜--基础型的大信号特性
+\begin{itemize}
+    \item 最小输出电压$V_{\min}=2V_{ON}+V_T=\SI{2.0}{V}$，实现了高摆幅。
+    \item 最小输出电压$V_{\min}=2V_{ON}+V_T=\SI{2.0}{V}$的理论值似乎并不准确，理论上$v_{out}=V_{\min}$时$M_2,M_4$管应同时饱和，而实际上，$M_4$管饱和发生的稍早了些，$M_2$甚至根本没有饱和！该问题和\xref{subsec:共源共栅电流漏}分析共源共栅电流漏时遇到的问题是相同的，其本质是，高摆幅共源共栅卡了$M_2$的饱和边界，而体效应使$M_2$的$v_{D2}$比预期低了些，就落入了线性区。解决方案很简单，只要略再减小些$M_3$的宽长比（比如$1/4$至$1/5$）使$v_{D3}$稍大些即可。当然，这会稍微损失些摆幅，不过相较普通的共源共栅，这仍然是高摆幅的。
+    \item 电流特性出现了一些问题！注意到$i_{OUT}$变得略小于$I_{REF}$，这是因为$v_{DS1}\neq v_{DS2}$导致的沟道调制误差，\xref{fig:高摆幅共源共栅电流镜--基础型}中我们可以看到，$v_{DS1}=v_{D1}=V_{ON}+V_T$，$v_{DS2}=v_{D2}=V_{ON}$。
+\end{itemize}
+
+\begin{Figure}[高摆幅共源共栅电流镜--基础型的大信号特性]
+    \begin{FigureSub}[电流特性;高摆幅共源共栅电流镜--基础型--电流特性]
+        \includegraphics[scale=0.6]{build/Chapter03D_03_0.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[漏极电压;高摆幅共源共栅电流镜--基础型--漏极电压]
+        \includegraphics[scale=0.6]{build/Chapter03D_03_1.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.25cm}
+    \begin{FigureSub}[$M_2$管工作区分析;高摆幅共源共栅电流镜--基础型--M2管工作区分析]
+        \includegraphics[scale=0.6]{build/Chapter03D_03_2.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[$M_4$管工作区分析;高摆幅共源共栅电流镜--基础型--M4管工作区分析]
+        \includegraphics[scale=0.6]{build/Chapter03D_03_3.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+
+
+因此下一步的改进，就是要设法令$v_{DS1}=v_{DS2}$，保证电流镜复制的准确性。
+
+\subsection{高摆幅共源共栅电流镜--改进型}
+改进的高摆幅共源共栅电流镜如\xref{fig:高摆幅共源共栅电流镜--改进型}所示，相较原先的\xref{fig:高摆幅共源共栅电流镜--基础型}的电路，改进型又引入了一个晶体管$M_5$，置于$M_1$上方，且原先$M_1$是二极管连接的，其栅与漏短接的，而在现在的改进型中，其栅改与$M_5$的漏短接。同时，$M_5$的栅和$M_3,M_4$的栅相连（后两者原本就相连）。
+
+\begin{Figure}[高摆幅共源共栅电流镜--改进型]
+    \includegraphics[scale=0.8]{build/Chapter03D_10.fig.pdf}
+\end{Figure}
+
+现在，我们推定所有节点的电压$v_D$
+\begin{enumerate}
+    \item $M_1,M_2,M_4,M_5$的$v_{GS}=V_{ON}+V_T$，$M_3$的$v_{GS}=2V_{ON}+V_T$。
+    \item $v_{D3}=2V_{ON}+V_T$：$M_3$二极管连接，故$v_{DS3}=v_{GS3}=2V_{ON}+V_T$，$v_{D3}=v_{DS3}$。
+    \item $v_{D5}=V_{ON}+V_T$：$M_1$满足$v_{GS1}=V_{ON}+V_T$，$v_{D5}=v_{GS1}$。
+    \item $v_{D1}=V_{ON}$：$M_5$满足$v_{GS5}=V_{ON}+V_T$，$v_{D1}=v_{D3}-v_{GS5}$。
+    \item $v_{D2}=V_{ON}$：$M_4$满足$v_{GS4}=V_{ON}+V_T$，$v_{D2}=v_{D3}-v_{GS4}$。
+    \item $v_{D4}=2V_{ON}$：$M_4$饱和所需的最小$v_{DS4}=V_{ON}$，$v_{D4}=v_{D2}+v_{DS4}$。
+\end{enumerate}
+由此可见，$M_5$引入的目的，就是通过$v_{GS5}=V_{ON}+V_T$强令位于其源端的$v_{D1}=v_{D3}-v_{GS5}$变为$v_{D1}=V_{ON}$，这样就和$v_{D2}=V_{ON}$一致，实现了$v_{DS1}=v_{DS2}$，避免了因为沟道调制导致的$i_{OUT}\neq I_{REF}$的误差。\xref{fig:高摆幅共源共栅电流镜--改进型--电流特性}亦验证了改进后$i_{OUT}\neq I_{REF}$的问题确实得到了改善。
+
+\begin{Figure}[高摆幅共源共栅电流镜--改进型的大信号特性]
+    \begin{FigureSub}[电流特性;高摆幅共源共栅电流镜--改进型--电流特性]
+        \includegraphics[scale=0.6]{build/Chapter03D_04_0.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[漏极电压;高摆幅共源共栅电流镜--改进型--漏极电压]
+        \includegraphics[scale=0.6]{build/Chapter03D_04_1.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.25cm}
+    \begin{FigureSub}[$M_2$管工作区分析;高摆幅共源共栅电流镜--改进型--M2管工作区分析]
+        \includegraphics[scale=0.6]{build/Chapter03D_04_2.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[$M_4$管工作区分析;高摆幅共源共栅电流镜--改进型--M4管工作区分析]
+        \includegraphics[scale=0.6]{build/Chapter03D_04_3.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+在本节结尾，我们做一个总结，以梳理电流镜结构演进中到改善了什么性能。
+\begin{Tablex}[电流镜的特性总结]{lllX}
+<电流镜类型&$V_{min}$&是否输出电阻较大？&是否不受沟道调制影响？\\>
+简单&$V_{ON}$&否&否（$v_{D1}=V_{ON}+V_T, v_{D3}=v_{OUT}$）\\
+共源共栅&$2V_{ON}+V_T$&是&是（$v_{D1}=V_{ON}+V_T, v_{D3}=V_{ON}+V_T$）\\
+高摆幅共源共栅--基础型&$2V_{ON}$&是&否（$v_{D1}=V_{ON}+V_T, v_{D3}=V_{ON}$）\\
+高摆幅共源共栅--改进型&$2V_{ON}$&是&是（$v_{D1}=V_{ON}\hspace{2.5em}, v_{D3}=V_{ON}$）\\
+\end{Tablex}

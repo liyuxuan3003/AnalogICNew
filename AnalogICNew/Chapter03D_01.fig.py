@@ -103,9 +103,10 @@ plt.plot(d["Vout"],d["Iout"],c='k',label="$i_{OUT}$")
 plt.figure(idVD)
 plt.plot(d["Vout"],d["VD1"],c='b',label="$v_{D1}$",ls="dashed")
 plt.plot(d["Vout"],d["VD2"],c='b',label="$v_{D2}$")
+
 plt.figure(idVSAT2)
-plt.plot(d["Vout"],d["VGT2"],c='g',label="$v_{GS2}-V_{T}$")
 plt.plot(d["Vout"],d["VDS2"],c='purple',label="$v_{DS2}$")
+plt.plot(d["Vout"],d["VGT2"],c='g',label="$v_{GS2}-V_{T}$")
 
 for id in range(graphNum):
     plt.figure(id)
