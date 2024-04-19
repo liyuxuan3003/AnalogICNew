@@ -58,7 +58,13 @@
     \end{Equation}
 \end{BoxFormula}
 
-我们或许会关心电流镜在小信号下的输出电阻$r_{out}$是多少？不过，由于电流镜的左右两侧是完全独立的，电流镜的$r_{out}$就是其右侧电流漏的$r_{out}$，可直接引用\xref{fml:MOS电流漏的输出电阻}的结果。
+我们或许会关心电流镜在小信号下的输出电阻$r_{out}$是多少？不过，由于电流镜的左右两侧是相互独立的，电流镜的$r_{out}$就是其右侧电流漏的$r_{out}$，我们可直接引用\xref{fml:MOS电流漏的输出电阻}的结果。
+\begin{BoxFormula}[简单电流镜的输出电阻]
+    简单电流镜的输出电阻为
+    \begin{Equation}
+        r_{out}=g_{ds2}^{-1}
+    \end{Equation}
+\end{BoxFormula}
 
 在改进简单电流镜前，我们还想就其讨论下各类非理想因素对电流镜工作的影响。
 
@@ -197,13 +203,26 @@
     \item 共源共栅电流镜的电流特性改善了很多，这是得益于共源共栅电流漏的高输出阻抗。
 \end{itemize}
 
+类似的，共源共栅电流镜的$r_{out}$也完全等同于共源共栅电流漏，引用\xref{fml:MOS共源共栅电流漏的输出电阻}，请注意从电流漏到电流镜，下标发生了变化，原先电流漏的$M_1,M_2$对应的是这里电流镜的$M_2,M_4$。
+\begin{BoxFormula}[共源共栅电流镜的输出电阻]
+    共源共栅电流镜的输出电阻为
+    \begin{Equation}
+        r_{out}=g_{ds4}^{-1}\qty[1+g_{ds2}^{-1}(g_{m4}+g_{bs4}+g_{ds4})]
+    \end{Equation}
+\end{BoxFormula}
+
+
 \subsection{高摆幅共源共栅电流镜--基础型}
-共源共栅电流镜的问题主要是$V_{\min}$过高，且理论上有一个阈值$V_T$的改进空间，这一小节提出的高摆幅共源共栅电流镜就试图解决这个问题，其电路如\xref{fig:高摆幅共源共栅电流镜--基础型}所示，相较\xref{fig:共源共栅电流镜}，其变化在于将$M_1,M_3$管分别置于两个独立的$I_{REF}$支路上，且将$M_3$的宽长比改为$1/4$
+共源共栅电流镜的问题主要是$V_{\min}$过高，且理论上有一个阈值$V_T$的改进空间，这一小节提出的高摆幅共源共栅电流镜就试图解决这个问题，其电路如\xref{fig:高摆幅共源共栅电流镜--基础型}所示，相较\xref{fig:共源共栅电流镜}，其变化在于将$M_1,M_3$管分别置于两个独立的$I_{REF}$支路上，且将$M_3$的宽长比改为$1/4$，这导致
 \begin{itemize}
     \item 按照\xref{fml:串联MOS管的特性关系}，尺寸之比（宽长比之比）等于过驱电压平方之反比。
     \item $M_1$宽长比为$1/1$，设其有$V_{ON}$过驱电压，故$v_{GS1}=V_{ON}+V_T$。
     \item $M_3$宽长比为$1/4$，则应有$2V_{ON}$过驱电压，故$v_{GS3}=2V_{ON}+V_T$。
 \end{itemize}
+
+\begin{Figure}[高摆幅共源共栅电流镜--基础型]
+    \includegraphics[scale=0.8]{build/Chapter03D_09.fig.pdf}
+\end{Figure}
 现在，弄清$v_{GS3}$的变化后，我们推定所有节点的电压$v_D$
 \begin{enumerate}
     \item $M_1,M_2,M_4$的$v_{GS}=V_{ON}+V_T$，$M_3$的$v_{GS}=2V_{ON}+V_T$。
@@ -212,9 +231,7 @@
     \item $v_{D2}=V_{ON}$：$M_4$满足$v_{GS4}=V_{ON}+V_T$，$v_{D2}=v_{D3}-v_{GS4}$。
     \item $v_{D4}=2V_{ON}$：$M_4$饱和所需的最小$v_{DS4}=V_{ON}$，$v_{D4}=v_{D2}+v_{DS4}$。
 \end{enumerate}
-\begin{Figure}[高摆幅共源共栅电流镜--基础型]
-    \includegraphics[scale=0.8]{build/Chapter03D_09.fig.pdf}
-\end{Figure}
+
 由此可见，高摆幅共源共栅电流镜实现高摆幅的思路，就是将$M_3$和$M_1$分离，通过调节$M_3$的尺寸使其具有能使$M_2$饱和所需的最小的$v_{D3}=2V_{ON}+V_T$，从而降低至$V_{\min}=2V_{ON}$。
 
 \begin{BoxFormula}[高摆幅共源共栅电流镜的最小输出电压]
@@ -223,21 +240,13 @@
         V_{\min}=2V_{ON}
     \end{Equation}
 \end{BoxFormula}
-
-\xref{fig:共源共栅电流镜的大信号特性}展示了高摆幅共源共栅电流镜--基础型的大信号特性
-\begin{itemize}
-    \item 最小输出电压$V_{\min}=2V_{ON}+V_T=\SI{2.0}{V}$，实现了高摆幅。
-    \item 最小输出电压$V_{\min}=2V_{ON}+V_T=\SI{2.0}{V}$的理论值似乎并不准确，理论上$v_{out}=V_{\min}$时$M_2,M_4$管应同时饱和，而实际上，$M_4$管饱和发生的稍早了些，$M_2$甚至根本没有饱和！该问题和\xref{subsec:共源共栅电流漏}分析共源共栅电流漏时遇到的问题是相同的，其本质是，高摆幅共源共栅卡了$M_2$的饱和边界，而体效应使$M_2$的$v_{D2}$比预期低了些，就落入了线性区。解决方案很简单，只要略再减小些$M_3$的宽长比（比如$1/4$至$1/5$）使$v_{D3}$稍大些即可。当然，这会稍微损失些摆幅，不过相较普通的共源共栅，这仍然是高摆幅的。
-    \item 电流特性出现了一些问题！注意到$i_{OUT}$变得略小于$I_{REF}$，这是因为$v_{DS1}\neq v_{DS2}$导致的沟道调制误差，\xref{fig:高摆幅共源共栅电流镜--基础型}中我们可以看到，$v_{DS1}=v_{D1}=V_{ON}+V_T$，$v_{DS2}=v_{D2}=V_{ON}$。
-\end{itemize}
-
 \begin{Figure}[高摆幅共源共栅电流镜--基础型的大信号特性]
     \begin{FigureSub}[电流特性;高摆幅共源共栅电流镜--基础型--电流特性]
         \includegraphics[scale=0.6]{build/Chapter03D_03_0.fig.pdf}
     \end{FigureSub}
     \begin{FigureSub}[漏极电压;高摆幅共源共栅电流镜--基础型--漏极电压]
         \includegraphics[scale=0.6]{build/Chapter03D_03_1.fig.pdf}
-    \end{FigureSub}\\ \vspace{0.25cm}
+    \end{FigureSub}\\ \vspace{0.5cm}
     \begin{FigureSub}[$M_2$管工作区分析;高摆幅共源共栅电流镜--基础型--M2管工作区分析]
         \includegraphics[scale=0.6]{build/Chapter03D_03_2.fig.pdf}
     \end{FigureSub}
@@ -246,18 +255,25 @@
     \end{FigureSub}
 \end{Figure}
 
+\xref{fig:高摆幅共源共栅电流镜--基础型的大信号特性}展示了高摆幅共源共栅电流镜--基础型的大信号特性
+\begin{itemize}
+    \item 最小输出电压$V_{\min}=2V_{ON}=\SI{2.0}{V}$，实现了高摆幅。
+    \item 最小输出电压$V_{\min}=2V_{ON}=\SI{2.0}{V}$的理论值似乎并不是特别准确，理论上$v_{out}=V_{\min}$时$M_2,M_4$管应同时饱和，而实际上，$M_4$管饱和发生的稍早了些，$M_2$甚至根本没有饱和！该问题和\xref{subsec:共源共栅电流漏}分析共源共栅电流漏时遇到的问题是相同的，其本质是，高摆幅共源共栅卡了$M_2$的饱和边界，而体效应使$M_2$的$v_{D2}$比预期低了些，就落入了线性区。解决方案很简单，只要略再减小些$M_3$的宽长比（比如$1/4$至$1/5$）使$v_{D3}$稍大些即可。当然，这会稍微损失些摆幅，不过相较普通的共源共栅，这仍然是高摆幅的。
+    \item 电流特性出现了一些问题！注意到$i_{OUT}$变得略小于$I_{REF}$，这是因为$v_{DS1}\neq v_{DS2}$导致的沟道调制误差，\xref{fig:高摆幅共源共栅电流镜--基础型}中我们可以看到，$v_{DS1}=v_{D1}=V_{ON}+V_T$，$v_{DS2}=v_{D2}=V_{ON}$。
+    \item \xref{fig:高摆幅共源共栅电流镜--基础型--漏极电压}中，关注到蓝色实线和虚线不重合，即$v_{D1}\neq v_{D2}$。
+\end{itemize}
 
 
-因此下一步的改进，就是要设法令$v_{DS1}=v_{DS2}$，保证电流镜复制的准确性。
+因此下一步的改进，就是要设法令$v_{DS1}=v_{DS2}$，保证电流镜复制的准确性。\goodbreak
 
 \subsection{高摆幅共源共栅电流镜--改进型}
-改进的高摆幅共源共栅电流镜如\xref{fig:高摆幅共源共栅电流镜--改进型}所示，相较原先的\xref{fig:高摆幅共源共栅电流镜--基础型}的电路，改进型又引入了一个晶体管$M_5$，置于$M_1$上方，且原先$M_1$是二极管连接的，其栅与漏短接的，而在现在的改进型中，其栅改与$M_5$的漏短接。同时，$M_5$的栅和$M_3,M_4$的栅相连（后两者原本就相连）。
+改进的高摆幅共源共栅电流镜如\xref{fig:高摆幅共源共栅电流镜--改进型}所示，相较原先的\xref{fig:高摆幅共源共栅电流镜--基础型}的电路，改进型又引入了一个晶体管$M_5$，置于$M_1$上方，且原先$M_1$是二极管连接的，其栅与漏短接的，而在现在的改进型中，其栅改与$M_5$的漏短接。同时，$M_5$的栅和$M_3,M_4$的栅相连（后两者原本就相连）。\nopagebreak
 
 \begin{Figure}[高摆幅共源共栅电流镜--改进型]
     \includegraphics[scale=0.8]{build/Chapter03D_10.fig.pdf}
 \end{Figure}
 
-现在，我们推定所有节点的电压$v_D$
+现在\footnote{这里一个重要的变化是：注意到$v_{D1}$不再是一上来就能确定的，而是要在$v_{D5}$之后导出。}，我们推定所有节点的电压$v_D$
 \begin{enumerate}
     \item $M_1,M_2,M_4,M_5$的$v_{GS}=V_{ON}+V_T$，$M_3$的$v_{GS}=2V_{ON}+V_T$。
     \item $v_{D3}=2V_{ON}+V_T$：$M_3$二极管连接，故$v_{DS3}=v_{GS3}=2V_{ON}+V_T$，$v_{D3}=v_{DS3}$。
@@ -266,7 +282,14 @@
     \item $v_{D2}=V_{ON}$：$M_4$满足$v_{GS4}=V_{ON}+V_T$，$v_{D2}=v_{D3}-v_{GS4}$。
     \item $v_{D4}=2V_{ON}$：$M_4$饱和所需的最小$v_{DS4}=V_{ON}$，$v_{D4}=v_{D2}+v_{DS4}$。
 \end{enumerate}
-由此可见，$M_5$引入的目的，就是通过$v_{GS5}=V_{ON}+V_T$强令位于其源端的$v_{D1}=v_{D3}-v_{GS5}$变为$v_{D1}=V_{ON}$，这样就和$v_{D2}=V_{ON}$一致，实现了$v_{DS1}=v_{DS2}$，避免了因为沟道调制导致的$i_{OUT}\neq I_{REF}$的误差。\xref{fig:高摆幅共源共栅电流镜--改进型--电流特性}亦验证了改进后$i_{OUT}\neq I_{REF}$的问题确实得到了改善。
+
+由此可见，$M_5$引入的目的，就是通过$v_{GS5}=V_{ON}+V_T$强令位于其源端的$v_{D1}=v_{D3}-v_{GS5}$变为$v_{D1}=V_{ON}$，这样就和$v_{D2}=V_{ON}$一致，实现了$v_{DS1}=v_{DS2}$，避免了电流复制的误差。\vspace{2.5ex}
+
+\xref{fig:高摆幅共源共栅电流镜--改进型的大信号特性}展示了高摆幅共源共栅电流镜--改进型的大信号特性
+\begin{itemize}
+    \item 电流特性的问题在改进中确实被修复了，现在重新有$i_{OUT}=I_{REF}$成立了。
+    \item \xref{fig:高摆幅共源共栅电流镜--改进型--漏极电压}中，关注到蓝色实线和虚线重合，即$v_{D1}=v_{D2}$。
+\end{itemize}
 
 \begin{Figure}[高摆幅共源共栅电流镜--改进型的大信号特性]
     \begin{FigureSub}[电流特性;高摆幅共源共栅电流镜--改进型--电流特性]
@@ -282,11 +305,191 @@
         \includegraphics[scale=0.6]{build/Chapter03D_04_3.fig.pdf}
     \end{FigureSub}
 \end{Figure}
+
+\subsection{威尔逊电流镜--基础型}
+威尔逊电流镜是一种新的结构，它的电路可以从一个很有趣的问题引出：我们能否将简单电流镜反过来使用？如\xref{fig:简单电流镜能否逆向使用？}所示，关于电流镜能否反向工作，有以下两种不同的观点
+\begin{itemize}
+    \item 从直观上，显然不能！电流镜的复制是有方向的，怎么能将$i_{OUT}$复制给基准$I_{REF}$呢？
+    \item 从分析上，既然$M_1,M_2$管都具有相同的过驱电压，就应当具有相同的电流。
+\end{itemize}
+
+\begin{Figure}[简单电流镜能否逆向使用？]
+    \includegraphics[scale=0.8]{build/Chapter03D_15.fig.pdf}
+\end{Figure}
+
+当然，直觉是正确的，电流镜不可能反向工作。原因是在于过驱电压$V_{ON}$的约束问题，通常而言，$V_{ON}$是由基准电流$I_{REF}$定义的，但是在这个例子中，$V_{ON}$被$I_{REF}$定义的同时也会被$v_{OUT}-V_T$所确定，后者将会生效，而此时$v_{DS1}$会变化（或是减小进入线性区以缩减电流，或是急剧增大利用沟道调制抬升电流）以确保$M_1$恒定的电流$I_{REF}$能适应一个与之不匹配的过驱电压。若像\xref{fig:简单电流镜能否逆向使用？}这样反向使用电流镜，电流$i_{OUT}$只会按照MOS二极管的方式随着电压$v_{OUT}$变化，$M_1$和$I_{REF}$将完全不参与电路工作，这完全不符合电流镜的定义。
+
+但换一个角度来说，只要避免$V_{ON}$被$v_{OUT}$过约束，电流镜仍然是能正常工作的，如\xref{fig:威尔逊电流镜--基础型}所示的是威尔逊电流镜，相较\xref{fig:简单电流镜能否逆向使用？}，我们在$M_2$上方添加了一个$M_4$，栅连接到$M_1$的漏。
+
+\begin{Figure}[威尔逊电流镜--基础型]
+    \includegraphics[scale=0.8]{build/Chapter03D_12.fig.pdf}
+\end{Figure}
+
+现在，我们推定所有节点的电压$v_D$
+\begin{enumerate}
+    \item $M_1,M_2,M_4$的$v_{GS}=V_{ON}+V_T$
+    \item $v_{D2}=V_{ON}+V_T$。$M_2$二极管连接，故$v_{DS2}=v_{GS2}=V_{ON}+V_T$，$v_{D2}=v_{DS2}$。
+    \item $v_{D1}=2V_{ON}+2V_T$。$M_4$满足$v_{GS4}=V_{ON}+V_T$，$v_{D1}=v_{D2}+v_{GS4}$。
+    \item $v_{D4}=2V_{ON}+V_T$。$M_4$饱和所需的最小$v_{DS4}=V_{ON}$，$v_{D4}=v_{D2}+v_{DS4}$。
+\end{enumerate}
+由此可见，这里$M_4$的作用就是将$v_{OUT}$“屏蔽”在外面，避免其直接控制了$V_{ON}$。
+
+\xref{fig:威尔逊电流镜--基础型的大信号特性}展示了威尔逊电流镜--基础型的大信号特性
+\begin{itemize}
+    \item 最小输出电压$V_{\min}=2V_{ON}+V_T=\SI{2.7}{V}$，这和共源共栅一致。
+    \item 威尔逊电流镜的电流特性的整体变化趋势和简单电流镜或共源共栅电流镜不太一样，后两者的电流从$v_{OUT}=0$就开始增加，威尔逊电流镜在$v_{OUT}$大于一定值后才开始增加。
+    \item 威尔逊电流镜的电流特性存在$i_{OUT}\neq I_{REF}$的问题，且明显比基础型的高摆幅共源共栅电流镜的问题要严重，这是因为威尔逊电流镜中$v_{DS}$的偏差更大，注意到
+    \begin{itemize}
+        \item 基础型高摆幅共源共栅电流镜：$v_{DS1}=V_{ON}+V_T, v_{DS2}=V_{ON}$，偏差为$V_T$
+        \item 基础型威尔逊电流镜：$v_{DS1}=2V_{ON}+2V_T, v_{DS2}=V_{ON}+V_T$，偏差增至$V_{ON}+V_T$ 
+    \end{itemize}
+    \item 威尔逊电流镜的电流特性呈现出相当大的输出电阻，我们稍后就会证明，威尔逊电流镜的$r_{out}$和共源共栅电流镜的$r_{out}$均有$g_mg_{ds}^{-2}$的级数，考虑到威尔逊电流镜只需要三个晶体管就可以构成（作为对比，共源共栅电流镜需要四个），这是一个相当不错的成就。
+    \item $M_4$管在$v_{OUT}=V_{\min}$时饱和，$M_1$管则一直是饱和的（当$v_{OUT}$很小时会截止）。
+    \item $M_1$的漏端电压$v_{D1}$在$v_{OUT}$较小时会趋于无穷，无需担心，任何实际的电流源的恒流特性都无法支撑无穷大的电压，最终$v_{D1}$是不可能超过电源电压$V_{DD}$的限制的。
+    \item \xref{fig:高摆幅共源共栅电流镜--基础型--漏极电压}中，关注到蓝色实线和虚线不重合，即$v_{D1}\neq v_{D2}$。
+\end{itemize}
+
+\begin{Figure}[威尔逊电流镜--基础型的大信号特性]
+    \begin{FigureSub}[电流特性;威尔逊电流镜--基础型--电流特性]
+        \includegraphics[scale=0.6]{build/Chapter03D_06_0.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[漏极电压;威尔逊电流镜--基础型--漏极电压]
+        \includegraphics[scale=0.6]{build/Chapter03D_06_1.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.25cm}
+    \begin{FigureSub}[$M_1$管工作区分析;威尔逊电流镜--基础型--M2管工作区分析]
+        \includegraphics[scale=0.6]{build/Chapter03D_06_2.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[$M_4$管工作区分析;威尔逊电流镜--基础型--M4管工作区分析]
+        \includegraphics[scale=0.6]{build/Chapter03D_06_3.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+因此，威尔逊电流镜下一步的改进方向，同样是解决$v_{DS1}\neq v_{DS2}$的问题。
+
+在此之前，我们有必要先仔细分析一下威尔逊电流镜的输出电阻$r_{out}$。与简单电流镜和共源共栅电流镜的$r_{out}$就是其右侧电流漏的$r_{out}$不同，威尔逊电流镜的左右两侧是相互关联的，更确切说，威尔逊电流镜左侧的$v_{D1}$并不是一个不随$v_{OUT}$变化的量，这就导致$M_1$势必会影响$r_{out}$的表达式。因此，绘制威尔逊电流镜完整的小信号电路对于其$r_{out}$的计算是必须的。\goodbreak
+
+\xref{fig:威尔逊电流镜的小信号电路}是威尔逊电流镜的小信号电路，$M_1,M_2$均不需要考虑体效应。\setpeq{威尔逊电流镜的小信号电路}\nopagebreak
+\begin{Figure}[威尔逊电流镜的小信号电路]
+    \includegraphics[scale=0.8]{build/Chapter03D_14.fig.pdf}
+\end{Figure}
+
+列出方程，请注意，由于$I_{REF}$是恒定的，因此$M_1$管上通过的总小信号电流必然为零
+\begin{Gather}
+    i_{out}=g_{m4}v_{gs4}+g_{bs4}v_{bs4}+g_{ds4}v_{ds4}\xlabelpeq{1} \\
+    i_{out}=g_{m2}v_{gs2}+g_{ds2}v_{ds2}\xlabelpeq{2} \\
+    0=g_{m1}v_{gs1}+g_{ds1}v_{ds1}\xlabelpeq{3}
+\end{Gather}
+
+
+这里端电压可以表示为
+\begin{Equation}&[4]
+    \begin{pmatrix}
+        v_{gs1}&v_{gs2}&v_{gs4}\\
+        v_{bs1}&v_{bs2}&v_{bs4}\\
+        v_{ds1}&v_{ds2}&v_{ds4}\\
+    \end{pmatrix}=
+    \begin{pmatrix}
+        v_2&v_2&v_1\\
+        0&0&-v_2\\
+        v_1&v_2&v_{out}-v_2\\
+    \end{pmatrix}
+\end{Equation}
+将\xrefpeq{4}代入\xrefpeq{1}，\xrefpeq{2}，\xrefpeq{3}
+\begin{Gather}
+    i_{out}=g_{m4}v_{1}+g_{bs4}(-v_2)+g_{ds4}(v_{out}-v_2)\xlabelpeq{5} \\
+    i_{out}=g_{m2}v_{2}+g_{ds2}v_{2}\xlabelpeq{6} \\
+    0=g_{m1}v_{2}+g_{ds1}v_{1}\xlabelpeq{7}
+\end{Gather}
+
+从\xrefpeq{6}中容易定出
+\begin{Equation}&[8]
+    v_2=i_{out}(g_{m2}+g_{ds2})^{-1}
+\end{Equation}
+从\xrefpeq{7}中结合\xrefpeq{8}中容易定出
+\begin{Equation}&[9]
+    v_1=-i_{out}g_{m1}g_{ds1}^{-1}(g_{m2}+g_{ds2})^{-1}
+\end{Equation}
+将\xrefpeq{5}展开整理得到
+\begin{Equation}&[10]
+    i_{out}=g_{m4}v_1-(g_{bs4}+g_{ds4})v_2+g_{ds4}v_{out}
+\end{Equation}
+将\xrefpeq{8}和\xrefpeq{9}有关$v_1,v_2$的表达式代入\xrefpeq{10}
+\begin{Equation}&[11]
+    \qquad\qquad
+    i_{out}\qty[1+g_{m1}g_{m4}g_{ds1}^{-1}(g_{m2}+g_{ds2})^{-1}+(g_{bs4}+g_{ds4})(g_{m2}+g_{ds2})^{-1}]=g_{ds4}v_{out}
+    \qquad\qquad
+\end{Equation}
+这就得到
+\begin{Equation}&[12]
+    \qquad
+    r_{out}=\frac{v_{out}}{i_{out}}=g_{ds4}^{-1}\qty[1+g_{m1}g_{m4}g_{ds1}^{-1}(g_{m2}+g_{ds2})^{-1}+(g_{bs4}+g_{ds4})(g_{m2}+g_{ds2})^{-1}]
+    \qquad
+\end{Equation}
+就方括号内的项做一些整理
+\begin{Equation}&[13]
+    r_{out}=g_{ds4}^{-1}\qty[1+(g_{m1}g_{m4}g_{ds1}^{-1}+g_{bs4}+g_{ds4})(g_{m2}+g_{ds2})^{-1}]
+\end{Equation}
+
+\begin{BoxFormula}[威尔逊电流镜的输出电阻]
+    威尔逊电流镜的输出电阻为
+    \begin{Equation}
+        r_{out}=g_{ds4}^{-1}\qty[1+(g_{m1}g_{m4}g_{ds1}^{-1}+g_{bs4}+g_{ds4})(g_{m2}+g_{ds2})^{-1}]
+    \end{Equation}
+\end{BoxFormula}
+
+将结果整理如下
+若忽略些不重要的项，这里$r_{out}$可以近似为$r_{out}=g_{m1}^{\vphantom{-1}}g_{m2}^{-1}g_{m4}^{\vphantom{-1}}g_{ds1}^{-1}g_{ds4}^{-1}$，这表明，威尔逊电流镜具有和共源共栅电流镜一样的$r_{out}=g_{m}g_{ds}^{-2}$量级的输出电阻，验证了分析\xref{fig:威尔逊电流镜--基础型的大信号特性}时的说法。
+
+\subsection{威尔逊电流镜--改进型}
+威尔逊电流镜的改进方向就是解决$v_{DS1}\neq v_{DS2}$，新增了一个$M_3$管，如\xref{fig:威尔逊电流镜--改进型}所示。有趣的是，这看上去很像\xref{fig:共源共栅电流镜}的共源共栅电流镜，只不过$M_1,M_2$的接法发生了互换
+
+\begin{Figure}[威尔逊电流镜--改进型]
+    \includegraphics[scale=0.8]{build/Chapter03D_13.fig.pdf}
+\end{Figure}
+
+现在，我们推定所有节点的电压
+\begin{enumerate}
+    \item $M_1,M_2,M_3,M_4$的$v_{GS}=V_{ON}+V_T$
+    \item $v_{D2}=V_{ON}+V_T$。$M_2$二极管连接，故$v_{DS2}=v_{GS2}=V_{ON}+V_T$，$v_{D2}=v_{DS2}$。
+    \item $v_{D3}=2V_{ON}+2V_T$。$M_4$满足$v_{GS4}=V_{ON}+V_T$，$v_{D3}=v_{D2}+v_{GS4}$。
+    \item $v_{D1}=V_{ON}+V_T$。$M_3$满足$v_{GS3}=V_{ON}+V_T$，$v_{D1}=v_{D3}-v_{GS3}$。
+    \item $v_{D4}=2V_{ON}+V_T$。$M_4$饱和所需的最小$v_{DS4}=V_{ON}$，$v_{D4}=v_{D2}+v_{DS4}$。
+\end{enumerate}
+由此可见，$M_3$的引入为$M_1$的漏端$v_{D1}$削弱了$V_{ON}+V_T$的电压，从而使$v_{D1}=v_{D2}$。
+
+\xref{fig:威尔逊电流镜--基础型的大信号特性}展示了威尔逊电流镜--基础型的大信号特性
+\begin{itemize}
+    \item 注意到改进后$i_{OUT}=I_{REF}$，电流复制的误差随着$v_{DS1}=v_{DS2}$得到解决。
+    \item 注意到$V_{\min}$仍为$2V_{ON}+V_T$，这说明改进并未优化摆幅问题。
+    \item \xref{fig:高摆幅共源共栅电流镜--改进型--漏极电压}中，关注到蓝色实线和虚线重合，即$v_{D1}=v_{D2}$。
+\end{itemize}
+
+\begin{Figure}[威尔逊电流镜--改进型的大信号特性]
+    \begin{FigureSub}[电流特性;威尔逊电流镜--改进型--电流特性]
+        \includegraphics[scale=0.6]{build/Chapter03D_11_0.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[漏极电压;威尔逊电流镜--改进型--漏极电压]
+        \includegraphics[scale=0.6]{build/Chapter03D_11_1.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.25cm}
+    \begin{FigureSub}[$M_1$管工作区分析;威尔逊电流镜--改进型--M2管工作区分析]
+        \includegraphics[scale=0.6]{build/Chapter03D_11_2.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[$M_4$管工作区分析;威尔逊电流镜--改进型--M4管工作区分析]
+        \includegraphics[scale=0.6]{build/Chapter03D_11_3.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+
+
+\subsection{关于电流镜的总结}
 在本节结尾，我们做一个总结，以梳理电流镜结构演进中到改善了什么性能。
-\begin{Tablex}[电流镜的特性总结]{lllX}
-<电流镜类型&$V_{min}$&是否输出电阻较大？&是否不受沟道调制影响？\\>
-简单&$V_{ON}$&否&否（$v_{D1}=V_{ON}+V_T, v_{D3}=v_{OUT}$）\\
-共源共栅&$2V_{ON}+V_T$&是&是（$v_{D1}=V_{ON}+V_T, v_{D3}=V_{ON}+V_T$）\\
-高摆幅共源共栅--基础型&$2V_{ON}$&是&否（$v_{D1}=V_{ON}+V_T, v_{D3}=V_{ON}$）\\
-高摆幅共源共栅--改进型&$2V_{ON}$&是&是（$v_{D1}=V_{ON}\hspace{2.5em}, v_{D3}=V_{ON}$）\\
+
+\begin{Tablex}[电流镜的特性总结]{Xrllll}
+    <电流镜类型&晶体管数&$V_{\min}$&$r_{out}$&$v_{D1}$&$v_{D2}$\\>
+    简单电流镜&$2$&$V_{ON}$&$g_{ds}^{-1}$&$V_{ON}+V_T$&$V_{ON}+v_{OUT}$\\
+    共源共栅电流镜&$4$&$2V_{ON}+V_T$&$g_{ds}^{-2}g_m^{\vphantom{-1}}$&$V_{ON}+V_T$&$V_{ON}+V_T$\\
+    高摆幅共源共栅电流镜--基础型&$4$&$2V_{ON}$&$g_{ds}^{-2}g_m^{\vphantom{-1}}$&$V_{ON}+V_T$&$V_{ON}$\\
+    高摆幅共源共栅电流镜--改进型&$4$&$2V_{ON}$&$g_{ds}^{-2}g_m^{\vphantom{-1}}$&$V_{ON}+V_T$&$V_{ON}$\\
+    威尔逊电流镜--基础型&$3$&$2V_{ON}+V_T$&$g_{ds}^{-2}g_m^{\vphantom{-1}}$&$2V_{ON}+2V_T$&$V_{ON}+V_T$\\
+    威尔逊电流镜--改进型（$r_{out}$未验证）&$4$&$2V_{ON}+V_T$&$g_{ds}^{-2}g_m^{\vphantom{-1}}$&$V_{ON}+V_T$&$V_{ON}+V_T$\\
 \end{Tablex}

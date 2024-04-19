@@ -1,0 +1,66 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xSetX
+\xValDefine{xCa}[-3]
+\xValDefine{xCb}[+3]
+
+\xValOffset{xLa}{xCa}[-2]
+\xValOffset{xRa}{xCa}[+2]
+
+\xValOffset{xLb}{xCb}[-2]
+\xValOffset{xRb}{xCb}[+2]
+\xValOffset{xOb}{xRb}[+2]
+
+\xSetY
+\xValDefine{yBx}[-0.3]
+\xValDefine{yAx}[+0.3]
+\xValOffset{yB}{yBx}[-1.5]
+\xValOffset{yA}{yAx}[+1.5]
+
+\draw (xLa|-yB) -- (xRa|-yB);
+\draw (xLa|-yBx) -- (xRa|-yBx);
+
+\draw (xLb|-yA) -- (xRb|-yA);
+\draw (xLb|-yB) -- (xRb|-yB);
+\draw (xLb|-yAx) -- (xRb|-yAx);
+\draw (xLb|-yBx) -- (xRb|-yBx);
+
+\draw (xOb|-yA) node[right] {$v_{out}$} to[short,o-,f_=$i_{out}$] (xRb|-yA) node[circ] {};
+\draw (xLa|-yBx) to[short,*-o] (xLa|-yA);
+
+\draw (xCb|-yAx) to[short,*-*] (xCb|-yBx);
+
+\draw (xLb|-yA) to[cisource,l=$g_{m4}$] (xLb|-yAx);
+\draw (xCb|-yA) to[cisource,l=$g_{bs4}$] (xCb|-yAx);
+\draw (xRb|-yA) to[cisource,l=$g_{ds4}$] (xRb|-yAx);
+
+\draw (xLb|-yBx) to[cisource,l=$g_{m2}$] (xLb|-yB);
+\draw (xRb|-yBx) to[cisource,l=$g_{ds2}$] (xRb|-yB);
+
+\draw (xRa|-yBx) to[cisource,l=$g_{m1}$] (xRa|-yB);
+\draw (xLa|-yBx) to[cisource,l=$g_{ds1}$] (xLa|-yB);
+
+\draw (xLa|-yB) node[circ] {} node[ground] {};
+\draw (xRb|-yB) node[circ] {} node[ground] {};
+
+
+
+\path (xLa|-yBx) node[above right] {\tiny D$_1$,G$_4$};
+\path (xLa|-yB) node[above right] {\tiny S$_1$};
+
+\path (xRb|-yA) node[above left] {\tiny D$_4$};
+\path (xCb|-yAx) node[above right] {\tiny S$_4$};
+\path (xCb|-yBx) node[above right] {\tiny D$_2$,G$_2$,G$_1$};
+\path (xRb|-yB) node[above left] {\tiny S$_2$};
+\path (xRb|-yB) node[below left] {\tiny B};
+
+\path (xLb|-yBx) node[left] {$v_2$};
+\path (xRa|-yBx) node[right] {$v_1$};
+
+\xValBorder{xLa}[-1]{xOb}[+1]{yB}[-0.9]{yA}[0.9]*
+
+\end{tikzpicture}
+\end{document}

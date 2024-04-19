@@ -26,7 +26,7 @@ def SpiceWave(rdat,wave):
     return rdat.get_trace(wave).get_wave(0)
 
 folder="./build"
-filename="Chapter03D_06"
+filename="Chapter03E_01"
 
 fileGhost=os.path.join(folder,filename+".fig.pdf")
 fileASC=filename+".fig.asc"
@@ -63,18 +63,13 @@ runner=SimRunner(output_folder=folder,simulator=LTspice)
 netlist=SpiceEditor(fileASC)
 netlist.add_instruction(xNMOS)
 netlist.add_instruction(xPMOS)
-netlist.set_component_value("Vout","0")
-netlist.set_component_value("IREF","0.06m")
+netlist.set_component_value("VDD","0")
 netlist.set_element_model("M1","xNMOS W=0.8u L=0.8u")
-netlist.set_element_model("M2","xNMOS W=0.8u L=0.8u")
-netlist.set_element_model("M4","xNMOS W=0.8u L=0.8u")
-netlist.add_instruction(r".dc Vout 0 5 0.01")
+netlist.set_component_value("R1","100k")
+netlist.add_instruction(r".dc VDD 0 8 0.01")
 
-graphNum=4
-idIV=0
-idVD=1
-idVSAT1=2
-idVSAT4=3
+graphNum=1
+idVx=0
 
 for i in range(graphNum):
     plt.figure(i,figsize=(5,5*0.618))
@@ -90,63 +85,18 @@ d={}
 
 nl=copy.deepcopy(netlist)
 rdat=SpiceRun(nl)
-d["Vout"]=SpiceWave(rdat,"Vout")
-d["Iout"]=SpiceWave(rdat,"Id(M2)")
-d["Iref"]=SpiceWave(rdat,"Id(M1)")
-d["VD1"]=SpiceWave(rdat,"V(VD1)")
-d["VD2"]=SpiceWave(rdat,"V(VD2)")
-d["VD4"]=SpiceWave(rdat,"V(VD4)")
-d["VGT1"]=d["VD2"]-xVT0
-d["VDS1"]=d["VD1"]
-d["VGT4"]=d["VD1"]-d["VD2"]-xVT(d["VD2"])
-d["VDS4"]=d["VD4"]-d["VD2"]
+d["VDD"]=SpiceWave(rdat,"V(VDD)")
+d["VREF"]=SpiceWave(rdat,"V(VREF)")
 
-plt.figure(idIV)
-plt.plot(d["Vout"],d["Iref"],c='r',ls='dashed',lw='0.75',label="$I_{REF}$")
-plt.plot(d["Vout"],d["Iout"],c='k',label="$i_{OUT}$")
-
-plt.figure(idVD)
-plt.plot([],[],label="~",ls="")
-plt.plot(d["Vout"],d["VD1"],c='b',label="$v_{D1}$",ls="dashed")
-plt.plot(d["Vout"],d["VD4"],c='r',label="$v_{D4}$")
-plt.plot(d["Vout"],d["VD2"],c='b',label="$v_{D2}$")
-
-
-plt.figure(idVSAT1)
-plt.plot(d["Vout"],d["VDS1"],c='purple',label="$v_{DS1}$")
-plt.plot(d["Vout"],d["VGT1"],c='g',label="$v_{GS1}-V_{T}$")
-
-
-plt.figure(idVSAT4)
-plt.plot(d["Vout"],d["VDS4"],c='purple',label="$v_{DS4}$")
-plt.plot(d["Vout"],d["VGT4"],c='g',label="$v_{GS4}-V_{T}$")
-
+plt.figure(idVx)
+plt.plot(d["VDD"],d["VDD"])
+plt.plot(d["VDD"],d["VREF"])
 
 for id in range(graphNum):
     plt.figure(id)
     axes=plt.gca()
     axes.grid(linewidth=0.25)
     axes.tick_params(labeltop=True,labelright=True,top=True,right=True,direction="in",width=0.3)
-    if id in[idIV,idVD,idVSAT1,idVSAT4]:
-        axes.set_xlim(-0.1,5.1)
-        axes.xaxis.set_major_locator(ticker.MultipleLocator(0.5))
-        axes.set_xlabel(r"$v_{OUT}~(\si{V})$")
-        axes.vlines(2.7,-10,+10,colors='gray',lw=0.8,ls='dashed')
-        if id in[idIV]:
-            axes.set_ylim(-0.005e-3,0.085e-3)
-            axes.yaxis.set_major_locator(ticker.MultipleLocator(0.01e-3))
-            axes.yaxis.set_major_formatter(lambda x, pos:"$"+"{:.2f}".format(x/1e-3)+"$")
-            axes.set_ylabel(r"$i_{OUT}~(\si{mA})$")
-            axes.text(2.8,0.075e-3,r"$V_{\min}=2V_{ON}+V_T=\SI{2.7}{V}$",ha="left",va="center")
-            axes.legend(loc="lower right")
-        if id in[idVD,idVSAT1,idVSAT4]:
-            axes.set_ylim(-0.1,5.1)
-            axes.yaxis.set_major_locator(ticker.MultipleLocator(0.5))
-            axes.set_ylabel(r"$v~(\si{V})$")
-            if id in[idVD]:
-                axes.legend(loc="lower right",ncol=2)
-            if id in[idVSAT1,idVSAT4]:
-                axes.legend(loc="upper left")
     plt.savefig(fileExport(id),bbox_inches ='tight')
 
 os.remove(fileNET)

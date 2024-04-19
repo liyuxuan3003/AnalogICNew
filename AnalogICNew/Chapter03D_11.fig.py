@@ -26,7 +26,7 @@ def SpiceWave(rdat,wave):
     return rdat.get_trace(wave).get_wave(0)
 
 folder="./build"
-filename="Chapter03D_06"
+filename="Chapter03D_11"
 
 fileGhost=os.path.join(folder,filename+".fig.pdf")
 fileASC=filename+".fig.asc"
@@ -67,8 +67,9 @@ netlist.set_component_value("Vout","0")
 netlist.set_component_value("IREF","0.06m")
 netlist.set_element_model("M1","xNMOS W=0.8u L=0.8u")
 netlist.set_element_model("M2","xNMOS W=0.8u L=0.8u")
+netlist.set_element_model("M3","xNMOS W=0.8u L=0.8u")
 netlist.set_element_model("M4","xNMOS W=0.8u L=0.8u")
-netlist.add_instruction(r".dc Vout 0 5 0.01")
+netlist.add_instruction(r".dc Vout 0 5 0.005")
 
 graphNum=4
 idIV=0
@@ -92,13 +93,14 @@ nl=copy.deepcopy(netlist)
 rdat=SpiceRun(nl)
 d["Vout"]=SpiceWave(rdat,"Vout")
 d["Iout"]=SpiceWave(rdat,"Id(M2)")
-d["Iref"]=SpiceWave(rdat,"Id(M1)")
+d["Iref"]=SpiceWave(rdat,"I(IREF)")
 d["VD1"]=SpiceWave(rdat,"V(VD1)")
 d["VD2"]=SpiceWave(rdat,"V(VD2)")
+d["VD3"]=SpiceWave(rdat,"V(VD3)")
 d["VD4"]=SpiceWave(rdat,"V(VD4)")
 d["VGT1"]=d["VD2"]-xVT0
 d["VDS1"]=d["VD1"]
-d["VGT4"]=d["VD1"]-d["VD2"]-xVT(d["VD2"])
+d["VGT4"]=d["VD3"]-d["VD2"]-xVT(d["VD2"])
 d["VDS4"]=d["VD4"]-d["VD2"]
 
 plt.figure(idIV)
@@ -106,7 +108,7 @@ plt.plot(d["Vout"],d["Iref"],c='r',ls='dashed',lw='0.75',label="$I_{REF}$")
 plt.plot(d["Vout"],d["Iout"],c='k',label="$i_{OUT}$")
 
 plt.figure(idVD)
-plt.plot([],[],label="~",ls="")
+plt.plot(d["Vout"],d["VD3"],c='r',label="$v_{D3}$",ls="dashed")
 plt.plot(d["Vout"],d["VD1"],c='b',label="$v_{D1}$",ls="dashed")
 plt.plot(d["Vout"],d["VD4"],c='r',label="$v_{D4}$")
 plt.plot(d["Vout"],d["VD2"],c='b',label="$v_{D2}$")
