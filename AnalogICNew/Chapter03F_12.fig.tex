@@ -1,0 +1,27 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+    
+\xSetX
+\xValDefine{xL}[0]
+\xValDefine{xC}[2.3]
+\xValOffset{xR}{xC}[2]
+
+\xSetY
+\xValDefine{yB}[-3]
+\xValDefine{yA}[+3]
+\xValMiddle{yC}{yA}{yB}
+\xValPropor{yMA}{yA}{yB}[1/3]
+\xValPropor{yMB}{yMA}{yB}[0.5]
+
+\draw (xL|-yA) node[vdd,anchor=north] {$V_{DD}$} to[isource,l={$I_{PTAT}'$},i=$V_{PTAT}/R_1$] (xL|-yMA) -- (xC|-yMA) node[circ] {};
+
+\draw (xC|-yA) node[vdd,anchor=north] {$V_{DD}$} to[isource,l={$I_{CTAT}'$},i=$V_{CTAT}/R_2$] (xC|-yMA) to[R=$R_3$] (xC|-yB) node[tlground] {};
+
+\draw (xC|-yMA) to[short,*-o] (xR|-yMA) node[right] {$V_{REF}$};
+
+\xValBorder{xL}[-0.7]{xR}[+1.2]{yB}[-0.5]{yA}[0.7]*
+
+\end{tikzpicture}
+\end{document}

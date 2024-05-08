@@ -1,0 +1,26 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xSetX
+\xValDefine{xL}[-1.2]
+\xValDefine{xR}[+1.2]
+\xValPropor{xC}{xL}{xR}[0.7]
+
+\xSetY
+\xValDefine{yB}[-2.5]
+\xValDefine{yA}[+2.5]
+\xValMiddle{yC}{yA}{yB}
+\xValPropor{yMA}{yA}{yB}[1/3]
+\xValPropor{yMB}{yA}{yB}[2/3]
+
+\draw (xC|-yA) node[vdd,anchor=north] {$V_{DD}$} to[R=$R_0$,f_=$I_0$] (xC|-yC) to[D=$D_1$] (xC|-yB) node[tlground] {};
+
+
+\draw (xC|-yC) to[short,*-o] (xL|-yC) node[left] {$V_{REF}$};
+
+\xValBorder{xL}[-1.2]{xR}{yB}[-0.5]{yA}[+0.7]*
+
+\end{tikzpicture}
+\end{document}

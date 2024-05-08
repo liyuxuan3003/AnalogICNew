@@ -1,0 +1,931 @@
+\section{温度无关的基准}
+在本节，我们来探讨如何设计温度无关的基准。开始之前，既然要探讨温度，我们有必要先了解各类器件（电阻、PN结、MOS管）的特性是如何随温度变化的。随后，我们将会计算\xref{sec:电源无关的基准}中给出的未考虑温度的简单基准的温度特性。这些之后，我们再讨论温度无关的基准的设计。
+
+\subsection{电阻的温度特性}
+电阻的电阻值$R$会随温度$T$的变化而变化，这通常可以描述为一个指数关系。
+\begin{BoxFormula}[电阻的温度特性]
+    电阻的电阻值$R$温度特性为
+    \begin{Equation}
+        R=R_0\exp[\alpha_R(T-T_0)]
+    \end{Equation}
+\end{BoxFormula}
+其中，$R=R_0$是$T=T_0$时的电阻值，通常$T_0=\SI{300}{K}$即室温，$\alpha_R$是一个常系数。
+
+有时，作为近似，也会将\xref{fml:电阻的温度特性}的指数关系
+\begin{Equation}
+    R=R_0\exp[\alpha_R(T-T_0)]
+\end{Equation}
+取一阶泰勒展开进行近似
+\begin{Equation}
+    R=R_0[1+\alpha_R(T-T_0)]
+\end{Equation}
+
+现在的问题是，我们如何衡量器件的某项特性随温度变化的快慢呢？引入温度系数的概念。
+\begin{BoxDefinition}[温度系数]
+    定义$X$的温度系数$TC_F(X)$为
+    \begin{Equation}
+        TC_F(X)=\frac{1}{X}\pdv{X}{T}
+    \end{Equation}
+\end{BoxDefinition}
+简而言之，$X$的温度系数$TC_F(X)$就是$X$对温度的导数除以$X$自身，该定义形式上类似于先前\xref{def:电源敏感度}给出的电源敏感度$\SVV$的定义。$X$可以是任何量，电流、电压、电阻皆可。
+
+显然，温度系数$TC_F$的单位是$\si{K^{-1}}$，不过，由于温度系数$TC_F$的值通常是很小的，更常用的单位是$\si{ppm.K^{-1}}$，其中$\si{ppm}$代表百万分之一，即$\SI{1e-6}{}$或国际单位制词头“$\si{u}$”。
+
+现在计算$R$的温度系数$TC_F(R)$
+\begin{Equation}
+    \pdv{R}{T}=\alpha_R R_0\exp[\alpha_R(T-T_0)]=\alpha_R R
+\end{Equation}
+因此
+\begin{Equation}
+    \frac{1}{R}\pdv{R}{T}=\alpha_R
+\end{Equation}
+由此可见，系数$\alpha_R$就是电阻$R$的温度系数$TC_F(R)$，电阻的温度系数$TC_F(T)$是常量。
+\begin{BoxFormula}[电阻的温度系数]
+    电阻的电阻值$R$的温度系数$TC_F(R)$为
+    \begin{Equation}
+        TC_F(R)=\alpha_R
+    \end{Equation}
+\end{BoxFormula}
+电阻的温度系数$\alpha_R$取决于电阻的制造工艺，如多晶硅电阻$\alpha_R=\SI{1500}{ppm.K^{-1}}$。
+
+\subsection{PN结的温度特性}
+
+我们知道，PN结正向导通时遵循的电流公式是
+\begin{Equation}
+    i_D=I_s\exp(\frac{v_D}{V_t})
+\end{Equation}
+要弄清电流$i_D$如何随温度变化，就要先了解$i_D$的公式中那些项会随温度变化。显然，最明显的是热电压$V_t=\kB T/q$包含了温度$T$。但其实，反向饱和电流$I_s$也会与温度$T$有关！
+
+这要从$I_s$本身的表达式来分析，我们知道
+\begin{Equation}
+    I_s=qA\qty(\frac{D_pp_{n0}}{L_p}+\frac{D_nn_{p0}}{L_n})
+\end{Equation}
+应用$p_{n0}=n_i^2/N_D$和$n_{p0}=n_i^2/N_A$
+\begin{Equation}
+    I_s=qA\qty(\frac{D_p}{L_pN_D}+\frac{D_n}{L_nN_A})n_i^2
+\end{Equation}
+而这里$n_i$是一个与温度有关的量
+\begin{Equation}
+    n_i^2=D T^\gamma\exp(-\frac{V_{G0}}{V_t})
+\end{Equation}
+其中$D$是一个（我们并不关心的）常系数，而$V_{G0}$是硅的带隙电压$V_{G0}=\SI{1.205}{V}$，请注意带隙电压$V_{G0}$是不随温度$T$变化的。另外，$\gamma$是$T$上的指数，通常我们可以取$\gamma=3$。
+
+这样一来，若记$I_{s0}$为$T=T_0$时的$I_s$，就有
+\begin{Equation}
+    I_s=I_{s0}\frac{T^\gamma\exp(-V_{G0}/V_t)}{T_0^\gamma\exp(-V_{G0}/V_{t0})}
+\end{Equation}
+这里$V_{t0}$即$T=T_0$时的$V_t$，整理得到
+\begin{Equation}
+    I_s=I_{s0}\qty(\frac{T}{T_0})^{\gamma}\exp(\frac{V_{G0}}{V_{t0}}-\frac{V_{G0}}{V_t})
+\end{Equation}
+整理如下
+\begin{BoxFormula}[PN结的反向饱和电流的温度特性]
+    PN结的反向饱和电流$I_s$的温度特性为
+    \begin{Equation}
+        I_s=I_{s0}\qty(\frac{T}{T_0})^{\gamma}\exp(\frac{V_{G0}}{V_{t0}}-\frac{V_{G0}}{V_t})
+    \end{Equation}
+\end{BoxFormula}
+接下来我们想要计算$I_s$的温度系数$TC_F(I_s)$，先求导（注意到$\pdv*{V_t}{T}=V_t/T$）
+\begin{Equation}
+    \pdv{I_s}{T}=I_{s0}\qty[\gamma\qty(\frac{T}{T_0})^{\gamma-1}\qty(\frac{1}{T_0})\exp(\frac{V_{G0}}{V_{t0}}-\frac{V_{G0}}{V_t})+\qty(\frac{T}{T_0})^{\gamma}\exp(\frac{V_{G0}}{V_{t0}}-\frac{V_{G0}}{V_t})\qty(\frac{V_{G0}}{V_t^2})\qty(\frac{V_t}{T})] 
+\end{Equation}
+化简得到
+\begin{Equation}
+    \qquad
+    \pdv{I_s}{T}=I_{s0}\qty[\gamma\qty(\frac{T}{T_0})^{\gamma-1}\qty(\frac{1}{T_0})\exp(\frac{V_{G0}}{V_{t0}}-\frac{V_{G0}}{V_t})+\qty(\frac{T}{T_0})^{\gamma}\exp(\frac{V_{G0}}{V_{t0}}-\frac{V_{G0}}{V_t})\frac{V_{G0}}{T V_t}] 
+    \qquad
+\end{Equation}
+将表达式尽量用$I_s$来表示
+\begin{Equation}
+    \pdv{I_s}{T}=\frac{\gamma}{T}I_s+\frac{V_{G0}}{T V_t}I_s
+\end{Equation}
+整理得到
+\begin{Equation}
+    \pdv{I_s}{T}=\frac{1}{T}\qty(\gamma+\frac{V_{G0}}{V_t})I_s
+\end{Equation}
+即有
+\begin{Equation}
+    \frac{1}{I_s}\pdv{I_s}{T}=\frac{1}{T}\qty(\gamma+\frac{V_{G0}}{V_t})
+\end{Equation}
+整理如下
+\begin{BoxFormula}[PN结的反向饱和电流的温度系数]
+    PN结的反向饱和电流$I_s$的温度系数$TC_F(I_s)$为
+    \begin{Equation}
+        TC_F(I_s)=\frac{1}{T}\qty(\gamma+\frac{V_{G0}}{V_t})
+    \end{Equation}
+\end{BoxFormula}
+
+
+有关$I_s$的可视化结果如\xref{fig:PN结的反向饱和电流的温度性质}所示，取$I_{s0}=\SI{1e-15}{A}$
+\begin{Figure}[PN结的反向饱和电流的温度性质]
+    \begin{FigureSub}[反向饱和电流的温度特性]
+        \includegraphics[scale=0.8]{build/Chapter03F_01e.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[反向饱和电流的温度系数]
+        \includegraphics[scale=0.8]{build/Chapter03F_01f.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+\begin{itemize}
+    \item 反向饱和电流$I_s$随温度的增加而显著增加，请注意\xref{fig:反向饱和电流的温度特性}是对数纵坐标！我们注意到，在$T=\SI{300}{K}$处仅$\SI{50}{K}$的温度增量会导致反向饱和电流$I_s$上升三个数量级。
+    \item 反向饱和电流的温度系数$TC_F(I_s)=\SI{0.1655}{K^{-1}}$，由于$\log_{1.6655}2\approx 5$，这就代表反向饱和电流$I_s$在室温附近每增加$\SI{5}{K}$就会翻一倍\footnote{$\SI{5}{K}$翻一倍$(\times 2)$，$\SI{50}{K}$增大三个数量级$(\times 1000)$，这两项直观观察是相符的，因为$2^{10}\approx 1000$。}。另外，$TC_F(I_s)$随温度增加而减小。
+\end{itemize}
+
+
+接下来，让我们回到$i_D$，对其求导得到
+\begin{Equation}
+    \pdv{i_D}{T}=\pdv{I_s}{T}\exp(\frac{v_D}{V_t})+I_s\exp(\frac{v_D}{V_t})\qty(-\frac{v_D}{V_t^2})\qty(\frac{V_t}{T})
+\end{Equation}
+稍作变化
+\begin{Equation}
+    \pdv{i_D}{T}=I_s\exp(\frac{v_D}{T})\frac{1}{I_s}\pdv{I_s}{T}-I_s\exp(\frac{v_D}{V_t})\frac{v_D}{V_tT}
+\end{Equation}
+用$i_D$和$TC_F(I_s)$代换
+\begin{Equation}
+    \pdv{i_D}{T}=i_D\qty[TC_F(I_s)-\frac{v_D}{V_tT}]
+\end{Equation}
+引用\xref{fml:PN结的反向饱和电流的温度系数}代入$TC_F(I_s)$的表达式
+\begin{Equation}
+    \pdv{i_D}{T}=i_D\qty[\frac{1}{T}\qty(\gamma+\frac{V_{G0}}{V_t})-\frac{v_D}{V_tT}]
+\end{Equation}
+合并
+\begin{Equation}
+    \pdv{i_D}{T}=i_D\qty[\frac{1}{T}\qty(\gamma+\frac{V_{G0}-v_D}{V_t})]
+\end{Equation}
+即有
+\begin{Equation}
+    \frac{1}{i_D}\pdv{i_D}{T}=\frac{1}{T}\qty(\gamma+\frac{V_{G0}-v_D}{V_t})
+\end{Equation}
+整理如下
+\begin{BoxFormula}[PN结电流的温度系数]
+    PN结的电流$i_D$的温度系数$TC_F(i_D)$为
+    \begin{Equation}
+        TC_F(i_D)=\frac{1}{T}\qty(\gamma+\frac{V_{G0}-v_D}{V_t})
+    \end{Equation}
+\end{BoxFormula}
+由此可见，$TC_F(i_D)$相较$TC_F(I_s)$其实只是将$V_{G0}$变为了$V_{G0}-v_D$，换言之，后者恰好等于前者取$v_D=\SI{0}{V}$的情况。PN结典型的导通压降为$v_D=\SI{0.6}{V}$，故通常$TC_F(i_D)>0$。
+
+PN结的温度性质如\xref{fig:PN结的温度性质}，取$I_{s0}=\SI{1e-15}{A}$，重点关注$v_D=\SI{0.6}{V}$和$T=\SI{300}{K}$
+\begin{itemize}
+    \item PN结电流随温度增加很快，温度对于PN结电流有显著影响。
+    \item PN结电流的温度系数$TC_F(i_D)=\SI{0.0881}{K^{-1}}$，这相当于温度每上升$\SI{8}{K}$电流翻倍。
+    \item $TC_F(i_D)$随温度$T$的增加而减小，如\xref{fig:温度系数--随温度变化PN结}所示。
+    \item $TC_F(i_D)$随电压$v_D$的增加而线性减小，如\xref{fig:温度系数--随电压变化PN结}所示。
+\end{itemize}
+\begin{Figure}[PN结的温度性质]
+    \begin{FigureSub}[温度特性--随电压变化;温度特性--随电压变化PN结]
+        \includegraphics[scale=0.8]{build/Chapter03F_01a.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[温度系数--随电压变化;温度系数--随电压变化PN结]
+        \includegraphics[scale=0.8]{build/Chapter03F_01c.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.4cm}
+    \begin{FigureSub}[温度特性--随温度变化;温度特性--随温度变化PN结]
+        \includegraphics[scale=0.8]{build/Chapter03F_01b.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[温度系数--随温度变化;温度系数--随温度变化PN结]
+        \includegraphics[scale=0.8]{build/Chapter03F_01d.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+\subsection{MOS管的温度特性}
+我们知道，MOS管饱和区电流遵循的公式是
+\begin{Equation}
+    i_D=\frac{1}{2}K'(W/L)(v_{GS}-V_T)^2
+\end{Equation}
+在MOS管的电流公式中，涉及到温度变化的参量是跨导增益$K'$和阈值电压$V_T$。
+
+\begin{BoxFormula}[MOS管的跨导增益的温度特性]
+    MOS管的跨导增益$K'$的温度特性为
+    \begin{Equation}
+        K'=K_0'\qty(\frac{T}{T_0})^{-3/2}
+    \end{Equation}
+\end{BoxFormula}
+其中$K_0'$代表$T=T_0$时的跨导增益$K'$，取$K_0'=\SI{110}{uA.V^{-2}}$。
+
+\begin{BoxFormula}[MOS管的阈值电压的温度特性]
+    MOS管的阈值电压$V_T$的温度特性为
+    \begin{Equation}
+        V_T=V_{T0}+\alpha(T-T_0)
+    \end{Equation}
+\end{BoxFormula}
+其中$V_{T0}$代表$T=T_0$时的阈值电压$V_{T}$，取$V_{T0}=\SI{0.7}{V}$，而$\alpha$是温度相关的系数，其单位为$\si{V.K^{-1}}$，对于NMOS为负，对于PMOS为正，这里我们取$\alpha=\SI{-2.3}{mV.K^{-1}}$。
+
+推导$K'$的温度系数，先对\xref{fml:MOS管的跨导增益的温度特性}求导得
+\begin{Equation}
+    \pdv{K'}{T}=-\frac{3}{2}K'_0\qty(\frac{T}{T_0})^{-5/2}\qty(\frac{1}{T_0})
+\end{Equation}
+用$K'$自身回代
+\begin{Equation}
+    \pdv{K'}{T}=-\frac{3}{2}K'\qty(\frac{T}{T_0})^{-1}\qty(\frac{1}{T_0})
+\end{Equation}
+化简得到
+\begin{Equation}
+    \pdv{K'}{T}=-\frac{3}{2}\frac{K'}{T}
+\end{Equation}
+即有
+\begin{Equation}
+    \frac{1}{T}\pdv{K'}{T}=-\frac{3}{2}\frac{1}{T}
+\end{Equation}
+整理如下
+\begin{BoxFormula}[MOS管的跨导增益的温度系数]
+    MOS管的跨导增益$K'$的温度系数$TC_F(K')$为
+    \begin{Equation}
+        TC_F(K')=-\frac{3}{2}\frac{1}{T}
+    \end{Equation}
+\end{BoxFormula}
+
+推导$V_T$的温度系数，先对\xref{fml:MOS管的阈值电压的温度特性}求导得
+\begin{Equation}
+    \pdv{V_T}{T}=\alpha
+\end{Equation}
+既有
+\begin{Equation}
+    \frac{1}{V_T}\pdv{V_T}{T}=\frac{\alpha}{V_T}
+\end{Equation}
+整理如下
+\begin{BoxFormula}[MOS管的阈值电压的温度系数]
+    MOS管的阈值电压$V_T$的温度系数$TC_F(V_T)$为
+    \begin{Equation}
+        TC_F(V_T)=\frac{\alpha}{V_T}
+    \end{Equation}
+\end{BoxFormula}
+有趣的是，先前计算$I_s$和$K'$的温度系数$TC_F(I_s)$和$TC_F(K')$时，都恰好将导数表达式中多余的$I_s$和$K'$约去了。但这里$V_T$的导数本身是很简洁的，就是$\alpha$，计算$TC_F(V_T)$反而更复杂了。上述讨论并不太重要，只是想指出，从结论复用的角度$TC_F$未必总是最简单的。\goodbreak
+
+\xref{fig:MOS管的跨导增益的温度性质}展示了$K'$的温度性质，关注到
+\begin{itemize}
+    \item 跨导增益$K'$随温度$T$的增加而减小，减小率会逐渐放缓。
+    \item 跨导增益的温度系数$TC_F(K')=-\SI{0.0050}{K^{-1}}$，且随温度增大而减小。
+\end{itemize}
+\begin{Figure}[MOS管的跨导增益的温度性质]
+    \begin{FigureSub}[MOS管的跨导增益的温度特性]
+        \includegraphics[scale=0.8]{build/Chapter03F_02f.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[MOS管的跨导增益的温度系数]
+        \includegraphics[scale=0.8]{build/Chapter03F_02h.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+\xref{fig:MOS管的阈值电压的温度性质}展示了$V_T$的温度性质，关注到
+\begin{itemize}
+    \item 阈值电压$V_T$随温度$T$的增加而线性减小。但照此趋势，当$T$足够高时$V_T$甚至可能会变为负值？不必为此担心，因为$V_T=V_{T0}+\alpha(T-T_0)$实际只在$\SIrange{200}{400}{K}$间适用。
+    \item 阈值电压的温度系数$TC_F(V_T)=\SI{-0.0033}{K^{-1}}$，且随温度增大而减小。
+    \item 有关\xref{fig:MOS管的阈值电压的温度特性}中$V_{GS}(\te{ZTC})$的含义将在稍后解释。
+\end{itemize}
+
+\begin{Figure}[MOS管的阈值电压的温度性质]
+    \begin{FigureSub}[MOS管的阈值电压的温度特性]
+        \includegraphics[scale=0.8]{build/Chapter03F_02c.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[MOS管的阈值电压的温度系数]
+        \includegraphics[scale=0.8]{build/Chapter03F_02g.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+通常$i_D$是以$\beta$表示的
+\begin{Equation}
+    i_D=\frac{1}{2}\beta(v_{GS}-V_T)^2
+\end{Equation}
+这里我们指出，计算温度系数时不必展开$\beta=K'(W/L)$，因为显然$TC_F(\beta)=TC_F(K')$！
+
+接下来，我们来计算$i_D$的温度系数，求导得到
+\begin{Equation}
+    \pdv{i_D}{T}=\frac{1}{2}{\pdv{\beta}{T}}(v_{GS}-V_T)^2-\beta(v_{GS}-V_T)\pdv{V_T}{T}
+\end{Equation}
+凑出$TC_F(K')$和$i_D$的形式
+\begin{Equation}
+    \pdv{i_D}{T}=\frac{1}{2}\beta(v_{GS}-V_T)^2\frac{1}{\beta}\pdv{\beta}{T}-\frac{1}{2}\beta(v_{GS}-V_T)^2\frac{2}{v_{GS}-V_T}\pdv{V_T}{T} 
+\end{Equation}
+应用$i_D$以及$TC_F(K')=TC_F(\beta),TC_F(V_T)$代换
+\begin{Equation}
+    \pdv{i_D}{T}=i_D\qty[TC_F(K')-\frac{2}{v_{GS}-V_T}V_T\cdot TC_F(V_T)]
+\end{Equation}
+根据\xref{fml:MOS管的跨导增益的温度系数}和\xref{fml:MOS管的阈值电压的温度系数}对$TC_F(K')$和$TC_F(V_T)$代换
+\begin{Equation}
+    \pdv{i_D}{T}=i_D\qty[-\frac{3}{2}\frac{1}{T}-\frac{2\alpha}{v_{GS}-V_T}]
+\end{Equation}
+即有
+\begin{Equation}
+    \frac{1}{i_D}\pdv{i_D}{T}=-\frac{3}{2}\frac{1}{T}-\frac{2\alpha}{v_{GS}-V_T}
+\end{Equation}
+整理如下
+\begin{BoxFormula}[MOS管电流的温度系数]
+    MOS管的电流$i_D$的温度系数$TC_F(i_D)$为
+    \begin{Equation}
+        TC_F(i_D)=-\frac{3}{2}\frac{1}{T}-\frac{2\alpha}{v_{GS}-V_T}
+    \end{Equation}
+\end{BoxFormula}
+
+这里还有一项有趣的事情值得研究，考察在一定温度$T$下使$TC_F(i_D)=0$的$v_{GS}$，我们将其记作$V_{GS}(\te{ZTC})$，其中$\te{ZTC}$代表零温度系数（Zero Temperature Coefficient）。很明显，如果将一个MOS管偏置在$V_{GS}(\te{ZTC})$的零温度系数点上，那么其将几乎不受温度变化的影响。
+
+我们令$TC_F(i_D)=0$，得到
+\begin{Equation}
+    \frac{3}{2}\frac{1}{T}=-\frac{2\alpha}{v_{GS}-V_T}
+\end{Equation}
+两边同乘
+\begin{Equation}
+    3(v_{GS}-V_T)=-4\alpha T
+\end{Equation}
+化简
+\begin{Equation}
+    v_{GS}=V_T-\frac{4}{3}\alpha T
+\end{Equation}
+我们将$V_T$依据\xref{fml:MOS管的阈值电压的温度特性}完全展开
+\begin{Equation}
+    v_{GS}=V_{T0}+\alpha(T-T_0)-\frac{4}{3}\alpha T
+\end{Equation}
+继续化简
+\begin{Equation}
+    v_{GS}=V_{T0}-\alpha T_0-\frac{\alpha T}{3}
+\end{Equation}
+这里解出的$v_{GS}$就是$V_{GS}(\te{ZTC})$
+\begin{BoxFormula}[MOS管的零温度系数点]
+    MOS管的零温度系数点$V_{GS}(\te{ZTC})$
+    \begin{Equation}
+        V_{GS}(\te{ZTC})=V_{T0}-\alpha T_0-\frac{\alpha T}{3}
+    \end{Equation}
+\end{BoxFormula}
+根据\xref{fig:MOS管的阈值电压的温度特性}我们可以看出，当$T=\SI{300}{K}$时$V_{GS}(\te{ZTC})=\SI{1.62}{V}$。当然，从图像或公式我们都可以看出，零温度系数点$V_{GS}(\te{ZTC})$会随温度增加而缓慢增加。故用$\te{ZTC}$点偏置的想法仅在一定温度范围内是有效的，当温度变化很大时，由于$\te{ZTC}$点本身已经发生了移动，此时电流仍然会随温度变化。但总的来说，应用$\te{ZTC}$点可以显著减小温度对MOS管特性的影响！
+
+\begin{Figure}[MOS管的温度性质]
+    \begin{FigureSub}[温度特性--随电压变化;温度特性--随电压变化MOS]
+        \includegraphics[scale=0.8]{build/Chapter03F_02a.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[温度系数--随电压变化;温度系数--随电压变化MOS]
+        \includegraphics[scale=0.8]{build/Chapter03F_02d.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.4cm}
+    \begin{FigureSub}[温度特性--随温度变化;温度特性--随温度变化MOS]
+        \includegraphics[scale=0.8]{build/Chapter03F_02b.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[温度系数--随温度变化;温度系数--随温度变化MOS]
+        \includegraphics[scale=0.8]{build/Chapter03F_02e.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+MOS管的温度性质如\xref{fig:MOS管的温度性质}，我们注意到
+\begin{itemize}
+    \item 从\xref{fig:温度特性--随电压变化MOS}和\xref{fig:温度系数--随电压变化MOS}中可以看出，随着温度的增加ZTC点会发生偏移。
+    \item 当$v_{GS}$取$T=\SI{300}{K}$时的$V_{GS}(\te{ZTC})$，如\xref{fig:温度特性--随温度变化MOS}和\xref{fig:温度系数--随温度变化MOS}所示，尽管ZTC点随着温度变化也会变化，但$i_D$随温度几乎不变，且$i_D$的温度系数$TC_F(i_D)$也几乎是零。
+    \item 当$v_{GS}<V_{GS}(\te{ZTC})$时，$i_D$随温度增加而增加，具有正温度系数。
+    \item 当$v_{GS}>V_{GS}(\te{ZTC})$时，$i_D$随温度增加而减小，具有负温度系数。
+\end{itemize}
+
+\subsection{基于BJT分压的基准的温度系数}
+这一小节，我们分析\xref{subsec:基于BJT分压的基准}中基于BJT的简单基准，从\xref{fml:基于BJT分压的基准--基准电压}开始
+\begin{Equation}
+    V_{REF}=V_t\ln(\frac{V_{DD}}{R_0I_s})
+\end{Equation}
+求导
+\begin{Equation}
+    \qquad\qquad
+    \pdv{V_{REF}}{T}=\frac{V_t}{T}\ln(\frac{V_{DD}}{R_0I_s})-V_t\qty(\frac{R_0I_s}{V_{DD}})\qty(\frac{V_{DD}}{R_0^2I_s^2})\qty(I_s\dv{R_0}{T}+R\dv{I_s}{T})
+    \qquad\qquad
+\end{Equation}
+化简得到
+\begin{Equation}
+    \pdv{V_{REF}}{T}=\frac{V_t}{T}\ln\qty(\frac{V_{DD}}{R_{0}I_s})-V_t\qty(\frac{1}{R_0}\dv{R_0}{T}+\frac{1}{I_s}\dv{I_s}{T})
+\end{Equation}
+用$V_{REF}$自身以及$TC_F(R_0)$和$TC_F(I_s)$代换
+\begin{Equation}
+    \pdv{V_{REF}}{T}=\frac{V_{REF}}{T}-V_t\qty[TC_F(R_0)+TC_F(I_s)]
+\end{Equation}
+根据\xref{fml:电阻的温度系数}和\xref{fml:PN结的反向饱和电流的温度系数}代入$TC_F(R_0)$和$TC_F(I_s)$
+\begin{Equation}
+    \pdv{V_{REF}}{T}=\frac{V_{REF}}{T}-V_t\qty[\alpha_R+\frac{1}{T}\qty(\gamma+\frac{V_{G0}}{V_t})]
+\end{Equation}
+完全展开
+\begin{Equation}
+    \pdv{V_{REF}}{T}=\frac{V_{REF}}{T}-\frac{\gamma V_t}{T}-\frac{V_{G0}}{T}-\alpha_R V_t
+\end{Equation}
+合并
+\begin{Equation}
+    \pdv{V_{REF}}{T}=\frac{1}{T}\qty(V_{REF}-V_{G0}-\gamma V_t)-\alpha_R V_t
+\end{Equation}
+即有
+\begin{Equation}
+    \frac{1}{V_{REF}}\pdv{V_{REF}}{T}=\frac{1}{V_{REF}}\qty[\frac{1}{T}\qty(V_{REF}-V_{G0}-\gamma V_t)-\alpha_R V_t]
+\end{Equation}
+整理得到
+\begin{BoxFormula}[基于BJT分压的基准的温度系数]
+    基于BJT分压的基准$V_{REF}$的温度系数$TC_F(V_{REF})$
+    \begin{Equation}
+        TC_F(V_{REF})=\frac{1}{V_{REF}}\qty[\frac{1}{T}\qty(V_{REF}-V_{G0}-\gamma V_t)-\alpha_R V_t]
+    \end{Equation}
+\end{BoxFormula}
+
+\xref{fig:基于BJT分压的基准的温度性质}展示了基于BJT分压的$V_{REF}$和$TC_F(V_{REF})$随温度变化的的性质
+\begin{itemize}
+    \item $V_{REF}$随温度增加而线性减小，当温度上升至$\SI{400}{K}$时$V_{REF}$由约$\SI{0.6}{V}$下降至$\SI{0.4}{V}$。
+    \item $V_{REF}$在$T=\SI{300}{K}$时温度系数$TC_F(V_{REF})=\SI{-3438}{ppm.K^{-1}}$。
+\end{itemize}
+\begin{Figure}[基于BJT分压的基准的温度性质]
+    \begin{FigureSub}[基于BJT分压的基准的温度特性]
+        \includegraphics[scale=0.8]{build/Chapter03E_06g.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[基于BJT分压的基准的温度系数]
+        \includegraphics[scale=0.8]{build/Chapter03E_06f.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+\subsection{基于MOS分压的基准的温度系数}
+这一小节，我们分析\xref{subsec:基于MOS分压的基准}中基于MOS的简单基准，从\xref{fml:基于MOS分压的基准--基准电压}开始\setpeq{基于MOS分压的基准的温度系数}
+\begin{Equation}&[1]
+    V_{REF}=V_T+\frac{1}{\beta R_0}\qty[\sqrt{2\beta R_0(V_{DD}-V_T)+1}-1]
+\end{Equation}
+求导
+\begin{Split}&[2]
+    \pdv{V_{REF}}{T}=\pdv{V_T}{T}&-\frac{1}{\beta^2R_0^2}\qty[\pdv{\beta}{T}R_0+\beta\pdv{R_0}{T}]\qty[\sqrt{2\beta R_0(V_{DD}-V_T)+1}-1]\\
+    &+\frac{1}{2\beta R_0}\frac{2}{\sqrt{2\beta R_0(V_{DD}-V_T)+1}}\qty{\qty[\pdv{\beta}{T}R_0+\beta\pdv{R_0}{T}](V_{DD}-V_T)-\pdv{V_T}{T}\beta R_0}
+\end{Split}
+将$1/\beta R_0$下放至方括号中，并考虑$\sqrt{2\beta R_0(V_{DD}-V_T)+1}=\beta R_0(V_{REF}-V_T)+1$的代换
+\begin{Split}&[3]
+    \pdv{V_{REF}}{T}=\pdv{V_T}{T}&-\qty[\frac{1}{\beta}\pdv{\beta}{T}+\frac{1}{R_0}\pdv{R_0}{T}](V_{REF}-V_T)\\
+    &+\frac{1}{\beta R_0(V_{REF}-V_T)+1}\qty{\qty[\frac{1}{\beta}\pdv{\beta}{T}+\frac{1}{R_0}\pdv{R_0}{T}](V_{DD}-V_T)-\pdv{V_T}{T}}
+\end{Split}
+用$TC_F(K')=TC_F(\beta), TC_F(V_T), TC_F(R_0)$代换
+\begin{Split}&[4]
+    \pdv{V_{REF}}{T}&=V_T\cdot TC_F(V_T)-\qty[TC_F(K')+TC_F(R_0)](V_{REF}-V_T)\\
+    &+\frac{1}{\beta R_0(V_{REF}-V_T)+1}\qty\Big{\qty[TC_F(K')+TC_F(R_0)](V_{DD}-V_T)-V_T\cdot TC_F(V_T)}
+\end{Split}
+根据\xref{fml:电阻的温度系数}、\xref{fml:MOS管的跨导增益的温度系数}、\xref{fml:MOS管的阈值电压的温度系数}，代入所有$TC_F$
+\begin{Split}&[5]
+    \qquad\qquad\qquad
+    \pdv{V_{REF}}{T}&=\alpha-\qty(-\frac{3}{2}\frac{1}{T}+\alpha_R)(V_{REF}-V_T)\\
+    &+\frac{1}{\beta R_0(V_{REF}-V_T)+1}\qty[\qty(-\frac{3}{2}\frac{1}{T}+\alpha_R)(V_{DD}-V_T)-\alpha]
+    \qquad\qquad\qquad
+\end{Split}
+整理为两项
+\begin{Split}&[6]
+    \qquad
+    \pdv{V_{REF}}{T}&=\alpha\qty[\frac{\beta R_0(V_{REF}-V_T)}{\beta R_0(V_{REF}-V_T)+1}]\\[6pt]
+    &+\qty(-\frac{3}{2}\frac{1}{T}+\alpha_R)\qty[\frac{(V_{DD}-V_T)-(V_{REF}-V_T)\qty[\beta R_0(V_{REF}-V_T)+1]}{\beta R_0(V_{REF}-V_T)+1}]
+    \qquad
+\end{Split}
+化简
+\begin{Equation}&[7]
+    \pdv{V_{REF}}{T}=\alpha\qty[\frac{\beta R_0(V_{REF}-V_T)}{\beta R_0(V_{REF}-V_T)+1}]+\qty(-\frac{3}{2}\frac{1}{T}+\alpha_R)\qty[\frac{(V_{DD}-V_{REF})-\beta R_0(V_{REF}-V_T)^2}{\beta R_0(V_{REF}-V_T)+1}]
+\end{Equation}
+为了进一步化简，我们回到\xrefpeq{1}，我们已经知道
+\begin{Equation}&[8]
+    \beta R_0(V_{REF}-V_T)+1=\sqrt{2\beta R_0(V_{DD}-V_T)+1}
+\end{Equation}
+两边平方得到
+\begin{Equation}&[9]
+    \qquad\qquad
+    \beta^2R_0^2(V_{REF}-V_T)^2+2\beta R_0(V_{REF}-V_T)+1=2\beta R_0(V_{DD}-V_T)+1
+    \qquad\qquad
+\end{Equation}
+整理
+\begin{Equation}&[10]
+    \beta^2R_0^2(V_{REF}-V_T)^2=2\beta R_0(V_{DD}-V_{REF})
+\end{Equation}
+因此
+\begin{Equation}&[11]
+    V_{DD}-V_{REF}=\frac{1}{2}\beta R_0(V_{REF}-V_T)^2
+\end{Equation}
+将\xrefpeq{11}代入\xrefpeq{7}，得到了显著简化
+\begin{Equation}&[12]
+    \qquad
+    \pdv{V_{REF}}{T}=\alpha\qty[\frac{\beta R_0(V_{REF}-V_T)}{\beta R_0(V_{REF}-V_T)+1}]-\frac{1}{2}\qty(-\frac{3}{2}\frac{1}{T}+\alpha_R)\qty[\frac{\beta R_0(V_{REF}-V_T)^2}{\beta R_0(V_{REF}-V_T)+1}]
+    \qquad
+\end{Equation}
+这使得我们可以进行合并
+\begin{Equation}&[13]
+    \qquad
+    \pdv{V_{REF}}{V_T}=\qty[1-\frac{1}{\beta R_0(V_{REF}-V_T)+1}]\qty[\alpha-\frac{1}{2}\qty(-\frac{3}{2}\frac{1}{T}+\alpha_R)(V_{REF}-V_T)]
+    \qquad
+\end{Equation}
+即有
+\begin{Equation}&[14]
+    \frac{1}{V_{REF}}\pdv{V_{REF}}{V_T}=\frac{1}{V_{REF}}\qty[1-\frac{1}{\beta R_0(V_{REF}-V_T)+1}]\qty[\alpha-\frac{1}{2}\qty(-\frac{3}{2}\frac{1}{T}+\alpha_R)(V_{REF}-V_T)]
+\end{Equation}
+整理得到
+\begin{BoxFormula}[基于MOS分压的基准的温度系数]
+    基于MOS分压的基准$V_{REF}$的温度系数$TC_F(V_{REF})$
+    \begin{Equation}
+        TC_F(V_{REF})=\frac{1}{V_{REF}}\qty[1-\frac{1}{\beta R_0(V_{REF}-V_T)+1}]\qty[\alpha-\frac{1}{2}\qty(-\frac{3}{2}\frac{1}{T}+\alpha_R)(V_{REF}-V_T)]
+    \end{Equation}
+\end{BoxFormula}
+
+\xref{fig:基于MOS分压的基准的温度性质}展示了基于MOS分压的$V_{REF}$和$TC_F(V_{REF})$随温度变化的的性质
+\begin{itemize}
+    \item $V_{REF}$随温度增加而减小。
+    \item $V_{REF}$在$T=\SI{300}{K}$时温度系数$TC_F(V_{REF})=\SI{-928}{ppm.K^{-1}}$.
+\end{itemize}
+\begin{Figure}[基于MOS分压的基准的温度性质]
+    \begin{FigureSub}[基于MOS分压的基准的温度特性]
+        \includegraphics[scale=0.8]{build/Chapter03E_05g.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[基于MOS分压的基准的温度系数]
+        \includegraphics[scale=0.8]{build/Chapter03E_05f.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+我们可以看出，在温度系数上，基于MOS分压的基准要比基于BJT分压的基准好一些，这是因为：MOS管受温度的影响要远小于PN结，尤其是当$V_{GS}$位于$V_{GS}(\te{ZTC})$的附近时。
+
+\subsection{温度无关的基准的思想}
+从\xref{subsec:基于BJT分压的基准的温度系数}和\xref{subsec:基于MOS分压的基准的温度系数}可以看出，未考虑温度无关的简单基准的温度系数$TC_F(V_{REF})$在数千$\si{ppm.K^{-1}}$的量级，这是相当高的。在了解器件的温度特性并认识到了简单基准无法获得令人满意的温度无关特性后，自这一小节开始，我们来研究如何获得温度无关的基准。
+
+温度无关的基准的原理其实非常简单：我们试图找到一对具有相反温度特性的基准
+\begin{itemize}
+    \item PTAT或$V_{PTAT}$：随温度线性增加的电压。
+    \item PTAT的含义是\textbf{正比}于绝对温度（Proportional to Absolute Temperature）。
+    \item CTAT或$V_{CTAT}$：随温度线性减小的电压。
+    \item CTAT的含义是\textbf{互补}于绝对温度（Complementary to Absolute Temperature）。
+\end{itemize}
+显然，$V_{PTAT}$或$V_{CTAT}$随温度增加和减小的斜率是不同的，我们令具有较小斜率的电压（通常斜率较小的电压是$V_{PTAT}$）乘以一个与温度无关的常数$K$后与另一电压相加，即
+\begin{Equation}
+    V_{REF}=K V_{PTAT}+V_{CTAT}
+\end{Equation}
+此时，$V_{REF}$就应该是一个与温度无关的基准。
+
+总而言之，PTAT和CTAT的思想将“找到温度无关的基准”的任务分解为“找到一对具有特定温度性质的基准”。在接下来两小节，我们将分别讨论$V_{PTAT}$和$V_{CTAT}$的产生方法。
+
+\subsection{PTAT电压和电流的产生}
+PTAT要寻求一个随温度增加而增加的电压，这需要利用PN结，我们知道
+\begin{Equation}
+    I_D=I_s\exp(\frac{V_D}{V_t})
+\end{Equation}
+假如反过来写，就是
+\begin{Equation}
+    V_D=V_t\ln(\frac{I_D}{I_s})
+\end{Equation}
+我们或许兴奋的注意到$V_t=\kB T/q$提供了温度正比，那此时的$V_{D}$是否就是$V_{PTAT}$？遗憾的是，并不是。因为依据\xref{fml:PN结的反向饱和电流的温度特性}，反向饱和电流$I_s$同样与温度相关，且考虑$I_s$的影响后，事实上$V_D$是随温度增加而减小的。不过，这已经距离正确的想法不远了。既然$V_t$可以提供我们所需的PTAT正比项而$I_s$会产生不希望的影响，那我们只要设法将$I_s$约掉就可以了。
+
+\begin{Figure}[PTAT的产生方法]
+    \includegraphics[scale=0.8]{build/Chapter03F_05.fig.pdf}
+\end{Figure}
+
+PTAT的产生方法如\xref{fig:PTAT的产生方法}所示，使用一对二极管$D_1,D_2$，其上接了两个相同的电流源$I_D$。\setpeq{PTAT电压}
+
+显然，我们有
+\begin{Equation}&[1]
+    V_{D1}=V_{t}\ln\qty(\frac{I_D}{I_{s1}})\qquad
+    V_{D2}=V_{t}\ln\qty(\frac{I_D}{I_{s2}})
+\end{Equation}
+这两个二极管$D_1,D_2$被假定是不同的，换言之，两者具有不同的$I_{ss}$。现考虑其电压差
+\begin{Equation}&[2]
+    V_{D}=V_{D1}-V_{D2}=V_t\qty[\ln(\frac{I_D}{I_{s1}})-\ln(\frac{I_D}{I_{s2}})]
+\end{Equation}
+根据对数的性质化简，注意到$I_D$被约去了
+\begin{Equation}&[3]
+    V_{D}=V_t\ln(\frac{I_{s2}}{I_{s1}})
+\end{Equation}
+现在，尽管$I_{s1},I_{s2}$都会随温度变化，但由于两者随温度变化的趋势是相同的，因此两者的比值$I_{s2}/I_{s1}$是一个不随温度的定值！这样一来，此处的$V_{D}$就是正比于温度的$V_{PTAT}$了。
+
+\begin{BoxFormula}[PTAT电压]
+    PTAT电压可以表示为
+    \begin{Equation}
+        V_{PTAT}=V_t\ln(\frac{I_{s2}}{I_{s1}})
+    \end{Equation}
+\end{BoxFormula}
+
+\xref{fig:PTAT电压}展示了$V_{PTAT}=V_{D1}-V_{D2}$以及$V_{D1},V_{D2}$的图像，其中令$T=\SI{300}{K}$时$I_{s1},I_{s2}$分别取$I_{s01}=\SI{e-15}{A}$和$I_{s02}=\SI{e-14}{A}$，即$I_{s2}/I_{s1}=10$。另外，取$I_D=\SI{0.1}{mA}$。注意到
+\begin{itemize}
+    \item $V_{D1},V_{D2}$在$T=\SI{300}{K}$时有$V_{D1}=\SI{0.6548}{V}$和$V_{D2}=\SI{0.5953}{V}$，两者均随温度增加而减小，但是，两者的间距却逐渐增大，这符合我们想用$V_{D1}-V_{D2}$构成PTAT的想法。
+    \item $V_{PTAT}$正比于温度，随温度增加线性增加，符合PTAT的定义。
+    \item $V_{PTAT}$在$T=\SI{300}{K}$时为$V_{PTAT}=\SI{0.595}{V}$，这个值很小。这一点我们从公式中也可以看出，$V_{PTAT}$仅仅是热电压$V_t$的若干倍，而倍数$\ln(I_{s2}/I_{s1})$中包含对数不可能很大。
+\end{itemize}
+\begin{Figure}[PTAT电压]
+    \begin{FigureSub}[$V_{D1}$和$V_{D2}$随温度的变化;VD1和VD2随温度的变化]
+        \includegraphics[scale=0.8]{build/Chapter03F_03a.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[$V_{PTAT}$随温度的变化;VPTAT随温度的变化]
+        \includegraphics[scale=0.8]{build/Chapter03F_03b.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+应指出，尽管$I_D$会影响$V_{D1},V_{D2}$，但它们的差$V_{PTAT}$与$I_D$无关，只取决于$I_{s2}/I_{s1}$。
+
+接下来我们要解决两个问题
+\begin{enumerate}
+    \item PTAT依照\xref{fig:PTAT的产生方法}的产生方式，需要两个相等的电流源，这如何获得？
+    \item PTAT目前是以$V_{PTAT}$的“PTAT电压”形态存在的。但是，合成$V_{REF}$的所有方式实际上都需要“PTAT电流”，我们如何能有效的将电压$V_{PTAT}$转换为电流$I_{PTAT}$呢？
+\end{enumerate}
+
+\xref{fig:PTAT电流产生电路}所示电路解决了这两个问题：$M_3,M_4$构成了一个简单PMOS电流镜，这使$D_1,D_2$上的电流是相同的。同时，$M_1,M_2$上的电流也是相同的，这就有$V_{GS1}=V_{GS2}$。$M_1,M_2$的栅是相连的，因此有$V_{G1}=V_{G2}$。进而，我们注意到，$V_{G1},V_{G2}$可以分别展开为以下式子\setpeq{PTAT电流}
+\begin{Equation}
+    V_{G1}=V_{GS1}+V_{D1}\qquad V_{G2}=V_{GS2}=V_{R1}+V_{D2}
+\end{Equation}
+这里$V_{D1}$和$V_{D2}$表示$D_1,D_2$上的电压（而非$M_1,M_2$的漏端电压），而$V_{R1}$是$R_1$电压。
+
+由于$V_{G1}=V_{G2}$且$V_{GS1}=V_{GS2}$，上式可以化简为
+\begin{Equation}
+    V_{D1}=V_{R1}+V_{D2}
+\end{Equation}
+换言之
+\begin{Equation}
+    V_{R1}=V_{D1}-V_{D2}=V_{PTAT}
+\end{Equation}
+至此，我们就说明了$R_1$两端的电压恰好就是$V_{PTAT}$，这就产生了一个电流
+\begin{Equation}
+    I_{PTAT}'=\frac{V_{PTAT}}{R_1}
+\end{Equation}
+这里用$I_{PTAT}'$而非$I_{PTAT}$表示，原因是该电流是一个“伪PTAT电流”，因为其表达式中包含了$R_1$而$R_1$的阻值会随温度变化，这会破坏PTAT性质。但无妨，此处并不需要强行设法获得“真PTAT电流”，因为最终$I_{PTAT}'$会再通过流经电阻的方式转换回电压，届时，两电阻将以比值方式出现在电压表达式中，而电阻的比值是温度无关的。这就重新变回了真PTAT。
+\begin{Figure}[PTAT电流产生电路]
+    \includegraphics[scale=0.8]{build/Chapter03F_07.fig.pdf}
+\end{Figure}
+当然，我们还需要将$I_{PTAT}'$从$R_1$转到其他支路上，这很简单，$M_5$和$M_4$具有相同的$V_{GS}$，因而两者上的电流也是相同的，这就将$I_{PTAT}'$从$R_1$即$M_4$的支路上复制到了$M_5$的支路上。
+% \begin{BoxFormula}[PTAT电流]
+%     PTAT电流可以表示为（伪PTAT电流）
+%     \begin{Equation}
+%         I_{PTAT}'=\frac{V_{PTAT}}{R_1}
+%     \end{Equation}
+% \end{BoxFormula}
+
+\subsection{CTAT电压和电流的产生}
+CTAT要寻求一个随温度增加而减少的电压，这还是需要利用PN结，而且更简单了！先前提及，由于$I_s$的影响，实际上单个PN结的$V_{D}$是随温度减小的，这恰符合CTAT的要求！
+
+CTAT的产生方法如\xref{fig:CTAT的产生方法}，使用一个二极管$D$，其上连接了电流源$I_D$。
+
+仍然从$V_D$的表达式开始\setpeq{CTAT电压}
+\begin{Equation}&[1]
+    V_D=V_t\ln(\frac{I_D}{I_s})
+\end{Equation}
+\begin{Figure}[CTAT的产生方法]
+    \includegraphics[scale=0.8]{build/Chapter03F_06.fig.pdf}
+\end{Figure}
+这一次需要展开$I_s$，根据\xref{fml:PN结的反向饱和电流的温度特性}
+\begin{Equation}&[2]
+    V_D=V_t\ln(\frac{I_D}{I_{s0}(T/T_0)^\gamma\exp(V_{G0}/V_{t0}-V_{G0}/V_t)})
+\end{Equation}
+依照对数的性质，展开
+\begin{Equation}&[3]
+    V_D=V_t\qty(\frac{V_{G0}}{V_t}-\frac{V_{G0}}{V_{t0}})-V_t\gamma\ln(\frac{T}{T_0})+V_t\ln(\frac{I_D}{I_{s0}})
+\end{Equation}
+展开第一项并考虑到$V_t/V_{t0}=T/T_0$
+\begin{Equation}&[4]
+    V_D=V_{G0}-V_{G0}\qty(\frac{T}{T_0})-V_t\gamma\ln(\frac{T}{T_0})+V_t\ln\qty(\frac{I_D}{I_{s0}})
+\end{Equation}
+我们现在想做这样一件事，已知$T=T_0$时$V_D=V_{D0}$可以写为
+\begin{Equation}&[5]
+    V_{D0}=V_{t0}\ln(\frac{I_{D0}}{I_{s0}})
+\end{Equation}
+我们想将\xrefpeq{4}中的最后一项用\xrefpeq{5}中的$V_{D0}$表示。为此，先在\xrefpeq{4}中凑出$I_{D0}$
+\begin{Equation}&[6]
+    \qquad\qquad\qquad
+    V_D=V_{G0}-V_{G0}\qty(\frac{T}{T_0})-V_t\gamma\ln(\frac{T}{T_0})+V_t\ln(\frac{I_{D0}}{I_{s0}})+V_t\ln(\frac{I_D}{I_{D0}})
+    \qquad\qquad\qquad
+\end{Equation}
+随后变$V_t$为$V_{t0}(T/T_0)$
+\begin{Equation}&[7]
+    \qquad\qquad
+    V_D=V_{G0}-V_{G0}\qty(\frac{T}{T_0})-V_t\gamma\ln(\frac{T}{T_0})+V_{t0}\ln(\frac{I_{D0}}{I_{s0}})\qty(\frac{T}{T_0})+V_t\ln(\frac{I_D}{I_{D0}})
+    \qquad\qquad
+\end{Equation}
+现在可以用\xrefpeq{5}给出的$V_{D0}$代换了
+\begin{Equation}&[8]
+    \qquad\qquad\qquad
+    V_D=V_{G0}-V_{G0}\qty(\frac{T}{T_0})-V_t\gamma\ln(\frac{T}{T_0})+V_{D0}\qty(\frac{T}{T_0})+V_t\ln(\frac{I_D}{I_{D0}})
+    \qquad\qquad\qquad
+\end{Equation}
+合并
+\begin{Equation}&[9]
+    V_D=V_{G0}-(V_{G0}-V_{D0})\qty(\frac{T}{T_0})-V_t\gamma\ln(\frac{T}{T_0})+V_t\ln(\frac{I_D}{I_{D0}})
+\end{Equation}
+现在的问题是，这里$I_D$与$I_{D0}$间是什么关系？我们或许会设想$I_D=I_{D0}$是不随温度变化的电流源，但到目前为止，我们唯一可用的可靠电流源就是\xref{subsec:PTAT电压和电流的生成}中的PTAT电流，因此
+\begin{Equation}&[10]
+    \frac{I_D}{I_{D0}}=\qty(\frac{T}{T_0})
+\end{Equation}
+为了一般化，这里引入参数$\alpha$，并且这里$\alpha=1$
+\begin{Equation}&[11]
+    \frac{I_D}{I_{D0}}=\qty(\frac{T}{T_0})^{\alpha}
+\end{Equation}
+这样一来，将\xrefpeq{11}代入\xrefpeq{9}中，得到
+\begin{Equation}
+    V_{D}=V_{G0}-(V_{G0}-V_{D0})\qty(\frac{T}{T_0})-V_t(\gamma-\alpha)\ln(\frac{T}{T_0})
+\end{Equation}
+这里的$V_D$就是所需的$V_{CTAT}$，整理如下
+\begin{BoxFormula}[CTAT电压]
+    CTAT电压可以表示为
+    \begin{Equation}
+        V_{CTAT}=V_{G0}-(V_{G0}-V_{D0})\qty(\frac{T}{T_0})-V_t(\gamma-\alpha)\ln(\frac{T}{T_0})
+    \end{Equation}
+\end{BoxFormula}
+
+有关\xref{fml:CTAT电压}，我们做以下几点说明
+\begin{itemize}
+    \item $V_{CTAT}$在$T=T_0$时$V_{CTAT}=V_{D0}$，从\xref{fig:CTAT的产生方法}的电路上看，这很合理。
+    \item $V_{CTAT}$中的$-(V_{G0}-V_{D0})(T/T_0)$项表现出CTAT随温度增加而减小的特性。为了确认这一点，我们有必要论证$(V_{G0}-V_{D0})$为正：$V_{G0}$是硅的带隙电压$\SI{1.205}{V}$，$V_{D0}$是二极管压降，通常在$\SI{0.6}{V}$左右，因此$(V_{G0}-V_{D0})>0$确实是成立的，上述论断正确。
+    \item $V_{CTAT}$中的$-V_t(\gamma-\alpha)\ln(T/T_0)$项将导致非线性行为，换言之，这里的$V_{CTAT}$并不理想，并非严格按照我们的预期，随温度增加线性减小。这一问题称为带隙曲率，之后我们会逐步展示带隙曲率的影响和名称的含义。另外，如果忘记了$\gamma,\alpha$分别是什么，这里回顾一下，$\gamma=3$首次出现在$I_s$随温度变化的表达式中，$\alpha=1$是上文刚刚定义的。
+\end{itemize}
+
+\xref{fig:PTAT电压和CTAT电压}在同一图像上展示了PTAT电压和CTAT电压，取$V_{D0}=\SI{0.6}{V}$，注意到
+\begin{itemize}
+    \item $V_{CTAT}$随温度减小，$V_{PTAT}$随温度增加，和我们设想的完全一致。
+    \item $V_{CTAT}=\SI{0.6000}{V}$，$V_{PTAT}=\SI{0.0595}{V}$，当$T=T_0$时。
+    \item $V_{CTAT}$要比$V_{PTAT}$大的多，这是因为当$T=T_0$时$V_{CTAT}=V_{D0}$，换言之，CTAT电压是一个二极管的压降，而作为对比，PTAT电压仅仅不过是热电压$V_t$的数倍。
+    \item $V_{CTAT}$随温度变化是非线性的，在\xref{fig:PTAT电压和CTAT电压}中，蓝色实线和蓝色虚线分别代表考虑和不考虑$V_{CTAT}$中非线性项$-V_t(\gamma-\alpha)\ln(T/T_0)$的曲线，可以明显看出两者间的偏差。
+    % \item $V_{CTAT}=\SI{0.6000}{V}$，$V_{PTAT}=\SI{0.0595}{V}$，当$T=T_0=\SI{300}{K}$时。应指出，这里$V_{CTAT}$在$T=T_0$时为整数的原因只是因为我们设$V_{D0}=\SI{0.6}{V}$，实践中$V_{D0}$并不是一个可以直接指定的数值，其取决于前级提供的$I_D=I_{PTAT}'$。这里为了避免繁琐而直接设定了。
+    % \item $V_{CTAT}$随温度的增加而减小，这来自$-(V_{G0}-V_{D0})(T/T_0)$项，其中$(V_{G0}-V_{D0})>0$。
+    % \item $V_{CTAT}$随温度的变化是非线性的，这来自$-V_t(\gamma-\alpha)\ln(T/T_0)$，其中对数造成了非线性，
+\end{itemize}
+\begin{Figure}[PTAT电压和CTAT电压]
+    \includegraphics[scale=0.8]{build/Chapter03F_04a.fig.pdf}
+\end{Figure}
+
+这里我们回顾一下PTAT和CTAT电压的产生方式
+\begin{itemize}
+    \item PTAT电压要求随温度增加，由$2$个二极管的电压差产生，如\xref{fig:PTAT的产生方法}所示。
+    \item CTAT电压要求随温度减小，由$1$个二极管的电压产生，如\xref{fig:CTAT的产生方法}所示。
+\end{itemize}
+在本小节最后，我们讨论一下CTAT电流的产生方式，如\xref{fig:CTAT电流产生电路}所示，该电路的功能是，首先依照\xref{fig:CTAT的产生方法}使$I_{PTAT}'$流经$D$，随后，该电路能保证$R_2$上的电压与$D$上的电压相同，从而将$V_{CTAT}$转移到$R_2$两端并通过$R_2$产生$I_{CTAT}'$，最后通过$M_6$将$I_{CTAT}'$从$M_5$复制出去。
+\begin{Figure}[CTAT电流产生电路]
+    \includegraphics[scale=0.8]{build/Chapter03F_08.fig.pdf}
+\end{Figure}
+我们尚未完全弄清该电路为何能使$D$和$R_2$的电压$V_{D},V_{R2}$相同，以下给出一种可能正确的解释：不妨先假设$V_{D}=V_{R2}$，由于$V_{G1}=V_{G2}$，$V_{G1}=V_{GS1}+V_D$，$V_{G2}=V_{GS2}+V_{R2}$，这里也有$V_{GS1}=V_{GS2}$，这同时意味着$I_1=I_2$。现设想。若$V_{R2}$需增大些，从电压的角度看这需要令$V_{GS2}$减小些，从电流的角度看这需要令$I_2$增大些，然而这两者是矛盾的，故不可能。
+
+\subsection{温度无关的基准的产生}
+现在，我们已经有了PTAT和CTAT，如何产生温度无关的基准？有以下两种方式
+\begin{enumerate}
+    \item 串联型：$I_{PTAT}'$流经电阻变回$V_{CTAT}$与$V_{PTAT}$串联电压相加，如\xref{fig:串联型}所示。
+    \item 并联型：$I_{PTAT}'$和$I_{CTAT}'$并联电流相加，如\xref{fig:并联型}所示。
+\end{enumerate}
+\begin{Figure}[温度无关的基准的两种构成方式]
+    \begin{FigureSub}[串联型]
+        \includegraphics[scale=0.8]{build/Chapter03F_11.fig.pdf}
+    \end{FigureSub}
+    \qquad
+    \begin{FigureSub}[并联型]
+        \includegraphics[scale=0.8]{build/Chapter03F_12.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+接下来，我们先讨论较简单的串联型基准，随后推广至并联型基准。
+
+\subsubsection{串联型温度无关的基准}
+串联型温度无关的基准，基于\xref{fig:串联型}，完整电路如\xref{fig:串联型温度无关的基准}所示
+\begin{Figure}[串联型温度无关的基准]
+    \includegraphics[scale=0.8]{build/Chapter03F_09.fig.pdf}
+\end{Figure}
+\xref{fig:串联型温度无关的基准}中，左侧为\xref{fig:PTAT电流产生电路}所示的$I_{PTAT}'$产生电路，右侧$I_{PTAT'}$流过$R_2$和$D_3$。
+
+在$R_2$上，$I_{PTAT}'=V_{PTAT}/R_1$还原回PTAT电压
+\begin{Equation}
+    V_{R2}=\qty(\frac{R_2}{R_1})V_{PTAT}
+\end{Equation}
+在$D_3$上，$I_{PTAT}'$产生$V_{CTAT}$
+\begin{Equation}
+    V_{D3}=V_{CTAT}
+\end{Equation}
+输出的$V_{REF}$就是上面两者$V_{R2},V_{D3}$的和
+\begin{Equation}
+    V_{REF}=\qty(\frac{R_2}{R_1})V_{PTAT}+V_{CTAT}
+\end{Equation}
+整理如下
+\begin{BoxFormula}[串联型温度无关的基准]
+    串联型温度无关的基准的$V_{REF}$为
+    \begin{Equation}
+        V_{REF}=\qty(\frac{R_2}{R_1})V_{PTAT}+V_{CTAT}
+    \end{Equation}
+\end{BoxFormula}
+若对比\xref{subsec:温度无关的基准的思想}中$V_{REF}=KV_{PTAT}+V_{CTAT}$，我们可以看出该处$K=R_2/R_1$，那么现在的问题是，这里$R_2/R_1$应当如何确定？显然，这是不可以任意指定的，我们需要保证所选取的$K=R_2/R_1$可以令$V_{PTAT}$和$V_{CTAT}$随温度的变化相互抵消，这相当于
+\begin{Equation}[温度无关条件]
+    \dv{V_{REF}}{T}=\qty(\frac{R_2}{R_1})\dv{V_{PTAT}}{T}+\dv{V_{CTAT}}{T}=0
+\end{Equation}
+为了计算上式，我们必须要先求出$\dv*{V_{PTAT}}{T}$和$\dv*{V_{CTAT}}{T}$的表达式。
+
+根据\xref{fml:PTAT电压}
+\begin{Equation}
+    V_{PTAT}=V_t\ln(\frac{I_{s2}}{I_{s1}})
+\end{Equation}
+求导得
+\begin{Equation}
+    \dv{V_{PTAT}}{T}=\frac{V_t}{T}\ln(\frac{I_{s2}}{I_{s1}})=\frac{V_{PTAT}}{T}
+\end{Equation}
+整理如下
+\begin{BoxFormula}[PTAT电压随温度的变化率]
+    PTAT电压随温度的变化率为
+    \begin{Equation}
+        \dv{V_{PTAT}}{T}=\frac{V_{PTAT}}{T}
+    \end{Equation}
+    特别的，当$T=T_0$时
+    \begin{Equation}
+        \eval{\dv{V_{PTAT}}{T}}_{T=T_0}=\frac{V_{PTAT0}}{T_0}
+    \end{Equation}
+\end{BoxFormula}
+根据\xref{fml:CTAT电压}\setpeq{CTAT电压求导}
+\begin{Equation}&[1]
+    V_{CTAT}=V_{G0}-(V_{G0}-V_{D0})\qty(\frac{T}{T_0})-V_t(\gamma-\alpha)\ln(\frac{T}{T_0})
+\end{Equation}
+求导得
+\begin{Equation}&[2]
+    \qquad\qquad
+    \dv{V_{CTAT}}{T}=-(V_{G0}-V_{D0})\qty(\frac{1}{T_0})-\frac{V_t}{T_0}(\gamma-\alpha)\ln(\frac{T}{T_0})-V_t(\gamma-\alpha)\qty(\frac{T_0}{T})\qty(\frac{1}{T_0})
+    \qquad\qquad
+\end{Equation}
+观察\xrefpeq{1}，注意到
+\begin{Equation}&[3]
+    \frac{V_{CTAT}-V_{G0}}{T}=-(V_{G0}-V_{D})\qty(\frac{1}{T_0})-\frac{V_t}{T}(\gamma-\alpha)\ln(\frac{T}{T_0})
+\end{Equation}
+我们试着用\xrefpeq{3}代换\xrefpeq{2}的前半部分
+\begin{Equation}&[4]
+    \qquad\qquad
+    \dv{V_{CTAT}}{T}=\frac{V_{CTAT}-V_{G0}}{T}+\qty(\frac{V_t}{T}-\frac{V_{t}}{T_0})(\gamma-\alpha)\ln(\frac{T}{T_0})-\qty(\frac{V_t}{T})(\gamma-\alpha)
+    \qquad\qquad
+\end{Equation}
+整理如下
+\begin{BoxFormula}[CTAT电压随温度的变化率]
+    CTAT电压随温度的变化率为
+    \begin{Equation}
+        \qquad\quad
+        \dv{V_{CTAT}}{T}=\frac{V_{CTAT}-V_{G0}}{T}+\qty(\frac{V_t}{T}-\frac{V_{t}}{T_0})(\gamma-\alpha)\ln(\frac{T}{T_0})-\qty(\frac{V_t}{T})(\gamma-\alpha)
+        \qquad\quad
+    \end{Equation}
+    特别的，当$T=T_0$时
+    \begin{Equation}
+        \eval{\dv{V_{CTAT}}{T}}_{T=T_0}=\frac{V_{CTAT0}-V_{G0}}{T_0}-\qty(\frac{V_t}{T_0})(\gamma-\alpha)
+    \end{Equation}
+\end{BoxFormula}
+现在让我们重新回到$K=R_2/R_1$的求解上，依照\xrefeq{温度无关条件}，应有
+\begin{Equation}
+    K=-\frac{\dv*{V_{CTAT}}{T}}{\dv*{V_{PTAT}}{T}}
+\end{Equation}
+然而，由于CTAT电压具有带隙曲率问题，此处$\dv*{V_{CTAT}}{T}$会随温度变化。换言之，在不同温度$T$下令$\dv*{V_{REF}}{T}=0$的$K$是不同的，但$K$只能是一个常数。由于电路通常工作在室温$T=T_0$下，故$K$的取值保障$T=T_0$时温度无关$\dv*{V_{CTAT}}{T}=0$的成立，因此有
+\begin{Equation}
+    K=-\frac{\dv*{V_{CTAT}}{T}|_{T=T_0}}{\dv*{V_{PTAT}}{T}|_{T=T_0}}
+\end{Equation}
+代入\xref{fml:PTAT电压随温度的变化率}和\xref{fml:CTAT电压随温度的变化率}
+\begin{Equation}
+    K=-\frac{V_{CTAT0}-V_{G0}-V_t(\gamma-\alpha)}{V_{PTAT0}}
+\end{Equation}
+这就是我们所要求的温度无关条件，整理如下。
+\begin{BoxFormula}[温度无关条件]
+    温度无关条件为
+    \begin{Equation}
+        K=\frac{R_2}{R_1}=-\frac{V_{CTAT0}-V_{G0}-V_t(\gamma-\alpha)}{V_{PTAT0}}
+    \end{Equation}
+\end{BoxFormula}
+我们现在来计算$V_{REF}$的室温值$V_{REF0}$，根据\xref{fml:串联型温度无关的基准}
+\begin{Equation}
+    V_{REF}=\qty(\frac{R_2}{R_1})V_{PTAT}+V_{CTAT}
+\end{Equation}
+考虑$T=T_0$的情况
+\begin{Equation}
+    V_{REF0}=\qty(\frac{R_2}{R_1})V_{PTAT0}+V_{CTAT0}
+\end{Equation}
+若$K=R_2/R_1$满足\xref{fml:温度无关条件}的温度无关条件
+\begin{Equation}
+    V_{REF0}=-V_{CTAT0}+V_{G0}+V_t(\gamma-\alpha)+V_{CTAT0}
+\end{Equation}
+即有
+\begin{Equation}
+    V_{REF0}=V_{G0}+V_t(\gamma-\alpha)
+\end{Equation}
+% 这是一个相当简洁的结果：即室温$T=T_0$下，基准电压$V_{REF0}$由硅的带隙电压$V_{G0}$和两倍的热电压$2V_t$构成！若代入$V_{G0}=\SI{1.205}{V}$和$V_t=\SI{0.026}{V}$，即可得$V_{REF0}=\SI{1.257}{V}$或近似记为$V_{REF0}=\SI{1.25}{V}$。因此，任何串联型温度无关基准，在室温下都会趋于$\SI{1.25}{V}$左右。
+
+将结果整理如下
+\begin{BoxFormula}[串联型温度无关的基准的室温值]
+    串联型温度无关的基准在室温下$V_{REF0}$为
+    \begin{Equation}
+        V_{REF0}=V_{G0}+V_t(\gamma-\alpha)
+    \end{Equation}
+\end{BoxFormula}
+关于\xref{fml:串联型温度无关的基准的室温值}，说明以下几点
+\begin{itemize}
+    \item 基准电压$V_{REF0}$由带隙电压$V_{G0}$和两倍热电压$2V_t$构成（$\gamma-\alpha=2$）。
+    \item 基准电压$V_{REF0}=\SI{1.257}{V}$或近似以$\SI{1.25}{V}$表示（$V_{G0}=\SI{1.205}{V}$和$V_{t}=\SI{0.026}{V}$），事实上，任何串联型温度无关基准在室温下都将近似趋于$\SI{1.25}{V}$，这是其原理所决定的。
+    \item 基准电压$V_{REF0}$在数值上略大于带隙电压，因此，传统上这类基准被称为带隙基准，这也是为何先前CTAT的非线性特征被称为带隙曲率。但应指出的是，带隙基准实现温度无关与带隙毫无关系！我们并非通过带隙电压不随温度变化的性质实现的温度无关，而是通过PTAT和CTAT的温度互补特性实现的，只不过结果恰好是带隙电压$V_{G0}$罢了。
+\end{itemize}
+应指出，这里的$V_{REF0}$只是$T=T_0$下的$V_{REF}$，由于CTAT的带隙曲率问题，$V_{REF}$仍然会随温度变化。\xref{fig:温度无关的基准}中全面展现了$V_{REF}$的温度特性，仍取$I_{s2}/I_{s1}=10$和$V_{D0}=\SI{0.6}{V}$
+\begin{itemize}
+    \item \xref{fig:温度无关的基准--基准电压}展示了$V_{REF}$随温度的变化以及$V_{REF}$与带隙电压$V_{G0}$的对比。我们明显可以看出$V_{REF}$以$T=T_0$为中心的“曲率”特征，由此可以看出将CTAT的非线性项的影响称为“带隙曲率”是颇为形象的。当然，这里还要重申的是，所谓“带隙曲率”只不过是描述了“带隙基准”随温度变化曲线的形状罢了，和带隙本身的弯曲毫无关系。
+    \item \xref{fig:温度无关的基准--基准电压的温度系数}展示了$V_{REF}$的温度系数$TC_F(V_{REF})$，注意到$T=T_0$时$TC_F(V_{REF})=0$，这是由于$K=R_2/R_1$的取值保证的是$T=T_0$下的温度无关。温度系数$TC_F(V_{REF})$在室温附近大约在$\pm \SI{20}{ppm.K^{-1}}$左右，相较于未考虑温度性质的简单基准，这已经提升了很多了。最后，$TC_F(V_{REF})$在$T>T_0$时值为负，$TC_F(V_{REF})$在$T<T_0$时值为正。
+    \item \xref{fig:温度无关的基准--比例系数}展示了若期望在温度$T$下有温度无关，那么比例系数$K=R_2/R_1$应取多少？注意到$T=T_0$时$K=11.0321$。随着期望温度$T$的增加，比例系数$K$也需略微增加。
+\end{itemize}
+
+\begin{Figure}[温度无关的基准]
+    \begin{FigureSub}[基准电压;温度无关的基准--基准电压]
+        \includegraphics[scale=0.8]{build/Chapter03F_04b.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[基准电压的温度系数;温度无关的基准--基准电压的温度系数]
+        \includegraphics[scale=0.8]{build/Chapter03F_04c.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.5cm}
+    \begin{FigureSub}[比例系数;温度无关的基准--比例系数]
+        \includegraphics[scale=0.8]{build/Chapter03F_04d.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+进一步降低温度系数$TC_F(V_{REF})$需要设法矫正带隙曲率，在此不再做深入讨论。
+
+\subsubsection{并联型温度无关的基准}
+并联型温度无关的基准，基于\xref{fig:并联型}，完整电路如\xref{fig:并联型温度无关的基准}所示，尽管看起来复杂了些，但电路组成都是熟悉的部分。左侧和中间的部分分别是\xref{fig:PTAT电流产生电路}和\xref{fig:CTAT电流产生电路}给出的$I_{PTAT}'$和$I_{CTAT}'$产生电路。\xref{fig:并联型温度无关的基准}用红线和蓝线标注了“PTAT总线”和“CTAT总线”，它们通过电压方式传递了$I_{PTAT}'$和$I_{CTAT}'$，只要在总线上并联一PMOS即可实现电流取用。最后，右侧，通过将$I_{PTAT}'$和$I_{CTAT}'$并联实现PTAT和CTAT的相加，最终流过电阻$R_3$将电流转换回电压。
+\begin{Figure}[并联型温度无关的基准]
+    \includegraphics[scale=0.8]{build/Chapter03F_10.fig.pdf}
+\end{Figure}
+这里$V_{REF}$可以表示为下式，考虑到$I_{PTAT}'=V_{PTAT}/R_1$和$I_{CTAT}'=V_{CTAT}/R_2$
+\begin{Equation}
+    \qquad\qquad\qquad
+    V_{REF}=R_3(I_{PTAT'}+I_{CTAT}')=\qty(\frac{R_3}{R_1})V_{PTAT}+\qty(\frac{R_3}{R_2})V_{CTAT}
+    \qquad\qquad\qquad
+\end{Equation}
+整理如下
+\begin{BoxFormula}[并联型温度无关的基准]
+    并联型温度无关的基准的$V_{REF}$为
+    \begin{Equation}
+        V_{REF}=\qty(\frac{R_3}{R_1})V_{PTAT}+\qty(\frac{R_3}{R_2})V_{CTAT}
+    \end{Equation}
+\end{BoxFormula}
+容易证明，由于$V_{PTAT},V_{CTAT}$的占比没有变化，并联型的温度无关条件与串联型完全相同。
+
+类似的亦可以得到并联型的$V_{REF}$的室温值$V_{REF0}$的直接表达式
+\begin{BoxFormula}[串联型温度无关的基准的室温值]
+    串联型温度无关的基准在室温下$V_{REF0}$为
+    \begin{Equation}
+        V_{REF0}=\frac{R_3}{R_2}\qty[V_{G0}+V_t(\gamma-\alpha)]
+    \end{Equation}
+\end{BoxFormula}
+由此可见，并联型相较串联型的优点是，通过$R_3/R_2$可以实现任何所希望的$V_{REF}$，而不仅限于$\SI{1.25}{V}$。当然，代价也是明显的，并联型所需要的MOS管数几乎是串联型的一倍多。

@@ -26,7 +26,7 @@ def SpiceWave(rdat,wave):
     return rdat.get_trace(wave).get_wave(0)
 
 folder="./build"
-filename="Chapter03E_01"
+filename="Chapter03E_02"
 
 fileGhost=os.path.join(folder,filename+".fig.pdf")
 fileASC=filename+".fig.asc"
@@ -64,9 +64,9 @@ netlist=SpiceEditor(fileASC)
 netlist.add_instruction(xNMOS)
 netlist.add_instruction(xPMOS)
 netlist.set_component_value("VDD","0")
+netlist.set_element_model("M1","xNMOS W=0.8u L=0.8u")
 netlist.set_component_value("R1","100k")
-netlist.set_component_value("R2","25k")
-netlist.add_instruction(r".dc VDD 0 8 0.001")
+netlist.add_instruction(r".dc VDD 0 8 0.01")
 
 graphNum=2
 idVx=0
@@ -103,8 +103,6 @@ for id in range(graphNum):
     axes=plt.gca()
     axes.grid(linewidth=0.25)
     axes.tick_params(labeltop=True,labelright=True,top=True,right=True,direction="in",width=0.3)
-    if id in[idSVV]:
-        axes.set_ylim(-0.1,1.1)
     plt.savefig(fileExport(id),bbox_inches ='tight')
 
 os.remove(fileNET)

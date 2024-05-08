@@ -26,7 +26,7 @@ def SpiceWave(rdat,wave):
     return rdat.get_trace(wave).get_wave(0)
 
 folder="./build"
-filename="Chapter03E_01"
+filename="Chapter03E_07"
 
 fileGhost=os.path.join(folder,filename+".fig.pdf")
 fileASC=filename+".fig.asc"
@@ -64,13 +64,17 @@ netlist=SpiceEditor(fileASC)
 netlist.add_instruction(xNMOS)
 netlist.add_instruction(xPMOS)
 netlist.set_component_value("VDD","0")
-netlist.set_component_value("R1","100k")
-netlist.set_component_value("R2","25k")
-netlist.add_instruction(r".dc VDD 0 8 0.001")
+netlist.set_element_model("M1","xNMOS W=0.8u L=0.8u")
+netlist.set_element_model("M2","xNMOS W=0.8u L=0.8u")
+netlist.set_element_model("M3","xPMOS W=0.8u L=0.8u")
+netlist.set_element_model("M4","xPMOS W=0.8u L=0.8u")
+netlist.set_component_value("R1","200k")
+netlist.add_instruction(r".dc VDD 0 8 0.01")
 
-graphNum=2
+graphNum=3
 idVx=0
-idSVV=1
+idIx=1
+idSVV=2
 
 for i in range(graphNum):
     plt.figure(i,figsize=(5,5*0.618))
@@ -88,12 +92,23 @@ nl=copy.deepcopy(netlist)
 rdat=SpiceRun(nl)
 d["VDD"]=SpiceWave(rdat,"V(VDD)")
 d["VREF"]=SpiceWave(rdat,"V(VREF)")
+d["VD1"]=SpiceWave(rdat,"V(VD1)")
+d["VD2"]=SpiceWave(rdat,"V(VD2)")
+d["ID1"]=SpiceWave(rdat,"Id(M1)")
+d["ID2"]=SpiceWave(rdat,"Id(M2)")
+
 d["dVREF"]=LDiff(d["VDD"],d["VREF"])
 d["SVV"]=(d["VDD"]/d["VREF"])*d["dVREF"]
 
 plt.figure(idVx)
 plt.plot(d["VDD"],d["VDD"])
 plt.plot(d["VDD"],d["VREF"])
+plt.plot(d["VDD"],d["VD1"])
+plt.plot(d["VDD"],d["VD2"])
+
+plt.figure(idIx)
+plt.plot(d["VDD"],d["ID1"])
+plt.plot(d["VDD"],d["ID2"])
 
 plt.figure(idSVV)
 plt.plot(d["VDD"],d["SVV"])
@@ -103,8 +118,11 @@ for id in range(graphNum):
     axes=plt.gca()
     axes.grid(linewidth=0.25)
     axes.tick_params(labeltop=True,labelright=True,top=True,right=True,direction="in",width=0.3)
-    if id in[idSVV]:
-        axes.set_ylim(-0.1,1.1)
+    axes.set_xlim(4.5,5.5)
+    if id in [idSVV]:
+        axes.set_ylim(0,0.1)
+    if id in [idVx]:
+        axes.set_ylim(0,2)
     plt.savefig(fileExport(id),bbox_inches ='tight')
 
 os.remove(fileNET)

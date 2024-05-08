@@ -1,0 +1,56 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+    
+\xSetX
+\xValDefine{xL}[-2]
+\xValDefine{xR}[+2]
+\xValMiddle{xC}{xL}{xR}
+\xValOffset{xO}{xR}[2]
+\xValMiddle{xC}{xL}{xR}
+
+\xSetY
+\xValDefine{yB}[-3.2]
+\xValDefine{yA}[+3.2]
+\xValMiddle{yC}{yA}{yB}
+\xValPropor{yMA}{yA}{yB}[1/4]
+\xValPropor{yMB}{yA}{yB}[2/4]
+\xValPropor{yMC}{yA}{yB}[0.65]
+
+\path (xL|-yMA) node[pmos,xscale=-1] (M4) {\ctikzflipx{$M_4$}};
+\path (xL|-yMB) node[nmos,xscale=-1] (M3) {\ctikzflipx{$M_3$}};
+\path (xC|-yMC) node[nmos,xscale=-1] (M1) {\ctikzflipx{$M_1$}};
+\path (xR|-yMC) node[nmos] (M2) {$M_2$};
+\path (xR|-yMA) node[pmos] (M5) {};
+\path (xO|-yMA) node[pmos] (M6) {$M_6$};
+\path (M5.S) node[below right] {$M_5$};
+
+\path (xC|-yMA) node[jump crossing] (Cx) {};
+
+\draw (M4.G) -- (Cx.west) (Cx.east) -- (M5.G) -- (M6.G);
+\draw (M1.G) -- (M2.G);
+
+\draw (M4.G) node[circ] {} |- (M4.D) node[circ] {};
+\draw (M2.G) node[circ] {} |- (M2.D) node[circ] {};
+
+\draw (xL|-yA) node[vdd,anchor=north] {$V_{DD}$} -- (M4.S);
+\draw (M4.D)--(M3.D);
+\draw (M3.S) to[short] (xL|-yB) node[tlground] {};
+
+\draw (xR|-yA) node[vdd,anchor=north] {$V_{DD}$} -- (M5.S);
+\draw (M5.D)--(M2.D);
+\draw (M2.S) to[R=$R_2$,f_=$I_{CTAT}'$] (xR|-yB) node[tlground] {};
+\draw (M1.S) to[D=$D$] (xC|-yB) node[tlground] {};
+
+\draw (M3.G) -| (M1.D);
+
+\draw (xC|-yA) node[vdd,anchor=north] {$V_{DD}$} -- (Cx.north) (Cx.south) to[isource,l=$I_{PTAT}'$,-*] (xC|-yMB);
+
+\draw (xO|-yA) node[vdd,anchor=north] {$V_{DD}$} -- (M6.S);
+\draw (M6.D) to[short,-o,f_=$I_{CTAT}'$] (xO|-yMB);
+
+\xValBorder{xL}[-0.8]{xO}[+0.8]{yB}[-0.5]{yA}[0.7]*
+
+\end{tikzpicture}
+\end{document}

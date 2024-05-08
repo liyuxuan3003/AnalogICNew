@@ -1,0 +1,135 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+    
+\xSetX
+\xValDefine{xAL}[0]
+\xValOffset{xAR}{xAL}[3]
+
+\xValOffset{xBL}{xAR}[2.5]
+\xValOffset{xBR}{xBL}[4]
+\xValMiddle{xBC}{xBL}{xBR}
+
+\xValOffset{xCL}{xBR}[2.5]
+\xValOffset{xCR}{xCL}[1.75]
+
+\xValOffset{xV}{xCR}[1]
+
+\xValOffset{xABorL}{xAL}[-1]
+\xValOffset{xABorR}{xAR}[+1]
+\xValMiddle{xABorC}{xABorL}{xABorR}
+
+\xValOffset{xBBorL}{xBL}[-1]
+\xValOffset{xBBorR}{xBR}[+1]
+\xValMiddle{xBBorC}{xBBorL}{xBBorR}
+
+\xValOffset{xCBorL}{xCL}[-1]
+\xValOffset{xCBorR}{xV}[+1.2]
+\xValMiddle{xCBorC}{xCBorL}{xCBorR}
+
+\xSetY
+\xValDefine{yB}[-4]
+\xValDefine{yA}[+4]
+\xValMiddle{yC}{yA}{yB}
+\xValPropor{yMA}{yA}{yB}[1/5]
+\xValPropor{yMB}{yA}{yB}[2/5]
+\xValPropor{yMC}{yA}{yB}[3/5]
+\xValPropor{yMD}{yA}{yB}[4/5]
+\xValPropor{yMX}{yMB}{yMC}[0.5]
+\xValPropor{yMY}{yMC}{yMD}[0.2]
+\xValPropor{yMT}{yMC}{yMD}[0.65]
+
+\xValOffset{yBx}{yB}[-0.5]
+\xValOffset{yAx}{yA}[+0.7]
+
+\draw[very thin,red,dashed,fill=red!5!white] (xABorL|-yBx) rectangle (xABorR|-yAx);
+\draw[very thin,blue,dashed,fill=blue!5!white] (xBBorL|-yBx) rectangle (xBBorR|-yAx);
+\draw[very thin,black,dashed,fill=black!5!white] (xCBorL|-yBx) rectangle (xCBorR|-yAx);
+
+\path (xABorC|-yBx) node[below=0.1cm,red] {\Large PTAT};
+\path (xBBorC|-yBx) node[below=0.1cm,blue] {\Large CTAT};
+\path (xCBorC|-yBx) node[below=0.1cm] {\Large Parallel};
+
+\path (xAL|-yMX) node[nmos,xscale=-1] (M1) {\ctikzflipx{$M_1$}};
+\path (xAL|-yMA) node[pmos,xscale=-1] (M3) {\ctikzflipx{$M_3$}};
+\path (xBC|-yMT) node[nmos,xscale=-1] (M5) {\ctikzflipx{$M_{5}$}};
+\path (xBL|-yMB) node[pmos,xscale=-1] (M8) {\ctikzflipx{$M_8$}};
+\path (xBL|-yMY) node[nmos,xscale=-1] (M7) {\ctikzflipx{$M_7$}};
+
+\path (xAR|-yMX) node[nmos] (M2) {$M_2$};
+\path (xAR|-yMA) node[pmos] (M4) {};
+\path (xBR|-yMT) node[nmos] (M6) {$M_6$};
+\path (xBR|-yMB) node[pmos] (M9) {};
+\path (xBC|-yMA) node[pmos] (M10) {};
+\path (xCL|-yMB) node[pmos] (M11) {$M_{11}$};
+\path (xCR|-yMA) node[pmos] (M12) {$M_{12}$};
+
+\path (xBL|-yMA) node[jump crossing] (C8) {};
+\path (xBR|-yMA) node[jump crossing] (C9) {};
+\path (xBC|-yMB) node[jump crossing] (C5) {};
+\path (xCL|-yMA) node[jump crossing] (C11) {};
+
+\path (M4.S) node[below right] {$M_4$};
+\path (M9.S) node[below right] {$M_9$};
+\path (M10.S) node[below right] {$M_{10}$};
+
+\draw (xAL|-yA) node[vdd,anchor=north] {$V_{DD}$} -- (M3.S);
+\draw (M3.D) -- (M1.D);
+\draw (M1.S) to[D=$D_1$] (xAL|-yB) node[tlground] {};
+
+\draw (xAR|-yA) node[vdd,anchor=north] {$V_{DD}$} -- (M4.S);
+\draw (M4.D) -- (M2.D);
+\draw (M2.S) to[R=$R_1$,f_=$I_{PTAT}'$] (xAR|-yMD) to[D=$D_2$] (xAR|-yB) node[tlground] {};
+
+\draw (xBL|-yA) node[vdd,anchor=north] {$V_{DD}$} -- (C8.north);
+\draw (C8.south) -- (M8.S);
+\draw (M8.D) -- (M7.D);
+\draw (M7.S) -- (xBL|-yB) node[tlground] {};
+
+\draw (xBC|-yA) node[vdd,anchor=north] {$V_{DD}$} -- (M10.S);
+\draw (M10.D) to[short,f_=$I_{PTAT}'$] (C5.north);
+\draw (C5.south) -- (M5.D);
+\draw (M5.S) to[D=$D_3$] (xBC|-yB) node[tlground] {};
+
+\draw (xBR|-yA) node[vdd,anchor=north] {$V_{DD}$} -- (C9.north);
+\draw (C9.south) -- (M9.S);
+\draw (M9.D) to[short,f_=$I_{CTAT}'$] (M6.D);
+\draw (M6.S) to[R=$R_2$] (xBR|-yB) node[tlground] {};
+
+\draw (xCL|-yA) node[vdd,anchor=north] {$V_{DD}$} -- (C11.north);
+\draw (C11.south) -- (M11.S);
+\draw (M11.D) to[short,f=$I_{CTAT}'$] (xCL|-yMC);
+
+\draw (xCR|-yA) node[vdd,anchor=north] {$V_{DD}$} -- (M12.S);
+\draw (M12.D) -- (M12.D|-M11.D) to[short,f=$I_{PTAT}'$] (xCR|-yMC);
+\draw (xCR|-yMC) to[R=$R_3$] (xCR|-yB) node[tlground] {};
+
+%------------------------------------%
+
+\draw (M1.G) -- (M2.G);
+
+\draw[red] (M3.G) -- (M4.G) -- (C8.west);
+\draw[red] (C8.east) -- (M10.G) -- (C9.west);
+\draw[red] (C9.east) -- node[above=0.1cm,fill=white,draw=red] {PTAT}  (C11.west);
+\draw[red] (C11.east) -- (M12.G);
+
+\draw[blue] (M8.G) -- (C5.west);
+\draw[blue] (C5.east) -- (M9.G);
+\draw[blue] (M9.G) -- node[below right=0.1cm,fill=white,draw=blue] {CTAT} (M11.G);
+
+\draw (M7.G) -- (M7.G-|M5.D) node[circ] {}; 
+
+\draw (xCL|-yMC) -- (xCR|-yMC) to[short,*-o] (xV|-yMC) node[right] {$V_{REF}$};
+
+\foreach \x in {M1,M4,M6,M8}
+{
+    \draw (\x.G) node[circ] {} |- (\x.D) node[circ] {};
+}
+
+%------------------------------------%
+
+\xValBorder{xABorL}{xCBorR}{yBx}[-0.8]{yAx}*
+
+\end{tikzpicture}
+\end{document}

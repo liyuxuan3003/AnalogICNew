@@ -1,0 +1,29 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+    
+\xSetX
+\xValDefine{xL}[-1.75]
+\xValDefine{xR}[+1.75]
+\xValMiddle{xC}{xL}{xR}
+\xValPropor{xLx}{xL}{xR}[0.2]
+\xValMirror{xRx}{xLx}{xC}
+
+\xSetY
+\xValDefine{yB}[-2.5]
+\xValDefine{yA}[+2.5]
+\xValMiddle{yC}{yA}{yB}
+
+\draw (xL|-yA) node[vdd,anchor=north] {$V_{DD}$} to[isource,l=$I_D$] (xL|-yC) to[D,l=$D_1$] (xL|-yB) node[tlground] {};
+\draw (xR|-yA) node[vdd,anchor=north] {$V_{DD}$} to[isource,l_=$I_D$] (xR|-yC) to[D,l_=$D_2$] (xR|-yB) node[tlground] {};
+
+\draw (xL|-yC) to[short,*-o] (xLx|-yC);
+\draw (xR|-yC) to[short,*-o] (xRx|-yC);
+
+\xDrawVoltage{R}(xLx|-yC)(xRx|-yC)[$V_{PTAT}$]
+
+\xValBorder{xL}[-0.6]{xR}[+0.6]{yB}[-0.5]{yA}[0.7]*
+
+\end{tikzpicture}
+\end{document}

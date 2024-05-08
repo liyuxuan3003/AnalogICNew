@@ -1,0 +1,45 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xSetX
+\xValDefine{xL}[-2]
+\xValDefine{xR}[+2]
+\xValPropor{xC}{xL}{xR}[0.5]
+
+\xSetY
+\xValDefine{yB}[-3]
+\xValDefine{yA}[+3]
+\xValMiddle{yC}{yA}{yB}
+\xValPropor{yMA}{yC}{yA}[0.60]
+\xValPropor{yMB}{yC}{yB}[0.33]
+\xValPropor{yVREF}{yMB}{yB}[1/3]
+
+\path (xL|-yMB) node[nmos,xscale=-1] (M1) {\ctikzflipx{$M_1$}};
+\path (xR|-yC) node[nmos] (M2) {$M_2$};
+\path (xL|-yMA) node[pmos,xscale=-1] (M3) {\ctikzflipx{$M_3$}};
+\path (xR|-yMA) node[pmos] (M4) {$M_4$};
+\draw (M4.G) node[circ] {} |- (M4.D) node[circ] {};
+
+\draw (M3.G) -- (M4.G);
+\draw (M4.D) -- (M2.D);
+\draw (M2.G) -| (M1.D);
+\draw (M3.D) -- (M1.D|-M2.G) node[circ] {};
+\draw (M3.S) -- (xL|-yA);
+\draw (M4.S) -- (xR|-yA);
+\draw (M1.G) -| (M2.S);
+\draw (M1.S) to[short,f=$I_0$] (xL|-yB);
+\draw (xC|-yMB) to[short,*-o] (xC|-yVREF) node[below] {$V_{REF}$};
+\draw (xR|-yMB) to[R=$R_0$,f_=$I_0$,*-] (xR|-yB);
+
+\draw (xL|-yB) node[tlground] {};
+\draw (xR|-yB) node[tlground] {};
+
+\draw (xL|-yA) node[vdd,anchor=north] {$V_{DD}$};
+\draw (xR|-yA) node[vdd,anchor=north] {$V_{DD}$};
+
+\xValBorder{xL}[-0.95]{xR}[0.95]{yB}[-0.5]{yA}[+0.7]*
+
+\end{tikzpicture}
+\end{document}

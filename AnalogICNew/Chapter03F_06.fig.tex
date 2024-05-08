@@ -1,0 +1,23 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+    
+\xSetX
+\xValDefine{xL}[-0.8]
+\xValDefine{xR}[+0.8]
+\xValMiddle{xC}{xL}{xR}
+
+\xSetY
+\xValDefine{yB}[-2.5]
+\xValDefine{yA}[+2.5]
+\xValMiddle{yC}{yA}{yB}
+
+\draw (xL|-yA) node[vdd,anchor=north] {$V_{DD}$} to[isource,l=$I_D$] (xL|-yC) to[D,l=$D$] (xL|-yB) node[tlground] {};
+
+\draw (xL|-yC) to[short,*-o] (xR|-yC) node[right] {$V_{CTAT}$};
+
+\xValBorder{xL}[-0.6]{xR}[+1.4]{yB}[-0.5]{yA}[0.7]*
+
+\end{tikzpicture}
+\end{document}

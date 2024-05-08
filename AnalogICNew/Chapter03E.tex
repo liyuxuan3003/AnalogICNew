@@ -1,0 +1,342 @@
+\section{电源无关的基准}
+在模拟集成电路的设计中，许多模块都需要依赖于一个稳定的电流或电压才能工作，这就是所谓的基准电压和基准电流。然而，要实现“稳定”并不容易，我们设计的电路并非实验室中精致的花朵，而是要能抵抗现实中种种纷乱因素的干扰。基准设计主要面临的干扰有两项
+\begin{enumerate}
+    \item 电源：我们可能会期望有一个精确的电源电压，比如$V_{DD}=\SI{5}{V}$，但作为供电，其电压不可能精确，可能会稍高些，可能会稍低些，想想干电池随着电量消耗电压越来越低！
+    \item 温度：我们知道，许多器件的特性都会随温度显著变化。或许会认为，温度的波动能有多大呢？我们可以从两个方面来考虑，以手机为例，既要能在炎热的夏天运行，又要在冰冷的冬季运行，这就是环境温度的影响。除此之外，当手机长时间被使用后，其会显著发热，这就是电路自身工作带来的热效应所致。因此，温度影响绝对是不容小觑的。
+\end{enumerate}
+由此可见，基准电压或基准电流的设计可以分为两个阶段
+\begin{itemize}
+    \item 电源无关的基准
+    \item 温度无关的基准
+\end{itemize}
+其中，电源无关是较容易的，温度无关则相对复杂一些，本节先来考虑如何实现电源无关。除此之外，由于基准电压可以相对容易的转换为基准电流，故下面我们主要讨论基准电压。
+
+\subsection{基于电阻分压的基准}
+制造一个基准电压最朴素的想法，就是利用两个电阻$R_0,R_1$进行分压，如\xref{fig:基于电阻分压的基准--电路}所示。
+
+我们可以很容易写出$V_{REF}$的公式为
+\begin{BoxFormula}[基于电阻分压的基准--基准电压]
+    基于电阻分压的基准，基准电压$V_{REF}$为
+    \begin{Equation}
+        V_{REF}=V_{DD}\frac{R_1}{R_1+R_0}
+    \end{Equation}
+\end{BoxFormula}
+例如，若$V_{DD}=\SI{5}{V}$而期望$V_{REF}=\SI{1}{V}$，可以取$R_0=\SI{100}{k\ohm}$和$R_1=\SI{25}{k\ohm}$。
+\begin{Figure}[基于电阻分压的基准--电路]
+    \includegraphics[scale=0.8]{build/Chapter03E_09.fig.pdf}
+\end{Figure}
+显然，这样粗糙的基准肯定是“糟糕”的，那如何定量表征这种“糟糕”呢？本节的目标是实现基准电压$V_{REF}$与电源电压$V_{DD}$无关，故我们定义$V_{REF}$对$V_{DD}$的敏感度$\SVV$如下
+\begin{BoxDefinition}[电源敏感度]
+    定义电源敏感度$\SVV$
+    \begin{Equation}
+        \SVV=\pdv{V_{REF}}{V_{DD}}\qty(\frac{V_{REF}}{V_{DD}})^{-1}
+    \end{Equation}
+\end{BoxDefinition}
+
+敏感度$\SVV$的意义是：$V_{REF}$对$V_{DD}$的变化率除以$V_{REF}$对$V_{DD}$的比（即扣除分压比例的变化率）。$\SVV$的最大值是$1$，越小越好，而$\SVV=0$则代表基准与电源完全无关。
+
+然而，对于\xref{fml:基于电阻分压的基准--基准电压}，我们注意到
+\begin{Equation}
+    \pdv{V_{REF}}{V_{DD}}=\frac{R_1}{R_1+R_0}
+\end{Equation}
+因此
+\begin{Equation}
+    \pdv{V_{REF}}{V_{DD}}\qty(\frac{V_{REF}}{V_{DD}})^{-1}=1
+\end{Equation}
+这表明，电阻分压的基准的电源敏感度$\SVV=1$，换言之，基准电压$V_{REF}$完全跟随电源电源$V_{DD}$等比例波动，一点也不“基准”。当然，作为一个开始，分压的思路并没有错误。
+\begin{BoxFormula}[基于电阻分压的基准--电源敏感度]
+    基于电阻分压的基准，电源敏感度$\SVV$为
+    \begin{Equation}
+        \SVV=1
+    \end{Equation}
+\end{BoxFormula}
+
+\xref{fig:基于电阻分压的基准--特性}展示了基于电阻分压的基准相关的一系列图像，包括工作点和$V_{REF},\SVV$随$V_{DD}$和参数的变化。作图中，当不作为变量时，我们取$V_{DD}=\SI{5}{V}$，$R_0=\SI{100}{k\ohm}$，$R_1=\SI{25}{k\ohm}$。\goodbreak
+
+由于基于电阻分压的基准较简单，这些图像都比较乏味，但仍值得关注两点
+\begin{itemize}
+    \item 在\xref{fig:工作点--基于电阻分压的基准}展示了工作点的确定过程，即分别绘制$R_0,R_1$的$I_0$--$V_{REF}$曲线并观察两者的交点。两者的方程是$I_{0}=R_0^{-1}(V_{DD}-V_{REF})$和$I_{0}=R_1^{-1}V_{REF}$，通过这种方式我们可以直观理解为何$V_{DD}$会影响$V_{REF}$的取值，这就是因为$R_0$的$I_{0}$中包含$V_{DD}$项，关注\xref{fig:工作点--基于电阻分压的基准}中深浅不一的蓝线，当$V_{DD}$变化时$R_0$的$I_{0}$的曲线就会上下偏移，造成工作点的移动。此时，工作点在左右上的偏差，就是$V_{DD}$的变化造成的$V_{REF}$的变化量。
+    \item 在\xref{fig:基准电压随参数变化--基于电阻分压的基准}中，提到了随“参数”变化，这里的“参数”是$R_1$的取值。基准中总有一项参数可以调节$V_{REF}$的大小以符合需要，该例中其是$R_1$，之后也可能是别的什么。
+\end{itemize}
+
+\begin{Figure}[基于电阻分压的基准--特性]
+    \begin{FigureSub}[工作点;工作点--基于电阻分压的基准]
+        \includegraphics[scale=0.8]{build/Chapter03E_04c.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.5cm}
+    \begin{FigureSub}[基准电压随电源变化;基准电压随电源变化--基于电阻分压的基准]
+        \includegraphics[scale=0.8]{build/Chapter03E_04a.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[基准电压随参数变化;基准电压随参数变化--基于电阻分压的基准]
+        \includegraphics[scale=0.8]{build/Chapter03E_04b.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.5cm}
+    \begin{FigureSub}[敏感度随电源变化;敏感度随电源变化--基于电阻分压的基准]
+        \includegraphics[scale=0.8]{build/Chapter03E_04d.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[敏感度随参数变化;敏感度随参数变化--基于电阻分压的基准]
+        \includegraphics[scale=0.8]{build/Chapter03E_04e.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+\subsection{基于BJT分压的基准}
+获得更理想的基准电压$V_{REF}$的方法，是将\xref{fig:基于电阻分压的基准--电路}中的$R_1$替换为有源器件。在\xref{fig:基于BJT分压的基准--电路}中，我们使用了一个PNP型的BJT管，该PNP采用二极管接法，即将PNP的基极和集极短接。
+\begin{Figure}[基于BJT分压的基准--电路]
+    \includegraphics[scale=0.8]{build/Chapter03E_11.fig.pdf}
+\end{Figure}
+首先要解决的问题是弄清这里BJT是如何工作的？这里PNP自上至下依次对应E、B、C三个电极。我们知道，BJT的基本原理可以概况为，EB结正向导通，CB结反向导通，使原本应当从B流出的电流中绝大部分截流至C，并且有$i_C=\beta i_B$的关系成立。不过这里我们其实并不太关注这些种种细节，由于B和C短接，总电流终究就是正偏的EB结上的电流，因此，这里采用二极管接法的PNP就真的等同于一个货真价实的PN结二极管。当然，我们会说，既然等同于PN结，为什么不干脆直接用PN结代替呢？这可能是出于制程兼容上的考虑。
+
+因此，结论就是，这里的$Q_1$可以当作一个PN结！故可以直接套用PN结的电流公式\setpeq{BJT中VREF计算}
+\begin{Equation}&[1]
+    I_0=I_s\qty[\exp(\frac{V_{REF}}{V_t})-1]
+\end{Equation}
+而$R_0$的方程是简单的
+\begin{Equation}&[2]
+    I_0=\frac{V_{DD}-V_{REF}}{R_0}
+\end{Equation}
+当两者连接在一起时，应当具有相同的$I_0$，故联立上述两个方程就可以得到$V_{REF}$的值。我们确实可以通过计算机这么做，但由于$\e^x-1$的存在，我们将无法将结果表示为初等函数。
+
+因此，在手工求解前，我们先对上述两个公式做一些必要的近似。
+
+对于$Q_1$，假定$V_{REF}\gg V_t$，这使得$1$可以被忽略
+\begin{Equation}&[3]
+    I_0=I_s\exp(\frac{V_{REF}}{V_t})
+\end{Equation}
+对于$R_1$，假定$V_{REF}\ll V_{DD}$，这使得$V_{REF}$自身可以被忽略
+\begin{Equation}&[4]
+    I_0=\frac{V_{DD}}{R_0}
+\end{Equation}
+由\xrefpeq{3}可求得下式，并代入由\xrefpeq{4}给出的$I_0=V_{DD}/R_0$
+\begin{Equation}&[5]
+    V_{REF}=V_t\ln(\frac{I_0}{I_s})=V_t\ln(\frac{V_{DD}}{R_0I_s})
+\end{Equation}
+\begin{BoxFormula}[基于BJT分压的基准--基准电压]
+    基于BJT分压的基准，基准电压$V_{REF}$为
+    \begin{Equation}
+        V_{REF}=V_t\ln(\frac{V_{DD}}{R_0I_s})
+    \end{Equation}
+\end{BoxFormula}
+现在我们来计算电源敏感度，求导得到
+\begin{Equation}
+    \pdv{V_{REF}}{V_{DD}}=V_t\cdot \frac{R_0I_s}{V_{DD}}\cdot \frac{1}{R_0I_s}=\frac{V_t}{V_{DD}}
+\end{Equation}
+进而
+\begin{Equation}
+    \qquad\qquad\qquad
+    \pdv{V_{REF}}{V_{DD}}\qty(\frac{V_{REF}}{V_{DD}})^{-1}=\frac{V_t}{V_{DD}}\cdot\frac{V_{DD}}{V_t \ln(V_{DD}/R_0I_s)}=\frac{1}{\ln(V_{DD}/R_0I_s)}
+    \qquad\qquad\qquad
+\end{Equation}
+整理得到
+\begin{BoxFormula}[基于BJT分压的基准--电源敏感度]
+    基于BJT分压的基准，电源敏感度$\SVV$为
+    \begin{Equation}
+        \SVV=\frac{1}{\ln(V_{DD}/R_0I_s)}
+    \end{Equation}
+\end{BoxFormula}
+
+如\xref{fig:基于BJT分压的基准--特性}所示，取$V_{DD}=\SI{5}{V}$，$R_0=\SI{100}{k\ohm}$，$I_s=\SI{1e-15}{A}$
+\begin{itemize}
+    \item 白线代表计算机求解得到的精确结果，虚线代表上述求得的近似结果。
+    \item 基于BJT分压的基准中，调控$V_{REF}$大小的参数是$I_s$。
+    \item 基准电压为$V_{REF}=\SI{0.6334}{V}$，且随着设计参数$I_s$的增加而增加。
+    \item 基准电压的敏感度$\SVV=0.0465$，随$V_{DD}$增加而减小，随$I_s$的增加而增加。
+\end{itemize}
+我们可能会问，为什么简单的将电阻$R_1$替换为一个等效于PN结的BJT管$Q_1$就可以显著提升电源无关性能？从\xref{fig:工作点--基于BJT分压的基准}的工作点分析上我们或许能找到答案。由于PN结的$I$--$V$特性相较电阻的$I$--$V$特性要陡峭的多。当$R_0$的曲线发生上下偏移时，下方器件的$I$--$V$曲线越陡峭，工作点左右的偏移就越小。因此PN结能减小电源敏感性的关键，就在于PN结的电流随电压的变化相较电阻要快的多。这种认识可以直观告诉我们电源无关性能是如何被改进的。
+
+\begin{Figure}[基于BJT分压的基准--特性]
+    \begin{FigureSub}[工作点;工作点--基于BJT分压的基准]
+        \includegraphics[scale=0.8]{build/Chapter03E_06c.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.5cm}
+    \begin{FigureSub}[基准电压随电源变化;基准电压随电源变化--基于BJT分压的基准]
+        \includegraphics[scale=0.8]{build/Chapter03E_06a.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[基准电压随参数变化;基准电压随参数变化--基于BJT分压的基准]
+        \includegraphics[scale=0.8]{build/Chapter03E_06b.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.5cm}
+    \begin{FigureSub}[敏感度随电源变化;敏感度随电源变化--基于BJT分压的基准]
+        \includegraphics[scale=0.8]{build/Chapter03E_06d.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[敏感度随参数变化;敏感度随参数变化--基于BJT分压的基准]
+        \includegraphics[scale=0.8]{build/Chapter03E_06e.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+\subsection{基于MOS分压的基准}
+我们也可以使用MOS管实现相似的功能，如\xref{fig:基于MOS分压的基准--电路}所示，使用了一个二极管接法的NMOS。
+
+这里$M_1$的方程是（对于$V_{REF}>V_T$，当$V_{REF}<V_T$时$I_0=0$）
+\begin{Equation}
+    I_0=\frac{1}{2}\beta(V_{REF}-V_T)^2
+\end{Equation}
+这里$R_0$的方程仍然是
+\begin{Equation}
+    I_0=\frac{V_{DD}-V_{REF}}{R_0}
+\end{Equation}
+
+\begin{Figure}[基于MOS分压的基准--电路]
+    \includegraphics[scale=0.8]{build/Chapter03E_10.fig.pdf}
+\end{Figure}
+
+联立得到\setpeq{MOS中VREF计算}
+\begin{Equation}&[1]
+    \frac{1}{2}\beta(V_{REF}-V_T)^2=\frac{V_{DD}-V_{REF}}{R_0}
+\end{Equation}
+整理
+\begin{Equation}&[2]
+    \beta R_0V_{REF}^2+(2-2\beta R_0V_T)V_{REF}+(\beta R_0 V_T^2-2V_{DD})=0
+\end{Equation}
+应用求根公式
+\begin{Equation}&[3]
+    \qquad\qquad
+    V_{REF}=\frac{(2\beta R_0 V_T-2)+\sqrt{(2\beta R_0V_T-2)^2-4\beta R_0(\beta R_0V_T^2-2V_{DD})}}{2\beta R_0}
+    \qquad\qquad
+\end{Equation}
+将$2\beta R_0$的分母分配至每一项内
+\begin{Equation}&[4]
+    \qquad\qquad
+    V_{REF}=V_T-\frac{1}{\beta R_0}+\sqrt{\frac{(2\beta R_0 V_T)^2-8\beta R_0V_T+4+4\beta^2R_0^2V_T^2+8\beta R_0V_{DD}}{(2\beta R_0)^2}}
+    \qquad\qquad
+\end{Equation}
+化简
+\begin{Equation}&[5]
+    V_{REF}=V_T-\frac{1}{\beta R_0}+\sqrt{V_T^2-\frac{2V_T}{\beta R_0}+\frac{1}{\beta^2R_0^2}-V_T^2+\frac{2V_{DD}}{\beta R_0}}
+\end{Equation}
+约去$V_T^2$，得到
+\begin{Equation}&[6]
+    V_{REF}=V_T-\frac{1}{\beta R_0}+\sqrt{\frac{2(V_{DD}-V_T)}{\beta R_0}+\frac{1}{\beta^2R_0^2}}
+\end{Equation}
+再稍作整理
+\begin{Equation}
+    V_{REF}=V_T-\frac{1}{\beta R_0}+\sqrt{\frac{2\beta R_0(V_{DD}-V_T)+1}{\beta^2 R_0^2}}
+\end{Equation}
+即
+\begin{Equation}
+    V_{REF}=V_T+\frac{1}{\beta R_0}\qty[\sqrt{2\beta R_0(V_{DD}-V_T)+1}-1]
+\end{Equation}\goodbreak
+整理如下
+\begin{BoxFormula}[基于MOS分压的基准--基准电压]
+    基于MOS分压的基准，基准电压$V_{REF}$为
+    \begin{Equation}
+        V_{REF}=V_T+\frac{1}{\beta R_0}\qty[\sqrt{2\beta R_0(V_{DD}-V_T)+1}-1]
+    \end{Equation}
+\end{BoxFormula}
+我们对其求导得到
+\begin{Equation}
+    \pdv{V_{REF}}{V_{DD}}=\frac{1}{\sqrt{2\beta R_0(V_{DD}-V_T)+1}}
+\end{Equation}
+不妨将上式分母用$V_{REF}$自身表示
+\begin{Equation}
+    \pdv{V_{REF}}{V_{DD}}=\frac{1}{\beta R_0(V_{REF}-V_T)+1}
+\end{Equation}
+计算敏感度
+\begin{Equation}
+    \pdv{V_{REF}}{V_{DD}}\qty(\frac{V_{REF}}{V_{DD}})^{-1}=\frac{V_{DD}}{V_{REF}[\beta R_0(V_{REF}-V_T)+1]}
+\end{Equation}
+整理如下
+\begin{BoxFormula}[基于MOS分压的基准--电源敏感度]
+    基于MOS分压的基准，电源敏感度$\SVV$为
+    \begin{Equation}
+        \SVV=\frac{V_{DD}}{V_{REF}[\beta R_0(V_{REF}-V_T)+1]}
+    \end{Equation}
+\end{BoxFormula}
+如\xref{fig:基于MOS分压的基准--特性}，取$V_{DD}=\SI{5}{V}$，$R_0=\SI{100}{k\ohm}$，$W/L=2$
+\begin{itemize}
+    \item 基于MOS分压的基准中，调控$V_{REF}$大小的参数是$W/L$
+    \item 基准电压为$V_{REF}=\SI{1.2814}{V}$，且随着设计参数$W/L$的增加而减小。
+    \item 基准电压的敏感度$\SVV=0.2829$，随$V_{DD}$增加而增加，随$W/L$的增加而减小。
+\end{itemize}
+我们注意到，使用MOS的基准$\SVV=0.2829$，使用BJT的基准$\SVV=0.0465$，很明显的是，MOS的电源无关性能是不如BJT的。这一点仍然可以从工作点的分析上找到答案
+\begin{itemize}
+    \item 电阻的$I$--$V$特性是线性的，慢，电源无关性差。
+    \item MOS的$I$--$V$特性是平方的，较快，电源无关性较好。
+    \item BJT\hspace{0.6em}的$I$--$V$特性是指数的，最快，电源无关性最好。
+\end{itemize}
+
+\begin{Figure}[基于MOS分压的基准--特性]
+    \begin{FigureSub}[工作点;工作点--基于MOS分压的基准]
+        \includegraphics[scale=0.8]{build/Chapter03E_05c.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.5cm}
+    \begin{FigureSub}[基准电压随电源变化;基准电压随电源变化--基于MOS分压的基准]
+        \includegraphics[scale=0.8]{build/Chapter03E_05a.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[基准电压随参数变化;基准电压随参数变化--基于MOS分压的基准]
+        \includegraphics[scale=0.8]{build/Chapter03E_05b.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.5cm}
+    \begin{FigureSub}[敏感度随电源变化;敏感度随电源变化--基于MOS分压的基准]
+        \includegraphics[scale=0.8]{build/Chapter03E_05d.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[敏感度随参数变化;敏感度随参数变化--基于MOS分压的基准]
+        \includegraphics[scale=0.8]{build/Chapter03E_05e.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+\subsection{基于MOS和电流镜的基准}
+至此，我们已经可以看出基准电压$V_{REF}$会随电源电压$V_{DD}$的根源在于$R_0$的$I$--$V$特性会随$V_{DD}$的变化发生上下移动，造成工作点的变化。因此，如果我们能用非串联的方式令两个器件上的电流相同，由此确定的工作点将完全与$V_{DD}$无关，这就是本小节将要研究的内容。
+
+\xref{fig:基于MOS和电流镜的基准--电路}给出了这样一个例子，在该电路中，$M_3,M_4$构成的PMOS电流镜保证了左右支路的电流相同，$M_1$和$R_0$上的电流相同但具有不同的电流--电压关系（平方和线性），这将确定一个工作点，实现与$V_{DD}$无关的$V_{REF}$。$M_2$的意义可能是在$M_1$的栅和漏间维持了一定的电压。
+
+\begin{Figure}[基于MOS和电流镜的基准--电路]
+    \includegraphics[scale=0.8]{build/Chapter03E_13.fig.pdf}
+\end{Figure}
+
+如\xref{fig:基于MOS和电流镜的基准--特性}，取$V_{DD}=\SI{5}{V}$，$R_0=\SI{100}{k\ohm}$，$W/L=2$
+\begin{itemize}
+    \item 基准电压为$V_{REF}=\SI{1.0018}{V}$，当然调整$R_0,W/L$可以获得不同的$V_{REF}$。
+    \item 基准电压的敏感度$\SVV$理论上为零，介于现在$R_0$和$M_1$的$I$--$V$关系完全不涉及电源电压$V_{DD}$。但实际上，由于$M_3,M_4$构成的电流镜并不理想，受到沟道调制效应的作用，$V_{DD}$仍然会一定程度上影响$V_{REF}$，故实际上$\SVV$应当是一个很接近零的值。
+    \item 注意到，存在两个工作点！原点是我们不希望的工作点，为了避免电路状态落在我们不期望的工作点上，需要引入一个启动电路，在启动时将电路状态引导至正确的工作点。
+\end{itemize}
+\begin{Figure}[基于MOS和电流镜的基准--特性]
+    \begin{FigureSub}[工作点;工作点--基于MOS和电流镜的基准]
+        \includegraphics[scale=0.8]{build/Chapter03E_08a.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+这种通过电流镜获得一对相同的电流，以实现电源无关的基准，是基准设计的一种重要思想。
+
+接下来，我们求解$V_{REF}$的解析式，过程和结果与\xref{subsec:基于MOS分压的基准}高度相似。\goodbreak
+
+这里$M_1$的方程仍然是
+\begin{Equation}
+    I_0=\frac{1}{2}\beta(V_{REF}-V_T)^2
+\end{Equation}
+这里$R_0$的方程则变为（注意到$V_{DD}-V_{REF}$变为了$V_{REF}$）
+\begin{Equation}
+    I_0=\frac{V_{REF}}{R_0}
+\end{Equation}
+
+联立得到\setpeq{MOS电流镜中VREF计算}
+\begin{Equation}&[1]
+    \frac{1}{2}\beta(V_{REF}-V_T)^2=\frac{V_{REF}}{R_0}
+\end{Equation}
+整理
+\begin{Equation}&[2]
+    \beta R_0V_{REF}^2-(2+2\beta R_0V_T)V_{REF}+(\beta R_0 V_T^2)=0
+\end{Equation}
+应用求根公式
+\begin{Equation}&[3]
+    V_{REF}=\frac{(2\beta R_0 V_T+2)+\sqrt{(2\beta R_0V_T+2)^2-4\beta R_0(\beta R_0V_T^2)}}{2\beta R_0}
+\end{Equation}
+将$2\beta R_0$的分母分配至每一项内
+\begin{Equation}&[4]
+    V_{REF}=V_T+\frac{1}{\beta R_0}+\sqrt{\frac{(2\beta R_0 V_T)^2+8\beta R_0V_T+4-4\beta^2R_0^2V_T^2}{(2\beta R_0)^2}}
+\end{Equation}
+化简
+\begin{Equation}&[5]
+    V_{REF}=V_T+\frac{1}{\beta R_0}+\sqrt{V_T^2+\frac{2V_T}{\beta R_0}+\frac{1}{\beta^2R_0^2}-V_T^2}
+\end{Equation}
+约去$V_T^2$，得到
+\begin{Equation}&[6]
+    V_{REF}=V_T+\frac{1}{\beta R_0}+\sqrt{\frac{2V_T}{\beta R_0}+\frac{1}{\beta^2R_0^2}}
+\end{Equation}
+再稍作整理
+\begin{Equation}
+    V_{REF}=V_T+\frac{1}{\beta R_0}+\sqrt{\frac{2\beta R_0V_T+1}{\beta^2 R_0^2}}
+\end{Equation}
+即
+\begin{Equation}
+    V_{REF}=V_T+\frac{1}{\beta R_0}\qty[\sqrt{2\beta R_0V_T+1}+1]
+\end{Equation}\goodbreak
+整理如下
+\begin{BoxFormula}[基于MOS和电流镜的基准--基准电压]
+    基于MOS分压的基准，基准电压$V_{REF}$为
+    \begin{Equation}
+        V_{REF}=V_T+\frac{1}{\beta R_0}\qty[\sqrt{2\beta R_0V_T+1}+1]
+    \end{Equation}
+\end{BoxFormula}

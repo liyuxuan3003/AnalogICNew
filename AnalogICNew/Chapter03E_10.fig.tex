@@ -1,0 +1,29 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xSetX
+\xValDefine{xL}[-1.2]
+\xValDefine{xR}[+1.2]
+\xValPropor{xC}{xL}{xR}[0.5]
+
+\xSetY
+\xValDefine{yB}[-2.5]
+\xValDefine{yA}[+2.5]
+\xValMiddle{yC}{yA}{yB}
+\xValPropor{yMA}{yA}{yB}[1/4]
+\xValPropor{yMB}{yA}{yB}[3/4]
+
+\path (xC|-yMB) node[nmos,xscale=-1] (M1) {\ctikzflipx{$M_1$}};
+
+\draw (M1.G) |- (M1.D) node[circ] {};
+
+\draw (xC|-yA) node[vdd,anchor=north] {$V_{DD}$} to[R=$R_0$,f_=$I_0$] (xC|-yC) -- (M1.D) (M1.S) -- (xC|-yB) node[tlground] {};
+
+\draw (xC|-yC) to[short,*-o] (xL|-yC) node[left] {$V_{REF}$};
+
+\xValBorder{xL}[-1.2]{xR}{yB}[-0.5]{yA}[+0.7]*
+
+\end{tikzpicture}
+\end{document}
