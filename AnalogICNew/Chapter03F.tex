@@ -678,23 +678,23 @@ CTAT的产生方法如\xref{fig:CTAT的产生方法}，使用一个二极管$D$�
 \begin{Equation}&[9]
     V_D=V_{G0}-(V_{G0}-V_{D0})\qty(\frac{T}{T_0})-V_t\gamma\ln(\frac{T}{T_0})+V_t\ln(\frac{I_D}{I_{D0}})
 \end{Equation}
-现在的问题是，这里$I_D$与$I_{D0}$间是什么关系？我们或许会设想$I_D=I_{D0}$是不随温度变化的电流源，但到目前为止，我们唯一可用的可靠电流源就是\xref{subsec:PTAT电压和电流的生成}中的PTAT电流，因此
+现在的问题是，这里$I_D$与$I_{D0}$间是什么关系？我们或许会设想$I_D=I_{D0}$是不随温度变化的电流源，但到目前为止，我们唯一可用的可靠电流源就是\xref{subsec:PTAT电压和电流的产生}中的PTAT电流，因此
 \begin{Equation}&[10]
     \frac{I_D}{I_{D0}}=\qty(\frac{T}{T_0})
 \end{Equation}
-为了一般化，这里引入参数$\alpha$，并且这里$\alpha=1$
+为了一般化，这里引入参数$\gamma_a$，并且这里$\gamma_a=1$
 \begin{Equation}&[11]
-    \frac{I_D}{I_{D0}}=\qty(\frac{T}{T_0})^{\alpha}
+    \frac{I_D}{I_{D0}}=\qty(\frac{T}{T_0})^{\gamma_a}
 \end{Equation}
 这样一来，将\xrefpeq{11}代入\xrefpeq{9}中，得到
 \begin{Equation}
-    V_{D}=V_{G0}-(V_{G0}-V_{D0})\qty(\frac{T}{T_0})-V_t(\gamma-\alpha)\ln(\frac{T}{T_0})
+    V_{D}=V_{G0}-(V_{G0}-V_{D0})\qty(\frac{T}{T_0})-V_t(\gamma-\gamma_a)\ln(\frac{T}{T_0})
 \end{Equation}
 这里的$V_D$就是所需的$V_{CTAT}$，整理如下
 \begin{BoxFormula}[CTAT电压]
     CTAT电压可以表示为
     \begin{Equation}
-        V_{CTAT}=V_{G0}-(V_{G0}-V_{D0})\qty(\frac{T}{T_0})-V_t(\gamma-\alpha)\ln(\frac{T}{T_0})
+        V_{CTAT}=V_{G0}-(V_{G0}-V_{D0})\qty(\frac{T}{T_0})-V_t(\gamma-\gamma_a)\ln(\frac{T}{T_0})
     \end{Equation}
 \end{BoxFormula}
 
@@ -702,7 +702,7 @@ CTAT的产生方法如\xref{fig:CTAT的产生方法}，使用一个二极管$D$�
 \begin{itemize}
     \item $V_{CTAT}$在$T=T_0$时$V_{CTAT}=V_{D0}$，从\xref{fig:CTAT的产生方法}的电路上看，这很合理。
     \item $V_{CTAT}$中的$-(V_{G0}-V_{D0})(T/T_0)$项表现出CTAT随温度增加而减小的特性。为了确认这一点，我们有必要论证$(V_{G0}-V_{D0})$为正：$V_{G0}$是硅的带隙电压$\SI{1.205}{V}$，$V_{D0}$是二极管压降，通常在$\SI{0.6}{V}$左右，因此$(V_{G0}-V_{D0})>0$确实是成立的，上述论断正确。
-    \item $V_{CTAT}$中的$-V_t(\gamma-\alpha)\ln(T/T_0)$项将导致非线性行为，换言之，这里的$V_{CTAT}$并不理想，并非严格按照我们的预期，随温度增加线性减小。这一问题称为带隙曲率，之后我们会逐步展示带隙曲率的影响和名称的含义。另外，如果忘记了$\gamma,\alpha$分别是什么，这里回顾一下，$\gamma=3$首次出现在$I_s$随温度变化的表达式中，$\alpha=1$是上文刚刚定义的。
+    \item $V_{CTAT}$中的$-V_t(\gamma-\gamma_a)\ln(T/T_0)$项将导致非线性行为，换言之，这里的$V_{CTAT}$并不理想，并非严格按照我们的预期，随温度增加线性减小。这一问题称为带隙曲率，之后我们会逐步展示带隙曲率的影响和名称的含义。另外，如果忘记了$\gamma,\gamma_a$分别是什么，这里回顾一下，$\gamma=3$首次出现在$I_s$随温度变化的表达式中，$\gamma_a=1$是上文刚刚定义的。
 \end{itemize}
 
 \xref{fig:PTAT电压和CTAT电压}在同一图像上展示了PTAT电压和CTAT电压，取$V_{D0}=\SI{0.6}{V}$，注意到
@@ -710,10 +710,10 @@ CTAT的产生方法如\xref{fig:CTAT的产生方法}，使用一个二极管$D$�
     \item $V_{CTAT}$随温度减小，$V_{PTAT}$随温度增加，和我们设想的完全一致。
     \item $V_{CTAT}=\SI{0.6000}{V}$，$V_{PTAT}=\SI{0.0595}{V}$，当$T=T_0$时。
     \item $V_{CTAT}$要比$V_{PTAT}$大的多，这是因为当$T=T_0$时$V_{CTAT}=V_{D0}$，换言之，CTAT电压是一个二极管的压降，而作为对比，PTAT电压仅仅不过是热电压$V_t$的数倍。
-    \item $V_{CTAT}$随温度变化是非线性的，在\xref{fig:PTAT电压和CTAT电压}中，蓝色实线和蓝色虚线分别代表考虑和不考虑$V_{CTAT}$中非线性项$-V_t(\gamma-\alpha)\ln(T/T_0)$的曲线，可以明显看出两者间的偏差。
+    \item $V_{CTAT}$随温度变化是非线性的，在\xref{fig:PTAT电压和CTAT电压}中，蓝色实线和蓝色虚线分别代表考虑和不考虑$V_{CTAT}$中非线性项$-V_t(\gamma-\gamma_a)\ln(T/T_0)$的曲线，可以明显看出两者间的偏差。
     % \item $V_{CTAT}=\SI{0.6000}{V}$，$V_{PTAT}=\SI{0.0595}{V}$，当$T=T_0=\SI{300}{K}$时。应指出，这里$V_{CTAT}$在$T=T_0$时为整数的原因只是因为我们设$V_{D0}=\SI{0.6}{V}$，实践中$V_{D0}$并不是一个可以直接指定的数值，其取决于前级提供的$I_D=I_{PTAT}'$。这里为了避免繁琐而直接设定了。
     % \item $V_{CTAT}$随温度的增加而减小，这来自$-(V_{G0}-V_{D0})(T/T_0)$项，其中$(V_{G0}-V_{D0})>0$。
-    % \item $V_{CTAT}$随温度的变化是非线性的，这来自$-V_t(\gamma-\alpha)\ln(T/T_0)$，其中对数造成了非线性，
+    % \item $V_{CTAT}$随温度的变化是非线性的，这来自$-V_t(\gamma-\gamma_a)\ln(T/T_0)$，其中对数造成了非线性，
 \end{itemize}
 \begin{Figure}[PTAT电压和CTAT电压]
     \includegraphics[scale=0.8]{build/Chapter03F_04a.fig.pdf}
@@ -800,22 +800,22 @@ CTAT的产生方法如\xref{fig:CTAT的产生方法}，使用一个二极管$D$�
 \end{BoxFormula}
 根据\xref{fml:CTAT电压}\setpeq{CTAT电压求导}
 \begin{Equation}&[1]
-    V_{CTAT}=V_{G0}-(V_{G0}-V_{D0})\qty(\frac{T}{T_0})-V_t(\gamma-\alpha)\ln(\frac{T}{T_0})
+    V_{CTAT}=V_{G0}-(V_{G0}-V_{D0})\qty(\frac{T}{T_0})-V_t(\gamma-\gamma_a)\ln(\frac{T}{T_0})
 \end{Equation}
 求导得
 \begin{Equation}&[2]
     \qquad\qquad
-    \dv{V_{CTAT}}{T}=-(V_{G0}-V_{D0})\qty(\frac{1}{T_0})-\frac{V_t}{T_0}(\gamma-\alpha)\ln(\frac{T}{T_0})-V_t(\gamma-\alpha)\qty(\frac{T_0}{T})\qty(\frac{1}{T_0})
+    \dv{V_{CTAT}}{T}=-(V_{G0}-V_{D0})\qty(\frac{1}{T_0})-\frac{V_t}{T_0}(\gamma-\gamma_a)\ln(\frac{T}{T_0})-V_t(\gamma-\gamma_a)\qty(\frac{T_0}{T})\qty(\frac{1}{T_0})
     \qquad\qquad
 \end{Equation}
 观察\xrefpeq{1}，注意到
 \begin{Equation}&[3]
-    \frac{V_{CTAT}-V_{G0}}{T}=-(V_{G0}-V_{D})\qty(\frac{1}{T_0})-\frac{V_t}{T}(\gamma-\alpha)\ln(\frac{T}{T_0})
+    \frac{V_{CTAT}-V_{G0}}{T}=-(V_{G0}-V_{D})\qty(\frac{1}{T_0})-\frac{V_t}{T}(\gamma-\gamma_a)\ln(\frac{T}{T_0})
 \end{Equation}
 我们试着用\xrefpeq{3}代换\xrefpeq{2}的前半部分
 \begin{Equation}&[4]
     \qquad\qquad
-    \dv{V_{CTAT}}{T}=\frac{V_{CTAT}-V_{G0}}{T}+\qty(\frac{V_t}{T}-\frac{V_{t}}{T_0})(\gamma-\alpha)\ln(\frac{T}{T_0})-\qty(\frac{V_t}{T})(\gamma-\alpha)
+    \dv{V_{CTAT}}{T}=\frac{V_{CTAT}-V_{G0}}{T}+\qty(\frac{V_t}{T}-\frac{V_{t}}{T_0})(\gamma-\gamma_a)\ln(\frac{T}{T_0})-\qty(\frac{V_t}{T})(\gamma-\gamma_a)
     \qquad\qquad
 \end{Equation}
 整理如下
@@ -823,12 +823,12 @@ CTAT的产生方法如\xref{fig:CTAT的产生方法}，使用一个二极管$D$�
     CTAT电压随温度的变化率为
     \begin{Equation}
         \qquad\quad
-        \dv{V_{CTAT}}{T}=\frac{V_{CTAT}-V_{G0}}{T}+\qty(\frac{V_t}{T}-\frac{V_{t}}{T_0})(\gamma-\alpha)\ln(\frac{T}{T_0})-\qty(\frac{V_t}{T})(\gamma-\alpha)
+        \dv{V_{CTAT}}{T}=\frac{V_{CTAT}-V_{G0}}{T}+\qty(\frac{V_t}{T}-\frac{V_{t}}{T_0})(\gamma-\gamma_a)\ln(\frac{T}{T_0})-\qty(\frac{V_t}{T})(\gamma-\gamma_a)
         \qquad\quad
     \end{Equation}
     特别的，当$T=T_0$时
     \begin{Equation}
-        \eval{\dv{V_{CTAT}}{T}}_{T=T_0}=\frac{V_{CTAT0}-V_{G0}}{T_0}-\qty(\frac{V_t}{T_0})(\gamma-\alpha)
+        \eval{\dv{V_{CTAT}}{T}}_{T=T_0}=\frac{V_{CTAT0}-V_{G0}}{T_0}-\qty(\frac{V_t}{T_0})(\gamma-\gamma_a)
     \end{Equation}
 \end{BoxFormula}
 现在让我们重新回到$K=R_2/R_1$的求解上，依照\xrefeq{温度无关条件}，应有
@@ -841,13 +841,13 @@ CTAT的产生方法如\xref{fig:CTAT的产生方法}，使用一个二极管$D$�
 \end{Equation}
 代入\xref{fml:PTAT电压随温度的变化率}和\xref{fml:CTAT电压随温度的变化率}
 \begin{Equation}
-    K=-\frac{V_{CTAT0}-V_{G0}-V_t(\gamma-\alpha)}{V_{PTAT0}}
+    K=-\frac{V_{CTAT0}-V_{G0}-V_t(\gamma-\gamma_a)}{V_{PTAT0}}
 \end{Equation}
 这就是我们所要求的温度无关条件，整理如下。
 \begin{BoxFormula}[温度无关条件]
     温度无关条件为
     \begin{Equation}
-        K=\frac{R_2}{R_1}=-\frac{V_{CTAT0}-V_{G0}-V_t(\gamma-\alpha)}{V_{PTAT0}}
+        K=\frac{R_2}{R_1}=-\frac{V_{CTAT0}-V_{G0}-V_t(\gamma-\gamma_a)}{V_{PTAT0}}
     \end{Equation}
 \end{BoxFormula}
 我们现在来计算$V_{REF}$的室温值$V_{REF0}$，根据\xref{fml:串联型温度无关的基准}
@@ -860,11 +860,11 @@ CTAT的产生方法如\xref{fig:CTAT的产生方法}，使用一个二极管$D$�
 \end{Equation}
 若$K=R_2/R_1$满足\xref{fml:温度无关条件}的温度无关条件
 \begin{Equation}
-    V_{REF0}=-V_{CTAT0}+V_{G0}+V_t(\gamma-\alpha)+V_{CTAT0}
+    V_{REF0}=-V_{CTAT0}+V_{G0}+V_t(\gamma-\gamma_a)+V_{CTAT0}
 \end{Equation}
 即有
 \begin{Equation}
-    V_{REF0}=V_{G0}+V_t(\gamma-\alpha)
+    V_{REF0}=V_{G0}+V_t(\gamma-\gamma_a)
 \end{Equation}
 % 这是一个相当简洁的结果：即室温$T=T_0$下，基准电压$V_{REF0}$由硅的带隙电压$V_{G0}$和两倍的热电压$2V_t$构成！若代入$V_{G0}=\SI{1.205}{V}$和$V_t=\SI{0.026}{V}$，即可得$V_{REF0}=\SI{1.257}{V}$或近似记为$V_{REF0}=\SI{1.25}{V}$。因此，任何串联型温度无关基准，在室温下都会趋于$\SI{1.25}{V}$左右。
 
@@ -872,12 +872,12 @@ CTAT的产生方法如\xref{fig:CTAT的产生方法}，使用一个二极管$D$�
 \begin{BoxFormula}[串联型温度无关的基准的室温值]
     串联型温度无关的基准在室温下$V_{REF0}$为
     \begin{Equation}
-        V_{REF0}=V_{G0}+V_t(\gamma-\alpha)
+        V_{REF0}=V_{G0}+V_t(\gamma-\gamma_a)
     \end{Equation}
 \end{BoxFormula}
 关于\xref{fml:串联型温度无关的基准的室温值}，说明以下几点
 \begin{itemize}
-    \item 基准电压$V_{REF0}$由带隙电压$V_{G0}$和两倍热电压$2V_t$构成（$\gamma-\alpha=2$）。
+    \item 基准电压$V_{REF0}$由带隙电压$V_{G0}$和两倍热电压$2V_t$构成（$\gamma-\gamma_a=2$）。
     \item 基准电压$V_{REF0}=\SI{1.257}{V}$或近似以$\SI{1.25}{V}$表示（$V_{G0}=\SI{1.205}{V}$和$V_{t}=\SI{0.026}{V}$），事实上，任何串联型温度无关基准在室温下都将近似趋于$\SI{1.25}{V}$，这是其原理所决定的。
     \item 基准电压$V_{REF0}$在数值上略大于带隙电压，因此，传统上这类基准被称为带隙基准，这也是为何先前CTAT的非线性特征被称为带隙曲率。但应指出的是，带隙基准实现温度无关与带隙毫无关系！我们并非通过带隙电压不随温度变化的性质实现的温度无关，而是通过PTAT和CTAT的温度互补特性实现的，只不过结果恰好是带隙电压$V_{G0}$罢了。
 \end{itemize}
@@ -925,7 +925,7 @@ CTAT的产生方法如\xref{fig:CTAT的产生方法}，使用一个二极管$D$�
 \begin{BoxFormula}[串联型温度无关的基准的室温值]
     串联型温度无关的基准在室温下$V_{REF0}$为
     \begin{Equation}
-        V_{REF0}=\frac{R_3}{R_2}\qty[V_{G0}+V_t(\gamma-\alpha)]
+        V_{REF0}=\frac{R_3}{R_2}\qty[V_{G0}+V_t(\gamma-\gamma_a)]
     \end{Equation}
 \end{BoxFormula}
 由此可见，并联型相较串联型的优点是，通过$R_3/R_2$可以实现任何所希望的$V_{REF}$，而不仅限于$\SI{1.25}{V}$。当然，代价也是明显的，并联型所需要的MOS管数几乎是串联型的一倍多。

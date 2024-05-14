@@ -234,8 +234,8 @@
 
 由此可见，高摆幅共源共栅电流镜实现高摆幅的思路，就是将$M_3$和$M_1$分离，通过调节$M_3$的尺寸使其具有能使$M_2$饱和所需的最小的$v_{D3}=2V_{ON}+V_T$，从而降低至$V_{\min}=2V_{ON}$。
 
-\begin{BoxFormula}[高摆幅共源共栅电流镜的最小输出电压]
-    高摆幅共源共栅电流镜的最小输出电压为
+\begin{BoxFormula}[高摆幅共源共栅电流镜--基础型的最小输出电压]
+    高摆幅共源共栅电流镜--基础型的最小输出电压为
     \begin{Equation}
         V_{\min}=2V_{ON}
     \end{Equation}
@@ -283,7 +283,13 @@
     \item $v_{D4}=2V_{ON}$：$M_4$饱和所需的最小$v_{DS4}=V_{ON}$，$v_{D4}=v_{D2}+v_{DS4}$。
 \end{enumerate}
 
-由此可见，$M_5$引入的目的，就是通过$v_{GS5}=V_{ON}+V_T$强令位于其源端的$v_{D1}=v_{D3}-v_{GS5}$变为$v_{D1}=V_{ON}$，这样就和$v_{D2}=V_{ON}$一致，实现了$v_{DS1}=v_{DS2}$，避免了电流复制的误差。\vspace{2.5ex}
+由此可见，$M_5$引入的目的，就是通过$v_{GS5}=V_{ON}+V_T$强令位于其源端的$v_{D1}=v_{D3}-v_{GS5}$变为$v_{D1}=V_{ON}$，这样就和$v_{D2}=V_{ON}$一致，实现了$v_{DS1}=v_{DS2}$，避免了电流复制的误差。
+\begin{BoxFormula}[高摆幅共源共栅电流镜--改进型的最小输出电压]
+    高摆幅共源共栅电流镜--改进型的最小输出电压为
+    \begin{Equation}
+        V_{\min}=2V_{ON}
+    \end{Equation}
+\end{BoxFormula}
 
 \xref{fig:高摆幅共源共栅电流镜--改进型的大信号特性}展示了高摆幅共源共栅电流镜--改进型的大信号特性
 \begin{itemize}
@@ -333,6 +339,12 @@
     \item $v_{D4}=2V_{ON}+V_T$。$M_4$饱和所需的最小$v_{DS4}=V_{ON}$，$v_{D4}=v_{D2}+v_{DS4}$。
 \end{enumerate}
 由此可见，这里$M_4$的作用就是将$v_{OUT}$“屏蔽”在外面，避免其直接控制了$V_{ON}$。
+\begin{BoxFormula}[威尔逊电流镜--基础型的最小输出电压]
+    威尔逊电流镜--基础型的最小输出电压为
+    \begin{Equation}
+        V_{\min}=2V_{ON}+V_T
+    \end{Equation}
+\end{BoxFormula}
 
 \xref{fig:威尔逊电流镜--基础型的大信号特性}展示了威尔逊电流镜--基础型的大信号特性
 \begin{itemize}
@@ -456,6 +468,13 @@
 \end{enumerate}
 由此可见，$M_3$的引入为$M_1$的漏端$v_{D1}$削弱了$V_{ON}+V_T$的电压，从而使$v_{D1}=v_{D2}$。
 
+\begin{BoxFormula}[威尔逊电流镜--改进型的最小输出电压]
+    威尔逊电流镜--改进型的最小输出电压为
+    \begin{Equation}
+        V_{\min}=2V_{ON}+V_T
+    \end{Equation}
+\end{BoxFormula}
+
 \xref{fig:威尔逊电流镜--基础型的大信号特性}展示了威尔逊电流镜--基础型的大信号特性
 \begin{itemize}
     \item 注意到改进后$i_{OUT}=I_{REF}$，电流复制的误差随着$v_{DS1}=v_{DS2}$得到解决。
@@ -486,7 +505,7 @@
     简单电流镜&$2$&$V_{ON}$&$g_{ds}^{-1}$&$V_{ON}+V_T$&$V_{ON}+v_{OUT}$\\
     共源共栅电流镜&$4$&$2V_{ON}+V_T$&$g_{ds}^{-2}g_m^{\vphantom{-1}}$&$V_{ON}+V_T$&$V_{ON}+V_T$\\
     高摆幅共源共栅电流镜--基础型&$4$&$2V_{ON}$&$g_{ds}^{-2}g_m^{\vphantom{-1}}$&$V_{ON}+V_T$&$V_{ON}$\\
-    高摆幅共源共栅电流镜--改进型&$4$&$2V_{ON}$&$g_{ds}^{-2}g_m^{\vphantom{-1}}$&$V_{ON}+V_T$&$V_{ON}$\\
+    高摆幅共源共栅电流镜--改进型&$5$&$2V_{ON}$&$g_{ds}^{-2}g_m^{\vphantom{-1}}$&$V_{ON}$&$V_{ON}$\\
     威尔逊电流镜--基础型&$3$&$2V_{ON}+V_T$&$g_{ds}^{-2}g_m^{\vphantom{-1}}$&$2V_{ON}+2V_T$&$V_{ON}+V_T$\\
     威尔逊电流镜--改进型（$r_{out}$未验证）&$4$&$2V_{ON}+V_T$&$g_{ds}^{-2}g_m^{\vphantom{-1}}$&$V_{ON}+V_T$&$V_{ON}+V_T$\\
 \end{Tablex}
