@@ -102,7 +102,7 @@ for id in range(graphNum):
     plt.figure(id)
     axes=plt.gca()
     axes.grid(linewidth=0.25)
-    axes.tick_params(labeltop=True,labelright=True,top=True,right=True,direction="in",width=0.3)
+    axes.tick_params(labeltop=True,labelright=True,top=True,right=True,direction="in",width=0.5)
     if id in[idSVV]:
         axes.set_ylim(-0.1,1.1)
     plt.savefig(fileExport(id),bbox_inches ='tight')

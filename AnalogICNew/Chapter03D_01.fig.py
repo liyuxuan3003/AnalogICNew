@@ -105,14 +105,14 @@ plt.plot(d["Vout"],d["VD1"],c='b',label="$v_{D1}$",ls="dashed")
 plt.plot(d["Vout"],d["VD2"],c='b',label="$v_{D2}$")
 
 plt.figure(idVSAT2)
-plt.plot(d["Vout"],d["VDS2"],c='purple',label="$v_{DS2}$")
-plt.plot(d["Vout"],d["VGT2"],c='g',label="$v_{GS2}-V_{T}$")
+plt.plot(d["Vout"],d["VDS2"],c='green',label="$v_{DS2}$")
+plt.plot(d["Vout"],d["VGT2"],c='purple',label="$v_{GS2}-V_{T}$")
 
 for id in range(graphNum):
     plt.figure(id)
     axes=plt.gca()
     axes.grid(linewidth=0.25)
-    axes.tick_params(labeltop=True,labelright=True,top=True,right=True,direction="in",width=0.3)
+    axes.tick_params(labeltop=True,labelright=True,top=True,right=True,direction="in",width=0.5)
     if id in[idIV,idVD,idVSAT2]:
         axes.set_xlim(-0.1,5.1)
         axes.xaxis.set_major_locator(ticker.MultipleLocator(0.5))

@@ -117,7 +117,7 @@ for id in range(graphNum):
     plt.figure(id)
     axes=plt.gca()
     axes.grid(linewidth=0.25)
-    axes.tick_params(labeltop=True,labelright=True,top=True,right=True,direction="in",width=0.3)
+    axes.tick_params(labeltop=True,labelright=True,top=True,right=True,direction="in",width=0.5)
     axes.set_xlim(4.5,5.5)
     if id in [idSVV]:
         axes.set_ylim(0,0.1)

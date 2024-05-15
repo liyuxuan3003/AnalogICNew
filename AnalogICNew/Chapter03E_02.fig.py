@@ -102,7 +102,7 @@ for id in range(graphNum):
     plt.figure(id)
     axes=plt.gca()
     axes.grid(linewidth=0.25)
-    axes.tick_params(labeltop=True,labelright=True,top=True,right=True,direction="in",width=0.3)
+    axes.tick_params(labeltop=True,labelright=True,top=True,right=True,direction="in",width=0.5)
     plt.savefig(fileExport(id),bbox_inches ='tight')
 
 os.remove(fileNET)

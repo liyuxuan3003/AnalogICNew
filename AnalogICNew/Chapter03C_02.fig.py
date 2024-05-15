@@ -96,7 +96,7 @@ for id in range(graphNum):
     plt.figure(id)
     axes=plt.gca()
     axes.grid(linewidth=0.25)
-    axes.tick_params(labeltop=True,labelright=True,top=True,right=True,direction="in",width=0.3)
+    axes.tick_params(labeltop=True,labelright=True,top=True,right=True,direction="in",width=0.5)
     axes.vlines(2.0,-10,+10,colors='gray',lw=0.8,ls='dashed')
     if id in [idIV,idVmid]:
         axes.set_xlim(-0.1,5.1)

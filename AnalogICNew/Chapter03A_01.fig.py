@@ -171,7 +171,7 @@ for id in range(graphNum):
     plt.figure(id)
     axes=plt.gca()
     axes.grid(linewidth=0.25)
-    axes.tick_params(labeltop=True,labelright=True,top=True,right=True,direction="in",width=0.3)
+    axes.tick_params(labeltop=True,labelright=True,top=True,right=True,direction="in",width=0.5)
     if id in[idIVD,idRVD]:
         axes.set_xlim(0,2)
         axes.xaxis.set_major_locator(ticker.MultipleLocator(0.25))

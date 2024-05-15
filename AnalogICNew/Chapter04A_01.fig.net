@@ -1,0 +1,10 @@
+* d:\Learning\20240222-AnalogICNew\AnalogICNew\Chapter04A_01.fig.asc
+M1 Vout Vin 0 0 NMOS
+M2 Vout Vout VDD VDD PMOS
+VDD VDD 0 0
+Vin Vin 0 0
+.model NMOS NMOS
+.model PMOS PMOS
+.lib C:\Users\liyuxuan\AppData\Local\LTspice\lib\cmp\standard.mos
+.backanno
+.end
