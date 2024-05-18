@@ -1,0 +1,32 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xSetX
+\xValDefine{xL}[-3]
+\xValDefine{xR}[+3]
+\xValPropor{xC}{xL}{xR}
+\xValPropor{xLx}{xL}{xR}[0.1]
+\xValMirror{xRx}{xLx}{xC}
+\xValMiddle{xA}{xC}{xLx}
+
+\xSetY
+\xValDefine{yB}[-1.5]
+\xValDefine{yA}[+1.5]
+\xValPropor{yC}{yB}{yA}[2/3]
+
+\path (xA|-yC) node[plain mono amp] (A) {$A_v$};
+
+\draw (xL|-yC) node[left] {$v_{in}$} to[short,o-*] (xLx|-yC) -- (A.in);
+\draw (A.out) -- (xC|-yC) to[R=$R_{out}$] (xRx|-yC) to[short,*-o] (xR|-yC) node[right] {$v_{out}$};
+
+\draw (xLx|-yC) -- (xLx|-yA) to[C=$C_{m}$] (xRx|-yA) -- (xRx|-yC);
+
+\draw (xLx|-yC) to[C,l_=$C_{in}$] (xLx|-yB) node[tlground] {};
+\draw (xRx|-yC) to[C=$C_{out}$] (xRx|-yB) node[tlground] {};
+
+\xValBorder{xL}[-0.95]{xR}[1.15]{yB}[-0.6]{yA}[+0.9]*
+
+\end{tikzpicture}
+\end{document}

@@ -107,7 +107,7 @@ def xVT(xVBS,xVT0,xgamma,xphi):
 #--------------------------------#
 
 dirBuild="./build"
-fileName="Chapter04A_01"
+fileName="Chapter04A_02"
 
 ExportInit(dirBuild,fileName)
 
@@ -121,10 +121,11 @@ MPLInit()
 MPLNewFigure(graphNum)
 
 xVDD=5.0
+xVG=2.5
 
 xVinMin=0.0
 xVinMax=xVDD
-xVinStep=0.0005
+xVinStep=0.0001
 
 xV1Min=0.0
 xV1Max=xVDD
@@ -146,6 +147,7 @@ for nl in [nl0,nl1,nl2]:
     nl.add_instruction(modelNMOSL1)
     nl.add_instruction(modelPMOSL1)
     nl.set_component_value("VDD",str(xVDD))
+    nl.set_component_value("VG",str(xVG))
     nl.set_component_value("Vin","0")
     nl.set_element_model("M1","xNMOS W=1u L=1u")
     nl.set_element_model("M2","xPMOS W=2u L=1u")
@@ -165,8 +167,7 @@ rdat2=SpiceRun(runner,nl2)
 
 d["Vin"]=SpiceWave(rdat,"V(Vin)")
 d["Vout"]=SpiceWave(rdat,"V(Vout)")
-d["Vout"][d["Vin"]<0.01]=d["Vout"][d["Vin"]==0.01]
-# 滤掉Vin较小时Vout的异常波动
+d["VG"]=SpiceWave(rdat,"V(VG)")
 
 d["Av"]=NPDiff(d["Vin"],d["Vout"])
 
@@ -177,7 +178,7 @@ d["VGT1"]=d["VGS1"]-xVT(d["VBS1"],xVT0N,xgammaN,xphiN)
 
 d["VBS2"]=0
 d["VDS2"]=xVDD-d["Vout"]
-d["VGS2"]=xVDD-d["Vout"]
+d["VGS2"]=xVDD-d["VG"]
 d["VGT2"]=d["VGS2"]-xVT(d["VBS2"],xVT0P,xgammaP,xphiP)
 
 d["lVout"]=SpiceWave(rdat1,"V(Vout)")
@@ -185,8 +186,8 @@ d["lIdM1"]=SpiceWaveList(rdat1,"Id(M1)")
 d["lIdM2"]=SpiceWave(rdat2,"Is(M2)")
 
 iM1o=NPCross(d["VGT1"],0)
-iM1o+=20 # 微调
 iM1s=NPCross(d["VGT1"],d["VDS1"])
+iM2s=NPCross(d["VGT2"],d["VDS2"])
 
 iLoad=[]
 for i in range(lenV2):
@@ -195,11 +196,12 @@ for i in range(lenV2):
 plt.figure(idVV)
 plt.plot(d["Vin"],d["Vout"],c="k",label=r"$v_{OUT}$")
 plt.plot(d["Vin"],d["VGT1"],c="b",ls='dashed',lw=0.5,label=r"$M_1,sat$")
-MPLDrawPoints(d["Vin"],d["Vout"],[iM1s,iM1o],"k","w",4)
+plt.plot(d["Vin"],xVDD-d["VGT2"],c="r",ls='dashed',lw=0.5,label=r"$M_2,sat$")
+MPLDrawPoints(d["Vin"],d["Vout"],[iM1s,iM1o,iM2s],"k","w",4)
 
 plt.figure(idVA)
 plt.plot(d["Vin"],d["Av"],c="k",label=r"$A_v$")
-MPLDrawPoints(d["Vin"],d["Av"],[iM1s,iM1o],"k","w",4)
+MPLDrawPoints(d["Vin"],d["Av"],[iM1o],"k","w",4)
 
 plt.figure(idM1)
 plt.plot(d["Vin"],d["VDS1"],c="green",label=r"$v_{DS1}$")
@@ -209,6 +211,7 @@ MPLDrawPoints(d["Vin"],d["VGT1"],[iM1s,iM1o],"k","w",4)
 plt.figure(idM2)
 plt.plot(d["Vin"],d["VDS2"],c="green",label=r"$v_{DS2}$")
 plt.plot(d["Vin"],d["VGT2"],c="purple",label=r"$v_{GS2}-V_T$")
+MPLDrawPoints(d["Vin"],d["VGT2"],[iM2s],"k","w",4)
 
 plt.figure(idLO)
 cola=(0.00,0.00,1.00)
@@ -237,8 +240,8 @@ for id in range(graphNum):
             axes.set_ylabel(r"$v~(\si{V})$")
         axes.legend(loc="upper right")
     if id in[idVA]:
-        axes.set_ylim(-5.4,0.4)
-        axes.yaxis.set_major_locator(ticker.MultipleLocator(1))
+        axes.set_ylim(-32,2)
+        axes.yaxis.set_major_locator(ticker.MultipleLocator(5))
         axes.set_ylabel(r"$A_v$")
         axes.legend(loc="lower right")
     if id in[idLO]:
