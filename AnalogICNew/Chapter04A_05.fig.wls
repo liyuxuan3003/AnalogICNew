@@ -170,9 +170,9 @@ latexP={
 	xLaTeX["f_{p1}=-\\SI{1.40}{MHz}",0.7],
 	xLaTeX["f_{p1}=-\\SI{1.40}{MHz}",0.7]};
 latexZ={
-	xLaTeX["f_{z1}=-\\SI{47.21}{GHz}",0.7],
-	xLaTeX["f_{z1}=-\\SI{47.21}{GHz}",0.7],
-	xLaTeX["f_{z1}=-\\SI{46.11}{GHz}",0.7]};
+	xLaTeX["f_{z1}=\\SI{47.21}{GHz}",0.7],
+	xLaTeX["f_{z1}=\\SI{47.21}{GHz}",0.7],
+	xLaTeX["f_{z1}=\\SI{46.11}{GHz}",0.7]};
 
 
 ff1=Abs[{xp1,xz1}/(2Pi)]//.{rDIO}//.Join[rval,rfunc,revalWLr];

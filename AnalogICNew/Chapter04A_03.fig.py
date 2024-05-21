@@ -235,7 +235,10 @@ for id in range(graphNum):
     if id in[idVV,idM1,idM2,idVA,idLO]:
         axes.set_xlim(-0.2,5.2)
         axes.xaxis.set_major_locator(ticker.MultipleLocator(0.5))
-        axes.set_xlabel(r"$v_{IN}~(\si{V})$")
+        if id in[idLO]:
+            axes.set_xlabel(r"$v_{OUT}~(\si{V})$")
+        else:
+            axes.set_xlabel(r"$v_{IN}~(\si{V})$")
     if id in[idVV,idM1,idM2]:
         axes.set_ylim(-0.2,5.2)
         axes.yaxis.set_major_locator(ticker.MultipleLocator(0.5))

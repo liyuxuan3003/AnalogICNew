@@ -1,10 +1,916 @@
 \section{反相放大器}
+反相放大器是CMOS电路中的基本增益级。反相放大器实质上就是共源放大器！两者从不同的角度描述了该放大器的属性，前者从增益的正负上描述，后者从组态上描述。另外要说明的是，这里模拟设计中的“反相器”和数字设计中的“反相器”其实也是同一回事，只不过各自的用途有所不同：模拟设计将反相器用于放大，数字设计则将反相器用于正负电平的反转。
 
-\begin{Figure}
-    \begin{FigureSub}
-        \includegraphics[scale=0.8]{build/Chapter04A_22.fig.pdf}
+反相放大器通常由一个NMOS和PMOS构成，NMOS为共源管，PMOS充当负载
+\begin{itemize}
+    \item 二极管负载反相放大器：PMOS作为MOS二极管，充当负载。
+    \item 电流源负载反相放大器：PMOS作为MOS电流源，充当负载。
+    \item 推挽反相放大器：PMOS也作为共源管，和NMOS共同参与放大过程。 
+\end{itemize}
+
+在本节，我们将依次介绍这三种不同类型的反相放大器。
+
+在开始之前，我们想解决一个小小的问题。众所周知，当涉及PMOS时总会出现许多令人不悦的符号问题，绝对值和负号常常让人感到不知所措。不过，有一个极为简单的方法可以解决这个问题：在讨论PMOS时，认为$v_{GS},v_{BS},v_{DS}$实际上是$v_{SG},v_{SB},v_{SD}$，认为$i_D$是源自漏的电流，认为增强型PMOS的阈值$V_T$为正，那么，PMOS就可以完全当成NMOS计算了！
+
+\subsection{二极管负载反相放大器}
+二极管负载反相放大器的电路如\xref{fig:二极管负载反相放大器}所示
+\begin{Figure}[二极管负载反相放大器]
+    \includegraphics[scale=0.8]{build/Chapter04A_06.fig.pdf}
+\end{Figure}
+二极管负载反相放大器的大信号特性如\xref{fig:二极管负载反相放大器的大信号特性}所示，我们使用了四类图像
+\begin{itemize}
+    \item 负载图：将$M_1,M_2$视为两个独立的部分，令$v_{IN}$取一系列值，观察$M_1,M_2$各自的电流$i_D(M_1),i_D(M_2)$随$v_{OUT}$的变化，$i_D(M_1),i_D(M_2)$的交点即该$v_{IN}$下的工作点。
+    \item 电压传输特性：考察输出电压$v_{OUT}$随输入电压$v_{IN}$的变化曲线。
+    \item 电压增益特性：考察增益$A_v$随输入电压$v_{IN}$的变化曲线，即电压传输特性的导数图。
+    \item 工作区分析：考察$M_1,M_2$的$v_{DS}$和$v_{GS}-V_T$随$v_{IN}$的变化，观察工作区边界。
+\end{itemize} 
+关于本节所有仿真，取$V_{DD}=\SI{5}{V}$，取$W_1/L_1=1$和$W_2/L_2=2$以及$L_1=L_2=\SI{1}{um}$。之所以令PMOS的尺寸是NMOS的两倍，是出于$K_n'=\SI{110}{uA.V^{-1}}$和$K_p'=\SI{50}{uA.V^{-1}}$的缘故。试想，若PMOS尺寸是NMOS的两倍，则两者的$\beta$恰好是近似相同的。当然实际设计中，可以根据需要取任何需要的尺寸，这里只是为了解释为何要做这样特别的尺寸指定。
+
+\xref{fig:负载图--二极管反相}的负载图可以很直观的解释“放大”到底是怎么一回事：两个相邻的点位于两个邻近的$v_{IN}$取值上，因此，两点在横轴上的间距，就代表了一定的$v_{IN}$变化量导致的$v_{OUT}$的变化量，而这，恰恰就是增益！换言之，如果要取得较高的增益，负载线必须在穿越$M_1$的两根特性曲线的过程中在横向$v_{OUT}$上经过较大的距离，很明显，二极管负载在这一点上做的并不好，因此可以预期，二极管负载反相器不会有太高的增益。不过，这也指示了我们一个很重要的改进方向，如果想要更高的增益，负载线的斜率需要尽可能的小（电流基本不随电压变化）。
+
+\xref{fig:负载图--二极管反相}的负载图也展示出了$M_1$工作区的变化，最初，工作点是落在特性曲线的饱和段，但是，随着$v_{OUT}$的减小，工作点将落在线性段。这表明$M_1$实际已经从饱和区进入了线性区。
+
+\begin{Figure}[二极管负载反相放大器的大信号特性]
+    \begin{FigureSub}[负载图;负载图--二极管反相]
+        \includegraphics[scale=0.6]{build/Chapter04A_01_4.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.25cm}
+    \begin{FigureSub}[电压转移特性;电压转移特性--二极管反相]
+        \includegraphics[scale=0.6]{build/Chapter04A_01_0.fig.pdf}
     \end{FigureSub}
-    \begin{FigureSub}
-        \includegraphics[scale=0.8]{build/Chapter04A_22.fig.pdf}
+    \begin{FigureSub}[电压增益特性;电压增益特性--二极管反相]
+        \includegraphics[scale=0.6]{build/Chapter04A_01_1.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.25cm}
+    \begin{FigureSub}[$M_1$管工作区分析;M1管工作区分析--二极管反相]
+        \includegraphics[scale=0.6]{build/Chapter04A_01_2.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[$M_2$管工作区分析;M2管工作区分析--二极管反相]
+        \includegraphics[scale=0.6]{build/Chapter04A_01_3.fig.pdf}
     \end{FigureSub}
 \end{Figure}
+
+\xref{fig:电压转移特性--二极管反相}展示了电压传输特性，事实上，尽管细节有所不同，所有反相放大器的电压传输特性都可以用“$v_{OUT}$随$v_{IN}$的增大而减小”一言以蔽之。但很显然，并不是整段曲线都适合用于放大，只有斜率较大的中间部分具有较大增益。实际上，电压传输特性曲线中适合放大的区域就是$M_1,M_2$管均工作在饱和区的区域，因此，探究$M_1,M_2$何时能同时处于饱和区就是一个相当重要的问题。对于二极管负载，由于$M_2$处于二极管接法始终饱和，只需考虑$M_1$即可。
+
+$M_1$的饱和--线性分界条件是$v_{GS1}-V_T<v_{DS1}$，即
+\begin{Equation}
+    v_{IN}-V_T<v_{OUT}\qquad v_{OUT}>v_{IN}-V_T
+\end{Equation}
+$M_1$的饱和--截止分界条件是$v_{GS1}-V_T>0$，即
+\begin{Equation}
+    v_{IN}-V_T>0\qquad v_{IN}>V_T
+\end{Equation}
+\begin{BoxFormula}[二极管负载反相放大器--饱和分析]
+    二极管负载反相放大器中，$M_1,M_2$同时饱和的条件是
+    \begin{Equation}
+        v_{IN}>V_{T}\qquad v_{OUT}>v_{IN}-V_T
+    \end{Equation}
+\end{BoxFormula}
+我们会说，\xref{fml:二极管负载反相放大器--饱和分析}给出的饱和条件简直毫无意义！我们想了解的是输入电压$v_{IN}$满足什么条件时$M_1,M_2$能同时饱和，但是，这里求出的条件$v_{OUT}>v_{IN}-V_T$却包含了未知表达式的输出电压$v_{OUT}$。很显然$v_{OUT}$随$v_{IN}$的表达式必然是复杂且冗长的，以至于我们更愿意通过\xref{fig:电压转移特性--二极管反相}的仿真曲线而不是表达式来呈现它们间的关系。不过$v_{OUT}>v_{IN}-V_T$仍然是有意义的，我们可以将该条件以分界线的形式和电压转移曲线绘制在同一坐标下，如\xref{fig:电压转移特性--二极管反相}中的蓝虚线所示。此时，两者的交点就是分界点。因此，包含$v_{OUT}$的饱和条件尽管不能直接告诉我们$v_{IN}$取值范围，但只要与电压转移特性曲线结合在一起，这个取值范围就一目了然了！
+
+我们现在来解决另外一个大信号问题：输出电压的摆幅是多少？要明确的是，输出电压的摆幅并非是指$M_1,M_2$均位于饱和区时输出$v_{OUT}$的变化范围，而是指：输入$v_{IN}$从最小变化至最大，输出$v_{OUT}$的变化范围是多少？在理想状态下，输出摆幅应当是轨到轨的，换言之，应有$V_{OUT,\max}=V_{DD}$和$V_{OUT,\min}=0$。但是从\xref{fig:电压转移特性--二极管反相}中我们可以看出，这里两者均不满足。
+
+输出电压的最大值从\xref{fig:电压转移特性--二极管反相}中可以看出为$\SI{4.3}{V}$，这实际上是
+\begin{Equation}
+    V_{OUT,\max}=V_{DD}-V_T
+\end{Equation}
+原因很简单，当$v_{IN}<V_T$时$M_1$关断，此时$V_{DD}$将通过$M_2$对输出节点$v_{OUT}$充电，然而当$v_{OUT}$达到$V_{DD}-V_T$时，考虑到$M_2$的二极管接法，此时$v_{GS2}=V_T$使$M_2$也进入截止区关断。因此透过二极管接法的$M_2$输出$v_{OUT}$最大只能被$V_{DD}$上拉至$V_{DD}-V_T$。
+\begin{BoxFormula}[二极管负载反相放大器--最大输出电压]
+    二极管负载反相放大器中，输出电压的最大值为
+    \begin{Equation}
+        V_{OUT,\max}=V_{DD}-V_T
+    \end{Equation}
+\end{BoxFormula}
+
+输出电压的最小值的计算较为复杂，我们需要联立$M_1,M_2$的方程进行计算，简洁起见，假定$M_1,M_2$具有相同的$V_T$。根据\xref{fig:M1管工作区分析--二极管反相}和\xref{fig:M2管工作区分析--二极管反相}可知，当$v_{IN}=V_{DD}$时，$M_1$线性，$M_2$饱和
+\begin{Equation}
+    \beta_1\qty[(v_{GS1}-V_T)v_{DS1}-\frac{v_{DS1}^2}{2}]=\beta_2\frac{(v_{GS2}-V_T)^2}{2}
+\end{Equation}
+代入$v_{GS1}=v_{IN}$、$v_{GS2}=V_{DD}-v_{OUT}$、$v_{DS2}=v_{OUT}$，并考虑到$v_{IN}=v_{DD}$
+\begin{Equation}
+    \beta_1\qty[\qty(V_{DD}-V_T)v_{OUT}-\frac{v_{OUT}^2}{2}]=\beta_2\frac{(V_{DD}-v_{OUT}-V_T)^2}{2}
+\end{Equation}
+两边同乘$2$，整理得到
+\begin{Equation}
+    \qquad
+    \beta_1\qty[2(V_{DD}-V_T)v_{OUT}-v_{OUT}^2]=\beta_2\qty[(V_{DD}-V_T)^2-2(V_{DD}-V_T)v_{OUT}+v_{OUT}^2]
+    \qquad
+\end{Equation}
+整理为标准的二次方程的形式
+\begin{Equation}
+    (\beta_1+\beta_2)v_{OUT}^2-2(\beta_1+\beta_2)(V_{DD}-V_T)v_{OUT}+\beta_2(V_{DD}-V_T)^2=0
+\end{Equation}
+应用求根公式，这里取负
+\begin{Split}
+    v_{OUT}&=\frac{1}{2(\beta_1+\beta_2)}\Big[2(\beta_1+\beta_2)(V_{DD}-V_T)\\[3mm]
+    &-\sqrt{4(\beta_1+\beta_2)^2(V_{DD}-V_T)^2-4\beta_2(\beta_1+\beta_2)(V_{DD}-V_T)^2}\Big]
+\end{Split}
+化简，从方括号提出$2(\beta_1+\beta_2)$并约掉
+\begin{Equation}
+    v_{OUT}=(V_{DD}-V_T)+(V_{DD}-V_T)\sqrt{1-\frac{\beta_2}{\beta_1+\beta_2}}
+\end{Equation}
+整理如下
+\begin{BoxFormula}[二极管负载反相放大器--最小输出电压]
+    二极管负载反相放大器中，输出电压的最小值为
+    \begin{Equation}
+        V_{OUT,\min}=(V_{DD}-V_T)+(V_{DD}-V_T)\sqrt{1-\frac{\beta_2}{\beta_1+\beta_2}}
+    \end{Equation}
+\end{BoxFormula}
+
+接下来，我们来分析小信号特性，这包含增益$A_v$和输出电阻$R_{out}$，如\xref{fig:二极管负载反相放大器的小信号电路}所示
+\begin{Figure}[二极管负载反相放大器的小信号电路]
+    \begin{FigureSub}[电压增益;电压增益--二极管反相]
+        \includegraphics[scale=0.8]{build/Chapter04A_09.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[输出电阻;输出电阻--二极管反相]
+        \includegraphics[scale=0.8]{build/Chapter04A_12.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+先计算增益，首先写出电压矩阵\setpeq{二极管反相增益}
+\begin{Equation}&[1]
+    \begin{pmatrix}
+        v_{gs1}&v_{gs2}\\
+        v_{bs1}&v_{bs2}\\
+        v_{ds1}&v_{ds2}
+    \end{pmatrix}=
+    \begin{pmatrix}
+        v_{in}&v_{out}\\
+        0&0\\
+        v_{out}&v_{out}\\
+    \end{pmatrix}
+\end{Equation}
+列出方程
+\begin{Equation}&[2]
+    g_{m1}v_{gs1}+g_{ds1}v_{ds1}+g_{m2}v_{gs2}+g_{ds2}v_{ds2}=0
+\end{Equation}
+在\xrefpeq{2}中代入\xrefpeq{1}，整理得到
+\begin{Equation}&[3]
+    g_{m1}v_{in}+(g_{m2}+g_{ds1}+g_{ds2})v_{out}=0
+\end{Equation}
+即得
+\begin{Equation}&[4]
+    \frac{v_{out}}{v_{in}}=-g_{m1}(g_{m2}+g_{ds1}+g_{ds2})^{-1}
+\end{Equation}
+这里$g_{m2}+g_{ds1}+g_{ds2}$可以近似为$g_{m2}$，因为跨导远大于输出电导，即取$g_m\gg g_{ds}$的近似。
+\begin{BoxFormula}[二极管负载反相放大器--电压增益]
+    二极管负载反相放大器中，电压增益为
+    \begin{Equation}
+        A_v=-g_{m1}(g_{m2}+g_{ds1}+g_{ds2})^{-1}
+    \end{Equation}
+    可以近似为
+    \begin{Equation}
+        A_v=-g_{m1}g_{m2}^{-1}
+    \end{Equation}
+\end{BoxFormula}\setpeq{二极管反相增益}
+
+再计算输出电阻，从\xrefpeq{3}继续，但这一次$v_{in}=0$且电流之和为$i_{out}$
+\begin{Equation}
+    (g_{m2}+g_{ds1}+g_{ds2})v_{out}=i_{out}
+\end{Equation}
+即得
+\begin{Equation}
+    \frac{v_{out}}{i_{out}}=(g_{m2}+g_{ds1}+g_{ds2})^{-1}
+\end{Equation}
+整理如下
+\begin{BoxFormula}[二极管负载反相放大器--输出电阻]
+    二极管负载反相放大器中，输出电阻为
+    \begin{Equation}
+        R_{out}=(g_{m2}+g_{ds1}+g_{ds2})^{-1}
+    \end{Equation}
+    可以近似为
+    \begin{Equation}
+        R_{out}=g_{m2}^{-1}
+    \end{Equation}
+\end{BoxFormula}
+
+现在，我们已经推导出了增益$A_V$和输出电阻$R_{out}$随$g_m,g_{ds}$的关系式了。但是，如果能理解$A_V$和$R_{out}$是如何由偏置$I_D$决定的会更有帮助，这需要代入以下两个公式
+\begin{Equation}
+    g_{m}=(2\beta I_D)^{1/2}\qquad g_{ds}=(\lambda I_D)
+\end{Equation}
+
+根据\xref{fml:二极管负载反相放大器--电压增益}的近似式
+\begin{Equation}
+    A_v=-\sqrt{\frac{2\beta_1 I_D}{2\beta_2 I_D}}=-\sqrt{\frac{\beta_1}{\beta_2}}
+\end{Equation}
+根据\xref{fml:二极管负载反相放大器--输出电阻}的近似式
+\begin{Equation}
+    R_{out}=-\sqrt{\frac{1}{2\beta_2I_D}}=\frac{1}{\sqrt{2\beta_2}}\sqrt{\frac{1}{I_D}}
+\end{Equation}
+
+我们将结论整理如下
+\begin{BoxFormula}[二极管负载反相放大器--电压增益--偏置]
+    二极管负载反相放大器中，电压增益可以用偏置表示为
+    \begin{Equation}
+        A_v=-\sqrt{\frac{\beta_1}{\beta_2}}
+    \end{Equation}
+\end{BoxFormula}
+
+\begin{BoxFormula}[二极管负载反相放大器--输出电阻--偏置]
+    二极管负载反相放大器中，输出电阻可以用偏置表示为
+    \begin{Equation}
+        R_{out}=\frac{1}{\sqrt{2\beta_2}}\sqrt{\frac{1}{I_D}}
+    \end{Equation}
+\end{BoxFormula}
+
+\xref{fml:二极管负载反相放大器--电压增益--偏置}指出了二极管负载反相器的一个重要特性：增益仅取决于$M_1,M_2$的跨导之比，而与偏置电流$I_D$无关。这种特性有优势也有劣势，优势在于其增益特性是可以高度预见的，确定了$M_1,M_2$的宽长比，增益就确定了，增益不会受到偏置电流$I_D$的影响。劣势在于增益往往较低，例如这里仿真时我们令$\beta_1,\beta_2$近似相等，故可以预期增益$A_V=-\sqrt{\beta/\beta_2}$仅有$1$左右，这一点可以在\xref{fig:电压增益特性--二极管反相}中得到验证。当然，增大$M_1$的宽长比提高$\beta_1$可以增大增益，然而$A_V=-\sqrt{\beta/\beta_2}$的根号关系决定了这种途径很低效，增大$M_1$一百倍只能获得堪堪$10$的增益！在实践中，有时就需要这种“可高度遇见其特性的低增益反相器”，这就非常合适。
+
+\begin{Figure}[反相放大器的特性与偏置的关系]
+    \begin{FigureSub}[电压增益;电压增益--反相器增益]
+        \includegraphics[scale=0.8]{build/Chapter04A_04a.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[输出电阻;输出电阻--反相器增益]
+        \includegraphics[scale=0.8]{build/Chapter04A_04b.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+\xref{fig:反相放大器的特性与偏置的关系}展示了不同类型（二极管、电流源、推挽）的反相放大器的增益$A_v$与输出电阻$R_{out}$随偏置电流$I_D$的变化曲线，重点考察$I_D=\SI{0.1}{mA}$的情形（由\xref{fig:负载图--二极管反相}可知该电流是合适的）。
+
+\xref{fig:反相放大器的特性与偏置的关系}中，就二极管负载，观察到
+\begin{itemize}
+    \item 二极管负载有红实线和红虚线两条，前者为精确结果，后者为近似结果，这里的近似是指$g_{m}\gg g_{ds}$的近似，\xref{fml:二极管负载反相放大器--电压增益--偏置}和\xref{fml:二极管负载反相放大器--输出电阻--偏置}给出的结论对应的是近似结果。
+    \item 电压增益$A_v$与$I_D$无关。但若考虑$g_{ds}$的影响，其实际会随$I_D$增加略微减小。
+    \item 电压增益$A_v=\SI{-0.9860}{}$，若套用近似公式则为$\SI{-1.0488}{}$。
+    \item 输出电阻$R_{out}$随$I_D$的增加而减小，数量级为数千欧姆。
+    \item 输出电阻$R_{out}=\SI{6.648}{k\ohm}$，若套用近似公式则为$\SI{7.071}{k\ohm}$。
+\end{itemize}
+
+\subsection{电流源负载反相放大器}
+电流源负载反相放大器的电路如\xref{fig:电流源负载反相放大器}所示
+\begin{Figure}[电流源负载反相放大器]
+    \includegraphics[scale=0.8]{build/Chapter04A_07.fig.pdf}
+\end{Figure}
+电流源负载反相放大器的大信号特性如\xref{fig:电流源负载反相放大器的大信号特性}所示，其中取$V_G=\SI{2.5}{V}$。
+
+\xref{fig:负载图--电流源反相}相较\xref{fig:负载图--二极管反相}，可以看出，由于MOS电流源相较MOS二极管具有斜率小的多的负载线，在饱和区，两个相邻的工作点在横轴上的间距大了许多。因而，可以预期电流源负载相较二极管负载具有更大的增益，\xref{fig:电压增益特性--电流源反相}亦验证了这种预测，现在增益来到了$15$左右。
+
+\xref{fig:电压转移特性--电流源反相}的电压转移特性中，注意到以下几个明显的变化
+\begin{itemize}
+    \item 输出电压的最大值现在可以达到$V_{DD}$（而不是$V_{DD}-V_T$）。
+    \item 饱和区间明显变窄了，这是因为在电流源接法中，$M_2$未必总是饱和，因此，饱和区间是由$M_1,M_2$两者的线性边界夹出来的（而不再由$M_1$自身的线性边界和截止边界确定）。
+\end{itemize}
+这两者分别是大信号特性中的摆幅问题和工作区问题，我们下面逐一分析。
+
+$M_1$的饱和--线性分界条件是$v_{GS1}-V_T<v_{DS1}$，即
+\begin{Equation}
+    v_{IN}-V_T<v_{OUT}\qquad v_{OUT}>v_{IN}-V_T
+\end{Equation}
+$M_2$的饱和--线性分界条件是$v_{GS2}-V_T<v_{DS2}$，即
+\begin{Equation}
+    V_{DD}-V_{G}-V_T<V_{DD}-v_{OUT}\qquad v_{OUT}<V_{G}+V_T
+\end{Equation}
+
+\begin{Figure}[电流源负载反相放大器的大信号特性]
+    \begin{FigureSub}[负载图;负载图--电流源反相]
+        \includegraphics[scale=0.6]{build/Chapter04A_02_4.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.25cm}
+    \begin{FigureSub}[电压转移特性;电压转移特性--电流源反相]
+        \includegraphics[scale=0.6]{build/Chapter04A_02_0.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[电压增益特性;电压增益特性--电流源反相]
+        \includegraphics[scale=0.6]{build/Chapter04A_02_1.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.25cm}
+    \begin{FigureSub}[$M_1$管工作区分析;M1管工作区分析--电流源反相]
+        \includegraphics[scale=0.6]{build/Chapter04A_02_2.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[$M_2$管工作区分析;M2管工作区分析--电流源反相]
+        \includegraphics[scale=0.6]{build/Chapter04A_02_3.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+整理如下
+\begin{BoxFormula}[电流源负载反相放大器--饱和分析]
+    电流源负载反相放大器中，$M_1,M_2$同时饱和的条件是
+    \begin{Equation}
+        v_{OUT}>v_{IN}-V_T\qquad v_{OUT}<V_{G}+V_T
+    \end{Equation}
+\end{BoxFormula}
+这里$V_{G}=\SI{2.5}{V}$而$V_T=\SI{0.7}{V}$，\xref{fig:电压转移特性--电流源反相}中红虚线代表的$v_{OUT}<V_{G}+V_T$就位于$\SI{3.2}{V}$。
+
+输出电压的最大值现在就是$V_{DD}$，采用电流源接法后，$M_2$不会因为$v_{OUT}$接近$V_{DD}$关断。
+
+\begin{BoxFormula}[电流源负载反相放大器--最大输出电压]
+    电流源负载反相放大器中，输出电压的最大值为
+    \begin{Equation}
+        V_{OUT,\max}=V_{DD}
+    \end{Equation}
+\end{BoxFormula}
+
+输出电压的最小值同样需要联立计算，当$v_{IN}=V_{DD}$时，$M_1$线性，$M_2$饱和
+\begin{Equation}
+    \beta_1\qty[(v_{GS1}-V_T)v_{DS1}-\frac{v_{DS1}^2}{2}]=\beta_2\frac{(v_{GS2}-V_T)^2}{2}
+\end{Equation}
+代入$v_{GS1}=v_{IN}$、$v_{GS2}=V_{DD}-V_{G}$、$v_{DS2}=v_{OUT}$，并考虑到$v_{IN}=v_{DD}$
+\begin{Equation}
+    \beta_1\qty[\qty(V_{DD}-V_T)v_{OUT}-\frac{v_{OUT}^2}{2}]=\beta_2\frac{(V_{DD}-V_{G}-V_T)^2}{2}
+\end{Equation}
+两边同乘$2$，整理得到
+\begin{Equation}
+    \beta_1\qty[2(V_{DD}-V_T)v_{OUT}-v_{OUT}^2]=\beta_2\qty[(V_{DD}-V_G-V_T)^2]
+\end{Equation}
+整理为标准的二次方程的形式
+\begin{Equation}
+    \beta_1v_{OUT}^2-2\beta_1(V_{DD}-V_T)v_{OUT}+\beta_2(V_{DD}-V_G-V_T)^2=0
+\end{Equation}
+应用求根公式，这里取负
+\begin{Split}
+    v_{OUT}&=\frac{1}{2\beta_1}\Big[2\beta_1(V_{DD}-V_T)\\[3mm]
+    &-\sqrt{4\beta_1^2(V_{DD}-V_T)^2-4\beta_1\beta_2(V_{DD}-V_G-V_T)^2}\Big]
+\end{Split}
+化简，从方括号提出$2\beta_1$并约掉
+\begin{Equation}
+    v_{OUT}=(V_{DD}-V_T)-(V_{DD}-V_T)\sqrt{1-\frac{\beta_2}{\beta_1}\frac{(V_{DD}-V_G-V_T)^2}{(V_{DD}-V_T)^2}}
+\end{Equation}
+整理如下
+\begin{BoxFormula}[电流源负载反相放大器--最小输出电压]
+    电流源负载反相放大器，输出电压的最大值为
+    \begin{Equation}
+        \qquad\qquad
+        V_{OUT,\min}=(V_{DD}-V_T)-(V_{DD}-V_T)\sqrt{1-\frac{\beta_2}{\beta_1}\frac{(V_{DD}-V_G-V_T)^2}{(V_{DD}-V_T)^2}}
+        \qquad\qquad
+    \end{Equation}
+\end{BoxFormula}\goodbreak
+接下来，我们来分析小信号特性，如\xref{fig:电流源负载反相放大器的大信号特性}所示
+
+\begin{Figure}[电流源负载反相放大器的大信号特性]
+    \begin{FigureSub}[电压增益;电压增益--电流源反相]
+        \includegraphics[scale=0.8]{build/Chapter04A_10.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[输出电阻;输出电阻--电流源反相]
+        \includegraphics[scale=0.8]{build/Chapter04A_13.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+先计算增益，首先写出电压矩阵\setpeq{电流源反相增益}
+\begin{Equation}&[1]
+    \begin{pmatrix}
+        v_{gs1}&v_{gs2}\\
+        v_{bs1}&v_{bs2}\\
+        v_{ds1}&v_{ds2}
+    \end{pmatrix}=
+    \begin{pmatrix}
+        v_{in}&0\\
+        0&0\\
+        v_{out}&v_{out}\\
+    \end{pmatrix}
+\end{Equation}
+列出方程
+\begin{Equation}&[2]
+    g_{m1}v_{gs1}+g_{ds1}v_{ds1}+g_{m2}v_{gs2}+g_{ds2}v_{ds2}=0
+\end{Equation}
+在\xrefpeq{2}中代入\xrefpeq{1}，整理得到
+\begin{Equation}&[3]
+    g_{m1}v_{in}+(g_{ds1}+g_{ds2})v_{out}=0
+\end{Equation}
+即得
+\begin{Equation}&[4]
+    \frac{v_{out}}{v_{in}}=-g_{m1}(g_{ds1}+g_{ds2})^{-1}
+\end{Equation}
+我们注意到，这里得到的电流源负载的增益表达式和先前二极管负载极为相似，实际上，只不过是$(g_{m2}+g_{ds1}+g_{ds2})^{-1}$变为了$(g_{ds1}+g_{ds2})^{-1}$。其中这里$g_{m2}$消失的原因直观上可以这么理解：二极管中$g_{m2}$与$g_{ds2}$是一同在漏源间工作的，电流源中$g_{m2}$因$V_G$恒定不参与工作。
+
+\begin{BoxFormula}[电流源负载反相放大器--电压增益]
+    电流源负载反相放大器中，电压增益为
+    \begin{Equation}
+        A_v=-g_{m1}(g_{ds1}+g_{ds2})^{-1}
+    \end{Equation}
+\end{BoxFormula}\setpeq{电流源反相增益}
+
+再计算输出电阻，从\xrefpeq{3}继续，但这一次$v_{in}=0$且电流之和为$i_{out}$
+\begin{Equation}
+    (g_{ds1}+g_{ds2})v_{out}=i_{out}
+\end{Equation}
+即得
+\begin{Equation}
+    \frac{v_{out}}{i_{out}}=(g_{ds1}+g_{ds2})^{-1}
+\end{Equation}\goodbreak
+整理如下
+\begin{BoxFormula}[电流源负载反相放大器--输出电阻]
+    电流源负载反相放大器中，输出电阻为
+    \begin{Equation}
+        R_{out}=(g_{ds1}+g_{ds2})^{-1}
+    \end{Equation}
+\end{BoxFormula}
+根据\xref{fml:电流源负载反相放大器--电压增益}，将$g_{m},g_{ds}$展开为偏置电流
+\begin{Equation}
+    A_v=-\frac{\sqrt{2\beta_1I_D}}{\lambda_1I_D+\lambda_2I_D}=-\frac{\sqrt{2\beta_1}}{(\lambda_1+\lambda_2)}\sqrt{\frac{1}{I_D}}
+\end{Equation}
+根据\xref{fml:电流源负载反相放大器--输出电阻}，将$g_{m},g_{ds}$展开为偏置电流
+\begin{Equation}
+    R_{out}=\frac{1}{\lambda_1I_D+\lambda_2I_D}=\frac{1}{(\lambda_1+\lambda_2)}\frac{1}{I_D}
+\end{Equation}
+我们将结论整理如下
+\begin{BoxFormula}[电流源负载反相放大器--电压增益--偏置]
+    电流源负载反相放大器中，电压增益可以用偏置表示为
+    \begin{Equation}
+        A_v=-\frac{\sqrt{2\beta_1}}{(\lambda_1+\lambda_2)}\sqrt{\frac{1}{I_D}}
+    \end{Equation}
+\end{BoxFormula}
+
+\begin{BoxFormula}[电流源负载反相放大器--输出电阻--偏置]
+    电流源负载反相放大器中，输出电阻可以用偏置表示为
+    \begin{Equation}
+        R_{out}=\frac{1}{(\lambda_1+\lambda_2)}\frac{1}{I_D}
+    \end{Equation}
+\end{BoxFormula}
+
+\xref{fig:反相放大器的特性与偏置的关系}中，就电流源负载，观察到
+\begin{itemize}
+    \item 电压增益$A_v$随$I_D$的增大而减小。换言之，减小$I_D$可以让我们获得高增益！该趋势可以保持到$I_D$减小至亚阈值电流，此时$M_1,M_2$进入亚阈值区，增益将不再提升。
+    \item 电压增益$A_v=\SI{-16.4804}{}$，这和我们从\xref{fig:电压增益--电流源反相}读到的$15$左右相符。
+    \item 输出电阻$R_{out}$随$I_D$的增加而减小，数量级为数百千欧姆。
+    \item 输出电阻$R_{out}=\SI{111.1}{k\ohm}$，这比二极管负载的输出电阻高了两个数量级。
+\end{itemize}
+
+\subsection{推挽反相放大器}
+推挽反相放大器的电路如\xref{fig:电流源负载反相放大器}所示，它的结构相较之前的二极管负载和电流源负载是较为特殊的。PMOS不再是单纯的负载，PMOS变得与NMOS对等，协同放大，故称为“推挽”。
+
+\begin{Figure}[推挽反相放大器]
+    \includegraphics[scale=0.8]{build/Chapter04A_08.fig.pdf}
+\end{Figure}
+
+推挽反相放大器的大信号特性如\xref{fig:电流源负载反相放大器的大信号特性}所示。由于推挽放大器中$M_1,M_2$均与$v_{IN}$有关，故其负载图较为复杂，如\xref{fig:负载图--推挽反相}所示，对于每一个$v_{IN}$的取值，现在$M_1,M_2$都各有一条曲线。
+
+$M_1$的饱和--线性分界条件是$v_{GS1}-V_T<v_{DS1}$，即
+\begin{Equation}
+    v_{IN}-V_T<v_{OUT}\qquad v_{OUT}>v_{IN}-V_T
+\end{Equation}
+$M_2$的饱和--线性分界条件是$v_{GS2}-V_T<v_{DS2}$，即
+\begin{Equation}
+    V_{DD}-v_{IN}-V_T<V_{DD}-v_{OUT}\qquad v_{OUT}<v_{IN}+V_T
+\end{Equation}
+整理如下
+\begin{BoxFormula}[推挽反相放大器--饱和分析]
+    推挽反相放大器中，$M_1,M_2$同时饱和的条件是
+    \begin{Equation}
+        v_{OUT}>v_{IN}-V_T\qquad
+        v_{OUT}<v_{IN}+V_T
+    \end{Equation}
+\end{BoxFormula}
+
+推挽反相器的摆幅是特别简单的，如\xref{fig:电压转移特性--推挽反相}所示，分别为$0$和$V_{DD}$。
+\begin{BoxFormula}[推挽反相放大器--最大输出电压]
+    推挽反相放大器中，输出电压的最大值为
+    \begin{Equation}
+        V_{OUT,\max}=V_{DD}
+    \end{Equation}
+\end{BoxFormula}
+\begin{BoxFormula}[推挽反相放大器--最小输出电压]
+    推挽反相放大器中，输出电压的最小值为
+    \begin{Equation}
+        V_{OUT,\min}=0
+    \end{Equation}
+\end{BoxFormula}
+这是一个很重要的特性：推挽反相放大器可以实现轨到轨的全摆幅输出！
+
+\newpage
+\begin{Figure}[推挽反相放大器的大信号特性]
+    \begin{FigureSub}[负载图;负载图--推挽反相]
+        \includegraphics[scale=0.6]{build/Chapter04A_03_4.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.25cm}
+    \begin{FigureSub}[电压转移特性;电压转移特性--推挽反相]
+        \includegraphics[scale=0.6]{build/Chapter04A_03_0.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[电压增益特性;电压增益特性--推挽反相]
+        \includegraphics[scale=0.6]{build/Chapter04A_03_1.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.25cm}
+    \begin{FigureSub}[$M_1$管工作区分析;M1管工作区分析--推挽反相]
+        \includegraphics[scale=0.6]{build/Chapter04A_03_2.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[$M_2$管工作区分析;M2管工作区分析--推挽反相]
+        \includegraphics[scale=0.6]{build/Chapter04A_03_3.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+接下来，我们来分析小信号特性，如\xref{fig:推挽反相放大器}所示
+\begin{Figure}[电推挽反相放大器的大信号特性]
+    \begin{FigureSub}[电压增益;电压增益--推挽反相]
+        \includegraphics[scale=0.8]{build/Chapter04A_11.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[输出电阻;输出电阻--推挽反相]
+        \includegraphics[scale=0.8]{build/Chapter04A_14.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+先计算增益，首先写出电压矩阵\setpeq{推挽反相增益}
+\begin{Equation}&[1]
+    \begin{pmatrix}
+        v_{gs1}&v_{gs2}\\
+        v_{bs1}&v_{bs2}\\
+        v_{ds1}&v_{ds2}
+    \end{pmatrix}=
+    \begin{pmatrix}
+        v_{in}&v_{in}\\
+        0&0\\
+        v_{out}&v_{out}\\
+    \end{pmatrix}
+\end{Equation}
+列出方程
+\begin{Equation}&[2]
+    g_{m1}v_{gs1}+g_{ds1}v_{ds1}+g_{m2}v_{gs2}+g_{ds2}v_{ds2}=0
+\end{Equation}
+在\xrefpeq{2}中代入\xrefpeq{1}，整理得到
+\begin{Equation}&[3]
+    (g_{m1}+g_{m2})v_{in}+(g_{ds1}+g_{ds2})v_{out}=0
+\end{Equation}
+即得
+\begin{Equation}&[4]
+    \frac{v_{out}}{v_{in}}=-(g_{m1}+g_{m2})(g_{ds1}+g_{ds2})^{-1}
+\end{Equation}
+我们可以看出，此处的推挽相较先前的电流源负载或二极管负载，增益中的第一项由$g_{m1}$变为了$(g_{m1}+g_{m2})$。这就解释了，为什么我们说推挽反相放大器中$M_2$与$M_1$协同参与放大。
+\begin{BoxFormula}[推挽反相放大器--电压增益]
+    推挽反相放大器中，电压增益为
+    \begin{Equation}
+        A_v=-(g_{m1}+g_{m2})(g_{ds1}+g_{ds2})^{-1}
+    \end{Equation}
+\end{BoxFormula}\setpeq{推挽反相增益}
+再计算输出电阻，从\xrefpeq{3}继续，但这一次$v_{in}=0$且电流之和为$i_{out}$
+\begin{Equation}
+    (g_{ds1}+g_{ds2})v_{out}=i_{out}
+\end{Equation}
+即得
+\begin{Equation}
+    \frac{v_{out}}{i_{out}}=(g_{ds1}+g_{ds2})^{-1}
+\end{Equation}\goodbreak
+整理如下
+\begin{BoxFormula}[推挽反相放大器--输出电阻]
+    推挽反相放大器中，输出电阻为
+    \begin{Equation}
+        R_{out}=(g_{ds1}+g_{ds2})^{-1}
+    \end{Equation}
+\end{BoxFormula}
+
+至此，可以看出，三种类型的反相器在小信号下的差异，可以归结于$g_{m2}$的工作方式
+\begin{itemize}
+    \item 二极管负载反相器中$g_{m2}$工作在漏源间，即有$v_{gs2}=v_{out}$成立。（\xref{fml:二极管负载反相放大器--电压增益}）
+    \item 电流源负载反相器中$g_{m2}$不工作，即有$v_{gs2}=0$成立。（\xref{fml:电流源负载反相放大器--电压增益}）
+    \item 推挽反相放大器中$g_{m2}$工作在栅源间，即有$v_{gs2}=v_{in}$成立。（\xref{fml:推挽反相放大器--电压增益}）
+\end{itemize}
+
+根据\xref{fml:推挽反相放大器--电压增益}，将$g_{m},g_{ds}$展开为偏置电流
+\begin{Equation}
+    A_v=-\frac{\sqrt{2\beta_1I_D}+\sqrt{2\beta_2I_D}}{\lambda_1I_D+\lambda_2I_D}=-\frac{\sqrt{2\beta_1}+\sqrt{2\beta_2}}{(\lambda_1+\lambda_2)}\sqrt{\frac{1}{I_D}}
+\end{Equation}
+
+根据\xref{fml:推挽反相放大器--输出电阻}，将$g_{m},g_{ds}$展开为偏置电流
+\begin{Equation}
+    R_{out}=\frac{1}{\lambda_1I_D+\lambda_2I_D}=\frac{1}{(\lambda_1+\lambda_2)}\frac{1}{I_D}
+\end{Equation}
+
+我们将结论整理如下
+\begin{BoxFormula}[推挽反相放大器--电压增益--偏置]
+    电流源负载反相放大器中，电压增益可以用偏置表示为
+    \begin{Equation}
+        A_v=-\frac{\sqrt{2\beta_1}+\sqrt{2\beta_2}}{(\lambda_1+\lambda_2)}\sqrt{\frac{1}{I_D}}
+    \end{Equation}
+\end{BoxFormula}
+
+\begin{BoxFormula}[推挽反相放大器--输出电阻--偏置]
+    电流源负载反相放大器中，输出电阻可以用偏置表示为
+    \begin{Equation}
+        R_{out}=\frac{1}{(\lambda_1+\lambda_2)}\frac{1}{I_D}
+    \end{Equation}
+\end{BoxFormula}
+
+\xref{fig:反相放大器的特性与偏置的关系}中，就推挽，观察到
+\begin{itemize}
+    \item 电压增益$A_v$随$I_D$的增大而减小，这一点上，推挽与电流源负载基本一致。
+    \item 电压增益$A_v=\SI{-32.1939}{}$，这和我们从\xref{fig:电压增益--电流源反相}读到的$30$左右相符。
+    \item 电压增益比电流源负载的增益高了一倍，这就是因为推挽中$M_1,M_2$同时参与放大的缘故（即$g_{m1}$变为$g_{m1}+g_{m2}$）。因此，在同等情况下，推挽结构可以提供最高的电压增益。
+    \item 输出电阻$R_{out}$随$I_D$的增加而减小，数量级为数百千欧姆。
+    \item 输出电阻$R_{out}=\SI{111.1}{k\ohm}$。推挽和电流源负载的输出电阻完全相同，两者的曲线重合。
+\end{itemize}
+
+关于推挽反相放大器，有一个重要的问题：其能否在保持$\beta_1,\beta_2$的情况下使$I_D$变化？这个问题相当的重要，如果不成立，那讨论$A_v,R_{out}$随$I_D$的变化将毫无意义。对于二极管负载反相器，其$v_{IN}$可以在一个相当宽的范围内变化，对于电流源负载反相器，其$v_{IN}$的变化范围虽然很窄，但是其$I_D$可以由$V_G$确定。而推挽放大器两种情况都不符合，那这么看，讨论推挽反相器的$A_v,R_{out}$随$I_D$的变化似乎毫无意义了？实际上，我们忽略了一个可以直接影响所有反相器的$I_D$的变量：电源电压$V_{DD}$可以变化！故保持$\beta_1,\beta_2$不变令$I_D$变化总是可行的。
+
+实际上，考虑$V_{DD}$的变化对$I_D$的影响将得出一些有趣的结论。或许我们会认为，低电压意味着低性能，但事实上，上述有关$A_V$和$I_D$的讨论告诉我们，降低$V_{DD}$反而会提高增益！
+
+\subsection{反相放大器的频率特性}
+
+在本小节，我们来分析反相放大器的频率特性，\xref{fig:反相放大器的电容}绘制了三类反相器中$M_1,M_2$的寄生电容$C_{gs},C_{gd},C_{bs},C_{bd}$，请注意，有些电容并未出现，这是因为电容所连接的两端被短接了。除此之外，我们注意到输出端还有一个电容$C_L$，它代表的是负载电容（来自下一级的输入电容）。
+\begin{Figure}[反相放大器的电容]
+    \begin{FigureSub}[二极管负载反相放大器的电容]
+        \includegraphics[scale=0.8]{build/Chapter04A_15.fig.pdf}
+    \end{FigureSub}\qquad
+    \begin{FigureSub}[电流源负载反相放大器的电容]
+        \includegraphics[scale=0.8]{build/Chapter04A_16.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.25cm}
+    \begin{FigureSub}[推挽反相放大器的电容]
+        \includegraphics[scale=0.8]{build/Chapter04A_17.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+这里有一个较为简单的分析方法。我们注意到所有类型的反相放大器均没有输入和输出之外的中间节点，这意味着，所有的电容，最终都可以被划分为以下三种类型
+\begin{itemize}
+    \item 输入电容，连接输入节点和地，记为$C_{in}$。
+    \item 输出电容，连接输出节点和地，记为$C_{out}$。
+    \item 跨接电容，连接输出节点和输入节点，记为$C_m$。
+\end{itemize}
+这样一来，如\xref{fig:反相放大器的频率特性分析}所示，我们就可以在放大器的层级上考虑电容的影响，因为这里所有的电容$C_{in},C_{out},C_{m}$都位于放大器的外部。这种分析方法显然比直接在包含$g_{m},g_{ds}$的小信号电路上添加电容要来得简单，因为我们可以复用低频下由$g_{m},g_{ds}$计算出的$A_v$和$R_{out}$的结论。
+
+\begin{Figure}[反相放大器的频率特性分析]
+    \includegraphics[scale=0.8]{build/Chapter04A_18.fig.pdf}
+\end{Figure}
+
+第一步，我们先就三种反相器，分别写出他们的$C_{in},C_{out},C_m$。
+
+\begin{BoxFormula}[二极管负载反相放大器--电容]
+    二极管负载反相放大器中，电容$C_{in},C_{out},C_m$分别为
+    \begin{Gather}
+        C_{in}=C_{gs1}\\ 
+        C_{out}=C_{bd1}+C_{bd2}+C_{gs2}+C_L\\ 
+        C_m=C_{gd1}
+    \end{Gather}
+\end{BoxFormula}
+
+\begin{BoxFormula}[电流源负载反相放大器--电容]
+    电流源负载反相放大器中，电容$C_{in},C_{out},C_m$分别为
+    \begin{Gather}
+        C_{in}=C_{gs1}\\ 
+        C_{out}=C_{bd1}+C_{bd2}+C_{gd2}+C_L\\
+        C_m=C_{gd1}
+    \end{Gather}
+\end{BoxFormula}
+
+\begin{BoxFormula}[推挽反相放大器--电容]
+    推挽反相放大器中，电容$C_{in},C_{out},C_m$分别为
+    \begin{Gather}
+        C_{in}=C_{gs1}+C_{gs2}\\ 
+        C_{out}=C_{bd1}+C_{bd2}+C_L\\ 
+        C_m=C_{gd1}+C_{gd2}
+    \end{Gather}
+\end{BoxFormula}
+
+第二步，我们要求出\xref{fig:反相放大器的频率特性分析}中的$s$域增益$A_v(s)=v_{out}(s)/v_{in}(s)$的表达式。
+
+这并不复杂，在输出节点列出方程
+\begin{Equation}
+    sC_m(v_{out}-v_{in})+sC_{out}v_{out}+R_{out}^{-1}(v_{out}-A_vv_{in})=0
+\end{Equation}
+整理得到
+\begin{Equation}
+    (sC_m+sC_{out}+R_{out}^{-1})v_{out}=(sC_m+R_{out}^{-1}A_v)v_{in}
+\end{Equation}
+因此
+\begin{Equation}
+    A_v(s)=\frac{v_{out}}{v_{in}}=\frac{sC_m+R_{out}^{-1}A_v}{sC_m+sC_{out}+R_{out}^{-1}}
+\end{Equation}
+我们考虑上下同乘$R_{out}$
+\begin{Equation}
+    A_v(s)=\frac{sC_mR_{out}+A_v}{1+s(C_m+C_{out})R_{out}}
+\end{Equation}
+在分子上提出$A_v$
+\begin{Equation}
+    A_v(s)=A_v\cdot\frac{1+sC_mR_{out}A_v^{-1}}{1+s(C_m+C_{out})R_{out}}
+\end{Equation}
+不妨令
+\begin{Equation}
+    A_v(s)=A_v\cdot\frac{1-s/\omega_{z1}}{1-s/\omega_{p1}}
+\end{Equation}
+其中，$\omega_{z1}$和$\omega_{p1}$即零点和极点（这里化简的目的就是凑出零极点表示），频率整理如下
+\begin{BoxFormula}[反相放大器的零点频率]
+    反相放大器的零点频率为
+    \begin{Equation}
+        \omega_{z1}=-C_m^{-1}R_{out}^{-1}A_v
+    \end{Equation}
+\end{BoxFormula}
+\begin{BoxFormula}[反相放大器的极点频率]
+    反相放大器的极点频率为
+    \begin{Equation}
+        \omega_{p1}=-(C_m+C_{out})^{-1}R_{out}^{-1}
+    \end{Equation}
+\end{BoxFormula}
+
+关于反相放大器的零极点频率的结论，说明如下
+\begin{itemize}
+    \item $\omega_{p1}<0$是左极点，$\omega_{z1}>0$是右零点。尽管两者表达式中都带负号，但这里$A_v$是负的。
+    \item $\omega_{p1},\omega_{z1}$满足$|\omega_{p1}|<|\omega_{z1}|$，即先遇到极点再遇到零点。
+\end{itemize}
+这里我们或许注意到一个有趣的问题，似乎$C_{in}$完全不会影响频率特性？确实如此，不过这是因为这里假定输入的信号源理想，认为信号内阻$R_s=0$。假若$R_s\neq 0$则串联在输入端上的$R_s$会与$C_{in}$构成一个$RC$电路，影响频率特性。另外$C_{in}$也会作为前级的$C_L$的一部分。
+
+将$\omega_{p1},\omega_{z1}$的表达式与各反相器的$C_{out},C_{m}$结合在一起，就可以求得频率特性了。不过在可视化前，尚有一个问题需要解决，即电容的参数取什么？简洁起见，我们直接规定如下
+\begin{itemize}
+    \item 栅源电容$C_{gs}=\SI{2.00}{fF}$。
+    \item 栅漏电容$C_{gd}=\SI{0.50}{fF}$。
+    \item 体源电容$C_{bs}=\SI{10.0}{fF}$。
+    \item 体漏电容$C_{bd}=\SI{10.0}{fF}$。
+    \item 负载电容$C_L=\SI{1}{pF}$。
+\end{itemize}
+
+这些电容参数将作为本章分析频率特性时的默认参数。\goodbreak
+
+这里的可视化要做这样两类图：第一类图分析零点频率和极点频率随$I_D$的变化，第二类图是在取$I_D=\SI{0.1}{mA}$的典型值的情况下考察增益随频率的变化。不过有一个小小的麻烦，关于频率通常我们都会以$\si{Hz}$为单位，或者说，通常都会使用线频率$f$而非角频率$\omega$为单位，两者的关系是$f=\omega/2\pi$。绘图和计算时这一点需特别注意。第一类图纵轴应在算出来的角频率基础上除$2\pi$，这是因为$f=\omega/2\pi$。第二类图原本代入$s=\j\omega$处应当替换为代入$s=\j 2\pi f$。
+
+
+\xref{fig:反相放大器的零级点频率}展现了零极点频率，我们注意到
+\begin{itemize}
+    \item 极点和零点频率的大小$|f_{p1}|$和$|f_{z1}|$均随$I_D$的增加而提高，$f_{p1}$为负，$f_{z1}$为正。
+    \item 极点频率低于零点频率，即$|f_{p1}|<|f_{z1}|$，两者相差了三个数量级以上。
+    \item 三者的$f_{p1}$依次为：$\SI{-23.41}{MHz},\SI{-1.40}{MHz},\SI{-1.40}{MHz}$。二极管的$|f_{p1}|$明显较大。
+    \item 三者的$f_{p1}$依次为：$\SI{47.21}{GHz},\SI{47.21}{MHz},\SI{46.11}{GHz}$。三者数值相近。
+\end{itemize}
+\begin{Figure}[反相放大器的零级点频率]
+    \begin{FigureSub}[二极管负载反相放大器;二极管反相--零极点]
+        \includegraphics[scale=0.8]{build/Chapter04A_05a.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[电流源负载反相放大器;电流源反相--零极点]
+        \includegraphics[scale=0.8]{build/Chapter04A_05b.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.25cm}
+    \begin{FigureSub}[推挽反相放大器;推挽反相--零极点]
+        \includegraphics[scale=0.8]{build/Chapter04A_05c.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+\xref{fig:反相放大器的零级点频率}展现了频率特性，由于所有反相器均具有一个较小的左极点和一个较大的右极点，因此其频率特性均呈现相似的结果。幅频可以概括为极点导致的低通特性，但达到零点频率后幅度停止下降。由于是反相放大器，相频最初为$+\pi$，遇到极点后降至$+\pi/2$，遇到零点后减至$0$。
+
+\begin{Figure}[反相放大器的频率特性]
+    \begin{FigureSub}[幅率特性]
+        \includegraphics[scale=0.8]{build/Chapter04A_05d.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[相率特性]
+        \includegraphics[scale=0.8]{build/Chapter04A_05e.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+\subsection{反相器的噪声特性}
+在本小节，我们来分析反相放大器的噪声特性。我们知道，MOS的噪声特性可以由一个串联在其栅端的噪声源来模拟，\xref{fig:反相放大器的噪声}展现了考虑噪声源后三种反相放大器的电路结构。
+\begin{Figure}[反相放大器的噪声]
+    \begin{FigureSub}[二极管负载反相放大器;二极管反相--噪声]
+        \includegraphics[scale=0.8]{build/Chapter04A_19.fig.pdf}
+    \end{FigureSub}\qquad
+    \begin{FigureSub}[电流源负载反相放大器;电流源反相--噪声]
+        \includegraphics[scale=0.8]{build/Chapter04A_20.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.25cm}
+    \begin{FigureSub}[推挽反相放大器;推挽反相--噪声]
+        \includegraphics[scale=0.8]{build/Chapter04A_21.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+现在的问题是，我们如何来评估一个放大器的噪声特性呢？可以分为四个步骤
+\begin{enumerate}
+    \item 仅考虑$v_{n,1}^2$，考察输入端$v_{n,1}$的电压将在输出端造成多少电压$v_{n,out1}$。
+    \item 仅考虑$v_{n,2}^2$，考察输入端$v_{n,2}$的电压将在输出端造成多少电压$v_{n,out2}$。
+    \item 总的噪声电压功率由$v_{n,out}^2=v_{n,out1}^2+v_{n,out}^2$，注意！这一步非常重要，必须是平方相加。当我们单独计算某个噪声源的影响是可以把它当成普通电压来算，然而，当我们在计算两个相互独立的噪声源的共同影响时，不能将电压相加，必须是电压的平方即功率相加。
+    \item 将噪声从输出端口折算到输入端口，即$v_{n,in}=v_{n,out}^2/A_v^2$。这样是比较公平的噪声计算方式，因为不同的放大器的增益不同，统一折算至输入端口可以消除增益不同的影响。
+\end{enumerate}
+
+\xref{fig:二极管负载反相放大器的噪声小信号电路}展示了二极管负载反相放大器的噪声小信号电路。
+\begin{Figure}[二极管负载反相放大器的噪声小信号电路]
+    \begin{FigureSub}[$M_1$噪声;M1噪声--二极管反相]
+        \includegraphics[scale=0.8]{build/Chapter04A_22.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[$M_2$噪声;M2噪声--二极管反相]
+        \includegraphics[scale=0.8]{build/Chapter04A_23.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+这里有必要解释一下$v_{n,1}^2$为何这么画，在\xref{fig:二极管反相--噪声}中，我们注意到$v_{n,1}^2$是接在$M_1$的栅和其输入节点$v_{IN}$间的，而分析噪声时，输入应接地，故\xref{fig:M1噪声--二极管反相}中将$v_{n,1}^2$绘制在栅和地之间。\setpeq{二极管反相噪声}
+
+这里的电路方程为
+\begin{Equation}&[1]
+    g_{m1}v_{gs1}+g_{ds1}v_{ds1}+g_{m2}v_{gs2}+g_{ds2}v_{ds2}=0
+\end{Equation}
+
+$M_1,M_2$的噪声对应的电压矩阵为
+\begin{Equation}&[2]
+    \quad
+    \begin{pmatrix}
+        v_{gs1}&v_{gs2}\\
+        v_{bs1}&v_{bs2}\\
+        v_{ds1}&v_{ds2}
+    \end{pmatrix}=
+    \begin{pmatrix}
+        v_{n1}&v_{n,out1}\\
+        0&0\\
+        v_{n,out1}&v_{n,out1}\\
+    \end{pmatrix}\qquad
+    \begin{pmatrix}
+        v_{gs1}&v_{gs2}\\
+        v_{bs1}&v_{bs2}\\
+        v_{ds1}&v_{ds2}
+    \end{pmatrix}=
+    \begin{pmatrix}
+        0&v_{n2}+v_{n,out2}\\
+        0&0\\
+        v_{n,out2}&v_{n,out2}
+    \end{pmatrix}
+    \quad
+\end{Equation}
+将\xrefpeq{2}代入\xrefpeq{1}，分别得到
+\begin{Gather}
+    g_{m1}v_{n1}+(g_{m2}+g_{ds1}+g_{ds2})v_{n,out1}=0\\
+    g_{m2}v_{n2}+(g_{m2}+g_{ds1}+g_{ds2})v_{n,out2}=0
+\end{Gather}
+因而
+\begin{Gather}
+    v_{n,out1}=-g_{m1}(g_{m2}+g_{ds1}+g_{ds2})^{-1}v_{n1}\\
+    v_{n,out2}=-g_{m2}(g_{m2}+g_{ds1}+g_{ds2})^{-1}v_{n2}
+\end{Gather}
+
+平方相加，得到
+\begin{Equation}
+    v_{n,out}^2=(g_{m1}^2v_{n1}^2+g_{m2}^2+v_{n2}^2)(g_{m2}+g_{ds1}+g_{ds2})^{-2}
+\end{Equation}
+折算到输入端口，根据\xref{fml:二极管负载反相放大器--电压增益}
+\begin{Equation}
+    v_{n,in}^2=\frac{v_{n,out}^2}{A_v^2}=v_{n1}^2+\qty(\frac{g_{m2}}{g_{m1}})^2v_{n2}^2
+\end{Equation}
+整理如下
+\begin{BoxFormula}[二极管负载反相放大器--噪声]
+    二极管负载反相放大器中，等效输入噪声为
+    \begin{Equation}
+        v_{n,in}^2=v_{n1}^2+\qty(\frac{g_{m2}}{g_{m1}})^2v_{n2}^2
+    \end{Equation}
+\end{BoxFormula}
+
+\xref{fig:电流源负载反相放大器的噪声小信号电路}展示了电流源负载反相放大器的噪声小信号电路。
+\begin{Figure}[电流源负载反相放大器的噪声小信号电路]
+    \begin{FigureSub}[$M_1$噪声;M1噪声--电流源反相]
+        \includegraphics[scale=0.8]{build/Chapter04A_24.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[$M_2$噪声;M2噪声--电流源反相]
+        \includegraphics[scale=0.8]{build/Chapter04A_25.fig.pdf}
+    \end{FigureSub}
+\end{Figure}\setpeq{电流源反相噪声}
+
+这里的电路方程为
+\begin{Equation}&[1]
+    g_{m1}v_{gs1}+g_{ds1}v_{ds1}+g_{m2}v_{gs2}+g_{ds2}v_{ds2}=0
+\end{Equation}
+
+$M_1,M_2$的噪声对应的电压矩阵为
+\begin{Equation}&[2]
+    \qquad
+    \begin{pmatrix}
+        v_{gs1}&v_{gs2}\\
+        v_{bs1}&v_{bs2}\\
+        v_{ds1}&v_{ds2}
+    \end{pmatrix}=
+    \begin{pmatrix}
+        v_{n1}&0\\
+        0&0\\
+        v_{n,out1}&v_{n,out1}\\
+    \end{pmatrix}\qquad
+    \begin{pmatrix}
+        v_{gs1}&v_{gs2}\\
+        v_{bs1}&v_{bs2}\\
+        v_{ds1}&v_{ds2}
+    \end{pmatrix}=
+    \begin{pmatrix}
+        0&v_{n2}\\
+        0&0\\
+        v_{n,out2}&v_{n,out2}
+    \end{pmatrix}
+    \qquad
+\end{Equation}
+将\xrefpeq{2}代入\xrefpeq{1}，分别得到
+\begin{Gather}
+    g_{m1}v_{n1}+(g_{ds1}+g_{ds2})v_{n,out1}=0\\
+    g_{m2}v_{n2}+(g_{ds1}+g_{ds2})v_{n,out2}=0
+\end{Gather}
+因而
+\begin{Gather}
+    v_{n,out1}=-g_{m1}(g_{ds1}+g_{ds2})^{-1}v_{n1}\\
+    v_{n,out2}=-g_{m2}(g_{ds1}+g_{ds2})^{-1}v_{n2}
+\end{Gather}
+
+平方相加，得到
+\begin{Equation}
+    v_{n,out}^2=(g_{m1}^2v_{n1}^2+g_{m2}^2v_{n2}^2)(g_{ds1}+g_{ds2})^{-2}
+\end{Equation}
+折算到输入端口，根据\xref{fml:电流源负载反相放大器--电压增益}
+\begin{Equation}
+    v_{n,in}^2=\frac{v_{n,out}^2}{A_v^2}=v_{n1}^2+\qty(\frac{g_{m2}}{g_{m1}})^2v_{n2}^2
+\end{Equation}
+整理如下
+\begin{BoxFormula}[电流源负载反相放大器--噪声]
+    电流源负载反相放大器中，等效输入噪声为
+    \begin{Equation}
+        v_{n,in}^2=v_{n1}^2+\qty(\frac{g_{m2}}{g_{m1}})^2v_{n2}^2
+    \end{Equation}
+\end{BoxFormula}
+这表明，尽管电流源负载和二极管负载具有完全不同的增益的，但两者的噪声性能相同。
+
+实际上，上述推导中$v_{n,out1}$的计算是不必要的，因为若仔细观察就会发现，上述两种电路结构中$v_{n,1}$实际上都位于原先$v_{in}$的位置，故必有$v_{n,out1}=A_v v_{n,1}$成立。当然这样再算一遍也无妨，因为二极管负载和电流源负载能这么计算只是一个巧合，下面的推挽反相器就不成立了。
+
+\xref{fig:推挽反相放大器的噪声小信号电路}展示了推挽反相放大器的噪声小信号电路。注意到其和\xref{fig:电流源负载反相放大器的噪声小信号电路}完全相同！参照\xref{fig:反相放大器的噪声}可知，在电流源负载中$M_1,M_2$栅端的噪声源分别连接到$v_{IN},V_G$，在推挽中$M_1,M_2$栅端的噪声源均连接到$v_{IN}$。但对于噪声的小信号分析$v_{IN},V_G$都相当于地。故两者确实应该相同。
+\begin{Figure}[推挽反相放大器的噪声小信号电路]
+    \begin{FigureSub}[$M_1$噪声;M1噪声--推挽反相]
+        \includegraphics[scale=0.8]{build/Chapter04A_24.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[$M_2$噪声;M2噪声--推挽反相]
+        \includegraphics[scale=0.8]{build/Chapter04A_25.fig.pdf}
+    \end{FigureSub}
+\end{Figure}\setpeq{推挽反相噪声}
+
+由于推挽与电流源负载的噪声小信号电路相同，我们可以套用前面的结论
+\begin{Equation}
+    v_{n,out}^2=(g_{m1}^2v_{n1}^2+g_{m2}^2v_{n2}^2)(g_{ds1}+g_{ds2})^{-2}
+\end{Equation}
+
+折算到输入端口，根据\xref{fml:推挽反相放大器--电压增益}
+\begin{Equation}
+    v_{n,in}^2=\frac{v_{n,out}^2}{A_v^2}=\qty(\frac{g_{m1}}{g_{m1}+g_{m2}})^2v_{n1}^2+\qty(\frac{g_{m2}}{g_{m1}+g_{m2}})^2v_{n2}^2
+\end{Equation}
+由此可见，推挽和电流源负载具有相同的$v_{n,out}$，但由于增益不同，两者的$v_{n,in}$不同。
+\begin{BoxFormula}[推挽反相放大器--噪声]
+    推挽反相放大器中，等效输入噪声为
+    \begin{Equation}
+        v_{n,in}^2=\qty(\frac{g_{m1}}{g_{m1}+g_{m2}})^2v_{n1}^2+\qty(\frac{g_{m2}}{g_{m1}+g_{m2}})^2v_{n2}^2
+    \end{Equation}
+\end{BoxFormula}
+
