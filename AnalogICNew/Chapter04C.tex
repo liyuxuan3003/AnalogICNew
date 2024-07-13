@@ -1,0 +1,411 @@
+\section{共源共栅放大器}
+共源共栅放大器本质上仍是反相器，但共源结构被更换为共源共栅结构，主要有两个优点
+\begin{itemize}
+    \item 共源共栅放大器具有更高的增益，这是通过其高输出电阻实现的。
+    \item 共源共栅放大器可以显著抑制米勒效应的影响。
+\end{itemize}
+
+\subsection{共源共栅放大器的大信号特性}
+共源共栅放大器的电路如\xref{fig:共源共栅放大器}所示，可以认为它是从\xref{fig:电流源负载反相放大器}中的电流源负载反相放大器改造而来，上方负载仍然为简单电流源，下方输入则从原先的共源结构变为了共源共栅结构。
+
+\begin{Figure}[共源共栅放大器]
+    \includegraphics[scale=0.8]{build/Chapter04C_02.fig.pdf}
+\end{Figure}
+
+在\xref{fig:共源共栅放大器的大信号特性}中展示了共源共栅放大器的直流特性，取$V_{G3}=\SI{3.0}{V}$而$V_{G2}=\SI{3.6}{V}$，按照之前的惯例，PMOS的尺寸为NMOS尺寸的两倍以简化分析。这里要解释的问题是，为什么$V_{G3},V_{G2}$这样取值？首先，$V_{G3}$的取值会确定整个放大器的电流$I_D$，令$V_{G3}=\SI{3.0}{V}$就确定了过驱电压是$V_{ON}=\SI{1.3}{V}$。根据前面的经验，我们知道增益较高的放大器中，令所有管饱和的$v_{IN}$的取值区间是非常窄的，显然，各管能同时饱和意味着各管的过驱电压对应的$I_D$应当相当。因此，可以推定当$v_{IN}=V_{ON}+V_T$即$v_{IN}=\SI{2.0}{V}$时放大器才能处于放大状态。基于此，我们假设$V_{D1}=V_{ON}$即$V_{D1}=\SI{1.3}{V}$使$M_1$恰好能饱和，故$V_{G2}$至少要达到$V_{G2}=2V_{ON}+V_T$即$\SI{3.3}{V}$，考虑到$M_2$的阈值电压$V_T$会因体效应会稍大些，这里保险起见，令$V_{G2}=\SI{3.6}{V}$。
+
+在\xref{fig:共源共栅放大器的大信号特性}中，我们注意到
+\begin{itemize}
+    \item \xref{fig:负载图--共源共栅}中，注意到共源共栅结构相较共源结构，负载线有一定变化，共源共栅结构的负载线间的间距会随着$v_{IN}$的增加，先增大，后减小，而不是像共源那样一直增大。
+    \item \xref{fig:负载图--共源共栅}中，正如我们预期，在$v_{IN}=\SI{2.0}{V}$时放大器处于放大状态。
+    \item \xref{fig:负载图--共源共栅}中，饱和点从左至右依次为$M_3,M_2,M_1$，通过\xref{fig:M3管工作区分析--共源共栅}、\xref{fig:M2管工作区分析--共源共栅}、\xref{fig:M1管工作区分析--共源共栅}可以看出，$M_3,M_2,M_1$在$v_{IN}$位于其饱和点右、左、左时饱和，即$M_3,M_2$最终确定范围。
+    \item \xref{fig:电压增益特性--共源共栅}对比\xref{fig:电压增益特性--电流源反相}，共源共栅的增益大约是电流源反相器的一倍，稍后解释原因。
+\end{itemize}
+
+$M_3$的饱和--线性分界条件是$v_{GS3}-V_T<v_{DS3}$，即
+\begin{Equation}
+    V_{DD}-V_{G3}-V_T<V_{DD}-v_{OUT}\qquad v_{OUT}<V_{G3}+V_T
+\end{Equation}
+$M_2$的饱和--线性分界条件是$v_{GS2}-V_T<v_{DS2}$，即
+\begin{Equation}
+    v_{OUT}-v_{D1}>V_{G2}-v_{D1}-V_T\qquad v_{OUT}>V_{G2}-V_T
+\end{Equation}
+$M_1$的饱和--线性分界条件是$v_{GS2}-V_T<v_{DS2}$，即
+\begin{Equation}
+    v_{D1}>v_{IN}-V_T
+\end{Equation}
+
+\begin{Figure}[共源共栅放大器的大信号特性]
+    \begin{FigureSub}[负载图;负载图--共源共栅]
+        \includegraphics[scale=0.6]{build/Chapter04C_01_5.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.75cm}
+    \begin{FigureSub}[电压转移特性;电压转移特性--共源共栅]
+        \includegraphics[scale=0.6]{build/Chapter04C_01_0.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[电压增益特性;电压增益特性--共源共栅]
+        \includegraphics[scale=0.6]{build/Chapter04C_01_1.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.75cm}
+    \begin{FigureSub}[$M_1$管工作区分析;M1管工作区分析--共源共栅]
+        \includegraphics[scale=0.6]{build/Chapter04C_01_2.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[$M_2$管工作区分析;M2管工作区分析--共源共栅]
+        \includegraphics[scale=0.6]{build/Chapter04C_01_3.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.75cm}
+    \begin{FigureSub}[$M_3$管工作区分析;M3管工作区分析--共源共栅]
+        \includegraphics[scale=0.6]{build/Chapter04C_01_4.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+将$v_{D1}$用$V_{G2}-v_{GS2}$表示
+\begin{Equation}
+    V_{G2}-v_{GS2}>v_{IN}-V_T
+\end{Equation}
+我们认为$v_{GS2}=v_{IN}$，因为两管的过驱电压应当相同
+\begin{Equation}
+    V_{G2}-v_{IN}>v_{IN}-V_T
+\end{Equation}
+我们最终得到
+\begin{Equation}
+    v_{IN}<\frac{1}{2}(V_{G2}+V_T)
+\end{Equation}
+总结如下
+\begin{BoxFormula}[共源共栅放大器--饱和分析]
+    共源共栅放大器中，$M_1,M_2,M_3$同时饱和的条件是
+    \begin{Gather}
+        v_{OUT}<V_{G3}+V_T\qquad v_{OUT}>V_{G2}-V_T\\
+        v_{IN}<\frac{1}{2}(V_{G2}+V_T)
+    \end{Gather}
+\end{BoxFormula}
+
+通过\xref{fig:共源共栅放大器的大信号特性}中，我们看到饱和分析的效果并不好\footnote{\xref{fig:共源共栅放大器的大信号特性}绘制$M_2$的饱和线$V_{G2}-V_T$考虑了$V_T$因体效应随$v_{D1}$的变化，手工分析是无法考虑这点的。手工分析的结果其实比较接近于\xref{fig:共源共栅放大器的大信号特性}所示$M_2$饱和线的右端，此处$V_{D1}$接近零，体效应的影响很小了。故$M_2$实际的饱和点比手工分析的要更低些。}，$M_2$的饱和点比预期的偏上，$M_1$的饱和点比预期的偏左。但作为手工分析的估测，这些结果还是很有价值的，例如$M_2,M_3$的条件就告诉我们放大状态下$v_{OUT}$介于$V_{G2}-V_T$和$V_{G3}+V_T$之间，即$\SI{2.9}{V}$至$\SI{3.7}{V}$间，而$M_1$的条件则指出$v_{IN}$必须小于$(V_{G2}+V_T)/2$，这个值在这里是$\SI{2.15}{V}$，这个值必须要大于先前通过电流$I_D$一致确定的放大状态下$v_{IN}$的工作点$\SI{2.0}{V}$。由此可见，尽管饱和分析的结果不是特别精确，但是可以帮助我们在做进一步仿真前，先简单的验算一下取值是否是大致合理的。
+
+输出电压的最大值显然是$V_{DD}$，这是由电流源负载不会关断的特性决定的。
+\begin{BoxFormula}[共源共栅放大器--最大输出电压]
+    共源共栅放大器中，输出电压的最大值为
+    \begin{Equation}
+        V_{OUT,\max}=V_{DD}
+    \end{Equation}
+\end{BoxFormula}
+输出电压的最小值的计算比较麻烦，当$v_{IN}=V_{DD}$时，$M_1,M_2$处于线性区，$M_3$处于饱和区。
+
+$M_1$的电流方程如下，代入并忽略二次项\setpeq{共源共栅摆幅分析}
+\begin{Equation}&[1]
+    i_{D1}=\beta_1\qty[(v_{GS1}-V_T)v_{DS1}-\frac{v_{DS1}^2}{2}]=\beta_1(V_{DD}-V_T)v_{D1}
+\end{Equation}
+$M_2$的电流方程如下，代入并忽略二次项
+\begin{Equation}&[2]
+    \qquad\qquad
+    i_{D2}=\beta_2\qty[(v_{GS2}-V_T)v_{DS2}-\frac{v_{DS2}^2}{2}]=\beta_2(V_{G2}-v_{D1}-V_{T})(v_{OUT}-v_{D1})
+    \qquad\qquad
+\end{Equation}
+$M_3$的电流方程如下，代入得到
+\begin{Equation}&[3]
+    i_{D3}=\beta_3\frac{v_{GS3}^2}{2}=\frac{1}{2}\beta_3(V_{DD}-V_{G3}-V_T)^2
+\end{Equation}
+根据\xrefpeq{1}可以得到
+\begin{Equation}&[4]
+    v_{D1}=\frac{i_D}{\beta_1(V_{DD}-V_T)}
+\end{Equation}
+根据\xrefpeq{2}可以得到
+\begin{Equation}&[5]
+    v_{OUT}=\frac{i_D}{\beta_2(V_{G2}-v_{D1}-V_T)}+v_{D1}
+\end{Equation}
+忽略分母上的$v_{D1}$，考虑到$v_{D1}$此时相较$V_{G2}$较小
+\begin{Equation}&[6]
+    v_{OUT}=\frac{i_D}{\beta_2(V_{G2}-V_T)}+v_{D1}
+\end{Equation}
+在\xrefpeq{6}中代入\xrefpeq{4}给出的$v_{D1}$
+\begin{Equation}&[7]
+    v_{OUT}=\frac{i_D}{\beta_2(V_{G2}-V_T)}+\frac{i_D}{\beta_1(V_{DD}-V_T)}
+\end{Equation}
+最后一步，就\xrefpeq{7}中的$i_D$代入\xrefpeq{3}，并假定$\beta_1=\beta_2$
+\begin{Equation}
+    v_{OUT}=\frac{\beta_3}{2\beta_2}(V_{DD}-V_{G3}-V_T)^2\qty(\frac{1}{V_{G2}-V_T}+\frac{1}{V_{DD}-V_T})
+\end{Equation}
+整理如下
+\begin{BoxFormula}[共源共栅放大器--最小输出电压]
+    共源共栅放大器中，输出电压的最小值为
+    \begin{Equation}
+        \qquad\qquad\qquad
+        V_{OUT,\min}=\frac{\beta_3}{2\beta_2}(V_{DD}-V_{G3}-V_T)^2\qty(\frac{1}{V_{G2}-V_T}+\frac{1}{V_{DD}-V_T})
+        \qquad\qquad\qquad
+    \end{Equation}
+\end{BoxFormula}
+
+我们要明确的是，这里计算得到的$V_{OUT,\min}$和$V_{OUT,\max}$是当$v_{IN}$从$0$变化至$V_{DD}$时$v_{OUT}$的范围，但有些情况下更关心的是，当所有管子均在饱和区，放大器处于放大状态时$v_{OUT}$的变化范围。作为区分，称为最小/最大饱和输出电压并记作$V_{OUT,sat,\min}$和$V_{OUT,sat,\max}$，不过这里我们实际上已经解出这两个量了，参见饱和分析的\xref{fml:共源共栅放大器--饱和分析}中$v_{OUT}$的两个不等式。
+\begin{BoxFormula}[共源共栅放大器--最大饱和输出电压]
+    共源共栅放大器，当所有管饱和时，输出电压的最大值是
+    \begin{Equation}
+        V_{OUT,sat,\max}=V_{G3}+V_T
+    \end{Equation}
+\end{BoxFormula}
+\begin{BoxFormula}[共源共栅放大器--最小饱和输出电压]
+    共源共栅放大器，当所有管饱和时，输出电压的最小值是
+    \begin{Equation}
+        V_{OUT,sat,\min}=V_{G2}-V_T
+    \end{Equation}
+\end{BoxFormula}
+
+\subsection{共源共栅放大器的小信号特性}
+关于共源共栅放大器的小信号特性，我们计算的东西要比过去多些
+\begin{itemize}
+    \item \xref{fig:电压增益--共源共栅放大器}中，计算$v_{in}$至$v_{out},v_{d1}$的增益$A_v=v_{out}/v_{in}$和$A_{d1}=v_{d1}/v_{in}$。
+    \item \xref{fig:输出电阻--共源共栅放大器}中，计算输出节点处的电阻$R_{out}=v_{out}/i_{out}$。
+    \item \xref{fig:中间节点电阻--共源共栅放大器}中，计算中间节点处的电阻$R_{d1}=v_{d1}/i_{d1}$。
+\end{itemize}
+这里有关中间节点$v_{d1}$的增益$A_{d1}$和电阻$R_{d1}$对后续分析有重要作用。另外，要注意的是，计算$R_{d1}$必须用\xref{fig:中间节点电阻--共源共栅放大器}，通过\xref{fig:输出电阻--共源共栅放大器}中计算出的$v_{d1}/i_{out}$不是$R_{d1}$，这个结果无意义。
+
+\begin{Figure}[共源共栅放大器的小信号电路]
+    \begin{FigureSub}[电压增益;电压增益--共源共栅放大器]
+        \includegraphics[scale=0.8]{build/Chapter04C_04.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.1cm}
+    \begin{FigureSub}[输出电阻（输出节点）;输出电阻--共源共栅放大器]
+        \includegraphics[scale=0.8]{build/Chapter04C_05.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[输出电阻（中间节点）;中间节点电阻--共源共栅放大器]
+        \includegraphics[scale=0.8]{build/Chapter04C_06.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+关于\xref{fig:电压增益--共源共栅放大器}，我们分别对$v_{d1}$节点和$v_{out}$节点列出电流方程
+\begin{Gather}
+    g_{m1}v_{gs1}+g_{ds1}v_{ds1}-g_{m2}v_{gs2}-g_{bs2}v_{bs2}-g_{ds2}v_{ds2}=0\\
+    g_{m2}v_{gs2}+g_{bs2}v_{bs2}+g_{ds2}v_{ds2}+g_{ds3}v_{ds3}=0
+\end{Gather}
+电压矩阵为
+\begin{Equation}[共源共栅电压矩阵]
+    \begin{pmatrix}
+        v_{gs1}&v_{gs2}&v_{gs3}\\
+        v_{bs1}&v_{bs2}&v_{bs3}\\
+        v_{ds1}&v_{ds2}&v_{ds3}\\
+    \end{pmatrix}=
+    \begin{pmatrix}
+        v_{in}&-v_{d1}&0\\
+        0&-v_{d1}&0\\
+        v_{b1}&v_{out}-v_{d1}&v_{out}\\
+    \end{pmatrix}
+\end{Equation}
+比较共源管和共栅管的差异是很有意思的，从电压矩阵可以看出，对于$g_mv_{gs}$项
+\begin{itemize}
+    \item 共源管中$v_{s}=0$，因此$g_m$放大的是（正的）栅端电压。
+    \item 共栅管中$v_{g}=0$，因此$g_m$放大的是（负的）源端电压。
+\end{itemize}
+
+% 理解MOS管在共源组态和共栅组态下跨导$g_m$的不同工作方式将对直观分析将很有帮助。
+
+% 共栅管中，由于体和栅都接地了，$g_{mb}$和$g_m$将以完全相同的方式工作，协同放大源端，即
+% \begin{Equation}
+%     g_{m}v_{gs}+g_{mb}v_{bs}=-(g_m+g_{mb})v_{s}
+% \end{Equation}
+% 共源管中，与之对应的式子是
+% \begin{Equation}
+%     g_{m}v_{gs}+g_{mb}v_{bs}=g_mv_g
+% \end{Equation}
+让我们回到主线的方程求解上，这里同样通过Mathematica完成计算，直接给出结果。
+
+\begin{BoxFormula}[共源共栅放大器--输出节点--电压增益]
+    共源共栅放大器中，至输出节点的电压增益为
+    \begin{Equation}
+        \qquad
+        A_v=-g_{m1}(g_{m2}+g_{bs2}+g_{ds2})\qty[g_{ds1}(g_{ds2}+g_{ds3})+g_{ds3}(g_{m2}+g_{bs2}+g_{ds2})]^{-1}
+        \qquad
+    \end{Equation}
+    第一级近似结果为（假定$g_{m}\gg g_{bs},g_{ds}$）
+    \begin{Equation}
+        A_v=-g_{m1}g_{ds3}^{-1}
+    \end{Equation}
+\end{BoxFormula}
+
+\begin{BoxFormula}[共源共栅放大器--中间节点--电压增益]
+    共源共栅放大器中，至中间节点的电压增益为
+    \begin{Equation}
+        \qquad\qquad
+        A_{d1}=-g_{m1}(g_{ds2}+g_{ds3})\qty[g_{ds1}(g_{ds2}+g_{ds3})+g_{ds3}(g_{m2}+g_{bs2}+g_{ds2})]^{-1}
+        \qquad\qquad
+    \end{Equation}
+    第一级近似结果为（假定$g_{m}\gg g_{bs},g_{ds}$）
+    \begin{Equation}
+        A_v=-g_{m1}(g_{ds2}+g_{ds3})g_{m2}^{-1}g_{ds3}^{-1}
+    \end{Equation}
+    第二级近似结果为（假定$g_{m},g_{bs},g_{ds}$对于各管均相同）
+    \begin{Equation}
+        A_v=-2
+    \end{Equation}
+\end{BoxFormula}
+
+关于$A_v,A_{d1}$的结果，我们解读如下
+\begin{itemize}
+    \item 共源共栅的增益$A_v=-g_{m1}g_{ds3}^{-1}$比电流源反相器的增益$A_v=-g_{m1}(g_{ds1}+g_{ds2})^{-1}$确实高了一倍，印证了直流扫描的结果。产生该结果的原因是$R_{out}$的变化。在电流源反相器中$R_{out}$是两个简单电流源的输出电阻$g_{ds2}^{-1}$和$g_{ds1}^{-1}$的并联。在共源共栅放大器中$R_{out}$是一个简单电流源和一个共源共栅电流源的输出电阻$g_{ds3}^{-1}$和$g_{ds1}^{-1}g_{ds2}^{-1}g_{m2}$的并联，由于后者远大于前者，故并联的结果仍然是$g_{ds3}^{-1}$，这样就刚好令输出电阻$R_{out}$大了一倍。
+    \item 共源共栅至中间节点的增益$A_{d1}=-2$很小，这可以解读为共源共栅结构对中间节点有很强的屏蔽作用。这个屏蔽作用的特性在之后分析共源共栅的频率特性时将非常有用。
+\end{itemize}
+
+对于\xref{fig:输出电阻--共源共栅放大器}，只要修改$v_{out}$节点的方程的右端为$i_{out}$
+\begin{Gather}
+    g_{m1}v_{gs1}+g_{ds1}v_{ds1}-g_{m2}v_{gs2}-g_{bs2}v_{bs2}-g_{ds2}v_{ds2}=i_{out}\\
+    g_{m2}v_{gs2}+g_{bs2}v_{bs2}+g_{ds2}v_{ds2}+g_{ds3}v_{ds3}=0
+\end{Gather}
+关于\xref{fig:中间节点电阻--共源共栅放大器}，令$v_{d1}$节点的方程的右端为$i_{d1}$
+\begin{Gather}
+    g_{m1}v_{gs1}+g_{ds1}v_{ds1}-g_{m2}v_{gs2}-g_{bs2}v_{bs2}-g_{ds2}v_{ds2}=0\\
+    g_{m2}v_{gs2}+g_{bs2}v_{bs2}+g_{ds2}v_{ds2}+g_{ds3}v_{ds3}=i_{d1}
+\end{Gather}\nopagebreak
+代入电压矩阵并令$v_{in}=0$，分别用Mathematica解出$R_{out}=v_{out}/i_{out}$和$R_{d1}=v_{d1}/i_{d1}$\goodbreak
+\begin{BoxFormula}[共源共栅放大器--输出节点--输出电阻]
+    共源共栅放大器中，输出节点处的输出电阻为
+    \begin{Equation}
+        \qquad
+        R_{out}=(g_{m2}+g_{bs2}+g_{ds2}+g_{ds1})\qty[g_{ds1}(g_{ds2}+g_{ds3})+g_{ds3}(g_{m2}+g_{bs2}+g_{ds2})]^{-1}
+        \qquad
+    \end{Equation}
+    第一级近似结果为（假定$g_{m}\gg g_{bs},g_{ds}$）
+    \begin{Equation}
+        R_{out}=g_{ds3}^{-1}
+    \end{Equation}
+\end{BoxFormula}
+正如我们预期的那样，这里$R_{out}$近似后与前面直观分析确定的$g_{ds3}^{-1}$一致。除此之外，这里的精确分析的结果可以驳斥一种想法：或许我们会认为，在求出$A_v$后“只要移除$A_v$中最前面的$-G_{m}$剩下的就是$R_{out}$了”，这个例子中我们会理所当然的认为$G_m$对应的是$g_{m1}$，但是倘若真的按这种想法移除掉$-G_m$，得到的$R_{out}$和真正的$R_{out}$是不一样的，仔细观察就会发现，前者第一项是$(g_{m2}+g_{bs2}+g_{ds2})$，后者第一项是$(g_{m2}+g_{bs2}+g_{ds2}+g_{ds3})$。这里的教训是，不要理所当然的认为$G_m$刚好会是某个管子的跨导$g_m$，其表达式也可以相当的复杂，当然$A_v=-G_mR_{out}$本身并没有错，但我们不能基于$A_v$和一个胡乱猜测的$G_m$确定$R_{out}$。当然，这只是对严格的精确求解而言的，在近似分析下认为$G_m=g_{m1}$是没有任何问题的。
+
+
+\begin{BoxFormula}[共源共栅放大器--中间节点--输出电阻]
+    共源共栅放大器中，中间节点处的输出电阻为
+    \begin{Equation}
+        \qquad\qquad
+        R_{d1}=(g_{ds2}+g_{ds3})\qty[g_{ds1}(g_{ds2}+g_{ds3})+g_{ds3}(g_{m2}+g_{bs2}+g_{ds2})]^{-1}
+        \qquad\qquad
+    \end{Equation}
+    第一级近似结果为（假定$g_{m}\gg g_{bs},g_{ds}$）
+    \begin{Equation}
+        R_{d1}=(g_{ds2}+g_{ds3})g_{m2}^{-1}g_{ds3}^{-1}
+    \end{Equation}
+    第二级近似结果为（假定$g_{m},g_{bs},g_{ds}$对于各管均相同）
+    \begin{Equation}
+        R_{d1}=2g_{m2}^{-1}
+    \end{Equation}
+\end{BoxFormula}
+
+这里有一个问题，我们常说MOS管从源端看进去的电阻是$g_{m}^{-1}$，这里$R_{d1}$是从$M_2$的源端看进去的电阻，但为什么结果是$2g_{m2}^{-1}$而不是$g_{m2}^{-1}$？可以这样分析，在$v_{d1}$激励下，由$g_{m2}$产生了$g_{m2}v_{d1}$的电流，由于$g_{m2}\gg g_{ds1}$故后者的影响在这里可以忽略，我们可以认为$v_{d1}$和地之间是开路的。当电流$g_{m2}v_{d1}$从$v_{d1}$流向$v_{out}$节点时，该电流通过$g_{ds3}^{-1}$和$g_{ds2}^{-1}$两个电阻被分流，而显然待求的$i_{d1}$是$g_{ds3}^{-1}$上的分流，即$i_{d1}=g_{m2}v_{d1}[g_{ds2}^{-1}/(g_{ds2}^{-1}+g_{ds3}^{-1})]$，由此就可以得到$R_{d1}=g_{m2}^{-1}(1+g_{ds3}^{-1}/g_{ds2}^{-1})$，这其实也就是上面第一级近似的结果。现在，若假定$g_{ds3}^{-1}=g_{ds2}^{-1}$就可以得到$R_{d1}=2g_{m2}^{-1}$，换言之，由于$g_{ds2}^{-1}$从$g_{ds3}^{-1}$分去了一半的电流，因此总的电阻就相应提升了一倍。若$g_{ds3}^{-1}=0$是短路的，所有电流都将从$g_{ds3}^{-1}$流出，结果也就回到$R_{d1}=g_{m2}^{-1}$。
+
+这里直观理解了为什么$R_{d1}=2g_{m2}^{-1}$之后，前面$A_{d1}=-2$就也非常容易解释了。同样运用直观分析法$A_{d1}=-G_mR_{d1}$，代入$G_{m}=g_{m1}$并假定$g_{m1}=g_{m2}$是相同的，即得$A_{d1}=-2$。
+
+% 关于上述最后一条，解释一下为什么要强调$R_{d1}$不是$g_{m2}^{-1}$。
+
+% 在模拟集成电路中，我们常常会被灌输以下观点
+% \begin{itemize}
+%     \item 从一个MOS管的漏端“看进去”，观察到的电阻是$g_{ds}^{-1}$。
+%     \item 从一个MOS管的源端“看进去”，观察到的电阻是$g_{m}^{-1}$。
+% \end{itemize}
+
+\subsection{共源共栅放大器的频率特性}
+
+
+\xref{fig:共源共栅放大器的电容分布}展示了共源共栅放大器中所有的寄生电容的分布
+\begin{Figure}[共源共栅放大器的电容分布]
+    \includegraphics[scale=0.8]{build/Chapter04C_07.fig.pdf}
+\end{Figure}
+通过观察，我们注意到所有电容均可以被划为以下四类，如\xref{fig:共源共栅放大器的等效电容分布}所示
+\begin{itemize}
+    \item 输入节点电容$C_{in}$，即输入节点$v_{in}$和地之间的电容。
+    \item 输出节点电容$C_{out}$，即输出节点$v_{out}$和地之间的电容。
+    \item 中间节点电容$C_{d1}$，即中间节点$v_{d1}$和地之间的电容。
+    \item 跨接电容$C_m$，即中间节点$v_{d1}$和输入节点$v_{in}$间的电容
+\end{itemize}
+请注意，不存在$v_{d1}$和$v_{out}$间的电容，故使用$C_m$表示$v_{d1}$和$v_{in}$间的电容不会有歧义。
+
+\begin{Figure}[共源共栅放大器的等效电容分布]
+    \includegraphics[scale=0.8]{build/Chapter04C_08.fig.pdf}
+\end{Figure}
+
+其中$C_{in},C_m,C_{d1},C_{out}$的表达式为
+\begin{BoxFormula}[共源共栅放大器--电容]
+    共源共栅放大器中，电容$C_{in},C_m,C_{d1},C_{out}$分别为
+    \begin{Gather}
+        C_{in}=C_{gs1}\\ 
+        C_m=C_{gd1}\\
+        C_{d1}=C_{bd1}+C_{bs2}+C_{gs2}\\ 
+        C_{out}=C_{bd2}+C_{gd2}+C_{gd3}+C_{bd3}+C_L
+    \end{Gather}
+\end{BoxFormula}
+应指出的是，在共源共栅放大器中，由于内部节点$v_{d1}$上连接有电容（$C_{m},C_{d1}$），因此我们无法应用\xref{subsec:反相放大器的频率特性}中的简单分析方法：将放大器视为一个已知增益和输出电阻的整体来考虑电容的影响。不过，这并没有太大的关系，我们仍然可以通过小信号电路来考虑电容的影响。
+\begin{Figure}[共源共栅放大器的高频小信号电路]
+    \includegraphics[scale=0.8]{build/Chapter04C_09.fig.pdf}
+\end{Figure}
+
+列出$v_{ds1}$和$v_{out}$处的方程
+\begin{Gather}
+    g_{m1}v_{gs1}+g_{ds1}v_{ds1}-g_{m2}v_{gs2}-g_{bs2}v_{bs2}-g_{ds2}v_{ds2}+sC_{d1}v_{d1}+sC_{m}(v_{d1}-v_{in})=0\\
+    g_{m2}v_{gs2}+g_{bs2}v_{bs2}+g_{ds2}v_{ds2}+g_{ds3}v_{ds3}+sC_{out}v_{out}=0
+\end{Gather}
+沿用\xrefeq{共源共栅电压矩阵}的电压矩阵，使用Mathematica求解，注意到结果可以表示为以下形式
+\begin{Equation}
+    A_v(s)=\frac{1-s/(g_{m1}C_{m}^{-1})}{1+a_1s+a_2s^2}A_v
+\end{Equation}
+其中$a_1$为
+\begin{Split}
+    \qquad
+    a_1=[(C_{d1}+C_{m})(g_{ds2}+g_{ds3})+&C_{out}(g_{m2}+g_{bs2}+g_{ds2}+g_{ds1})]\\
+    &[g_{ds1}(g_{ds2}+g_{ds3})+g_{ds3}(g_{m2}+g_{bs2}+g_{ds2})]^{-1}\qquad
+\end{Split}
+其中$a_2$为
+\begin{Equation}
+    a_2=[(C_{d1}+C_{m})C_{out}][g_{ds1}(g_{ds2}+g_{ds3})+g_{ds3}(g_{m2}+g_{bs2}+g_{ds2})]^{-1}
+\end{Equation}
+我们最终期望的形式是
+\begin{Equation}
+    A_v(s)=A_v\frac{1-s/\omega_{z1}}{(1-s/\omega_{p1})(1-\omega_{p2})}
+\end{Equation}
+零点$\omega_{z1}$显然是
+\begin{Equation}
+    \omega_{z1}=g_{m1}C_m^{-1}
+\end{Equation}
+极点当然要运用\xref{fml:主极点近似}给出的主极点近似
+\begin{Equation}
+    \omega_{p1}=-\frac{1}{a_1}\qquad
+    \omega_{p2}=-\frac{a_1}{a_2}
+\end{Equation}
+但在那之前，对$a_1,a_2$本身应用$g_{m}\gg g_{ds},g_{bs}$的近似是很有价值的
+\begin{Gather}
+    a_1=C_{out}g_{ds3}^{-1}\qquad a_2=[(C_{d1}+C_{m})C_{out}]g_{m2}^{-1}g_{ds3}^{-1}
+\end{Gather}
+极点$\omega_{p1}$为
+\begin{Equation}
+    \omega_{p1}=-g_{ds3}C_{out}^{-1}
+\end{Equation}
+极点$\omega_{p2}$为
+\begin{Equation}
+    \omega_{p2}=-g_{m2}(C_{d1}+C_m)^{-1}
+\end{Equation}
+由于$g_{m}\gg g_{ds}$，这里$\omega_{p2}$确实远大于$\omega_{p1}$，符合主极点近似条件。
+\begin{BoxFormula}[共源共栅放大器--零极点]
+    共源共栅放大器中，极点和零点分别是
+    \begin{Gather}
+        \omega_{p1}=-g_{ds3}C_{out}^{-1}\\
+        \omega_{p2}=-g_{m2}(C_{d1}+C_m)^{-1}\\
+        \omega_{z1}=g_{m1}C_m^{-1}
+    \end{Gather}
+\end{BoxFormula}\goodbreak
+应用\xref{subsec:直观分析--频率特性}中直观分析的想法，这里$\omega_{p1},\omega_{p2},\omega_{z1}$都很容易理解\nopagebreak
+\begin{itemize}
+    \item $\omega_{z1}$对应跨接电容$C_m$，其跨接管$M_1$的跨导为$g_{m1}$。
+    \item $\omega_{p1}$对应输出节点，电阻为$g_{ds3}^{-1}$，电容为$C_{out}$。
+    \item $\omega_{p2}$对应中间节点，电阻为$g_{m2}^{-1}$，电容为$C_{d1}+C_m$，其中$C_m$是等效出的米勒电容。
+\end{itemize}
+但有一个问题，我们刚刚在\xref{subsec:共源共栅放大器的小信号特性}中用很大篇幅解释了为什么中间节点的电阻会因为分流从$g_{m2}^{-1}$增加至$2g_{m2}^{-1}$，为什么这里中间节点的电阻又变回$g_{m2}^{-1}$了？首先，前面的分析和这里的推导都没有错误，事实上，这里要补充一个有关频率特性直观分析的补丁。当电路中存在不止一个极点时，分析从主极点开始，由低频至高频进行，每完成一个极点的分析，就将该极点对应的节点对地短路。在这个例子中，主极点对应输出节点，主极点分析完成后输出节点就应当对地短路，按照前面的分析，此时就不存在分流了，中间节点看到的电阻就回到$g_{m2}^{-1}$了。
+
+现在让我们考虑共源共栅放大器使用高阻源输入的情况，假设信号源电阻是$R_s$，或许我们会想重新进行一遍小信号分析，但可以预见的是，由于现在存在输入节点、中间节点、输出节点三个节点，$A(s)$的分母将变成一个三次多项式，高次的复杂性会掩盖我们想要的结果。介于我们只关心输入节点带来的主极点，我们可以直接运用直观分析。输入节点的电阻是$R_s$，输入节点的电容则是$C_{in}+(1-A_{d1})C_m$，其中后一项是$v_{in},v_{d1}$间的跨接电容$C_m$等效在输入端$v_{in}$的电容，根据\xref{fml:共源共栅放大器--中间节点--电压增益}可知$A_{d1}=-2$，故电容最终可以写为$C_{in}+3C_m$，因此有
+\begin{BoxFormula}[共源共栅放大器--高阻源--零极点]
+    共源共栅放大器使用高阻源时，新的主极点为
+    \begin{Equation}
+        \omega_{p1}=-R_s^{-1}(C_{in}+3C_m)
+    \end{Equation}
+\end{BoxFormula}
+通过比较\xref{fml:反相放大器--高阻源--零极点}和\xref{fml:共源共栅放大器--高阻源--零极点}中的$\omega_{p1}$，我们应该就可以理解为什么共源共栅放大器可以比反相放大器更好的抑制米勒效应，米勒效应的关键问题在于跨接电容会被放大$1-A$倍在输入端造成大电容。然而这里的$A$是跨接电容两端的增益，对于反相放大器这就是输入至输出的增益$A_v$，这是非常大的，对于共源共栅放大器则是输入至中间节点的增益$A_{d1}$，而我们知道$A_{d1}$仅有$-2$，因此，共源共栅放大器的$C_m$在输入产生的米勒电容只有不过$3C_m$。换言之，共源共栅放大器从输入到中间节点间的低增益抑制了$C_m$产生过大的米勒电容，从而显著降低了米勒效应的危害，即便使用高阻源，输入端引入的极点$\omega_{p1}$频率也不会特别低。
+
+\subsection{共源共栅放大器的高增益改进}
+共源共栅放大器的输出电阻$R_{out}=g_{ds3}^{-1}$，得益于使用了共源共栅的输入，输出电阻现在受制于负载，我们知道，输出电阻越大增益也相应越大，因此，很直接的一个想法是，将输出从简单电流源也换成共源共栅电流源，如，这样，$R_{out}$就变成了两个共源共栅电流源的并联了
+\begin{Equation}
+    R_{out}=g_{ds3}\qquad R_{out}=g_{ds1}^{-1}g_{ds2}^{-1}g_{m2}\parallel g_{ds4}^{-1}g_{ds3}^{-1}g_{m3}
+\end{Equation}
+
+\begin{Figure}[共源共栅放大器的高增益型]
+    \includegraphics[scale=0.8]{build/Chapter04C_03.fig.pdf}
+\end{Figure}
+进一步，如果考虑增益$A_v$的话，使用共源共栅电流源作为负载的共源共栅放大器，首次将增益从过去的$g_{m}g_{ds}^{-1}$提升至$(g_mg_{ds}^{-1})^2$数量级。这才是共源共栅放大器真正的高增益潜力！

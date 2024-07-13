@@ -1,0 +1,61 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\ctikzset{capacitors/scale=0.5}
+
+\xSetX
+\xValDefine{xL}[-2]
+\xValDefine{xR}[+2]
+\xValPropor{xC}{xL}{xR}[0.35]
+\xValPropor{xCA}{xC}{xR}[0.40]
+\xValPropor{xCB}{xC}{xR}[0.85]
+
+
+\xSetY
+\xValDefine{yB}[-4.5]
+\xValDefine{yA}[+4.5]
+\xValMiddle{yC}{yA}{yB}
+\xValPropor{yPA}{yA}{yB}[1/3]
+\xValPropor{yPB}{yA}{yB}[2/3]
+\xValPropor{yMA}{yA}{yPA}
+\xValPropor{yMB}{yPA}{yPB}
+\xValPropor{yMC}{yPB}{yB}
+
+\path (xC|-yMC) node[nmos] (M1) {$M_1$};
+\path (xC|-yMB) node[nmos] (M2) {$M_2$};
+\path (xC|-yMA) node[pmos] (M3) {$M_3$};
+
+\draw (xC|-yA) node[vdd,anchor=north] {$V_{DD}$} -- (M3.S);
+\draw (xC|-yB) node[tlground] {} -- (M1.S);
+\draw (M1.D) -- (M2.S);
+\draw (M2.D) -- (M3.D);
+\draw (M2.G) to[short,-o] (xL|-yMB) node[left] {$V_{G2}$};
+\draw (M3.G) to[short,-o] (xL|-yMA) node[left] {$V_{G3}$};
+
+\draw (xC|-yPA) to[short,*-o] (xR|-yPA) node[right] {$v_{OUT}$};
+
+\draw (xL|-yMC) node[left] {$v_{IN}$} to[short,o-] (M1.G);
+
+\path (xC|-M1.D) node[above right] {$v_{D1}$};
+
+\draw (M1.G) to[short,*-] (M1.G|-M1.D) to[C,l=$C_{gd1}$,-*] (M1.D);
+\draw (M1.G) to[short,*-] (M1.G|-M1.S) to[C,l_=\raisebox{0.5cm}{$C_{gs1}$},-*] (M1.S);
+
+\draw (M2.G) to[short,*-] (M2.G|-M2.D) to[C,l=$C_{gd2}$,-*] (M2.D);
+\draw (M2.G) to[short,*-] (M2.G|-M2.S) to[C,l_=\raisebox{0.5cm}{$C_{gs2}$},-*] (M2.S);
+
+\draw (M3.G) to[short,*-] (M3.G|-M3.D) to[C,l_=\raisebox{0.5cm}{$C_{gd3}$},-*] (M3.D);
+
+\draw (M1.D) to[short,*-] (xCA|-M1.D) to[C,l=$C_{bd1}$,-] (xCA|-yB) node[tlground] {};
+
+\draw (M2.S) to[short,*-] (xCA|-M2.S) to[C,l=$C_{bs2}$,-] (xCA|-yPB) node[tlground] {};
+\draw (M2.D) to[short,*-] (xCA|-M2.D) to[C,l=$C_{bd2}$,-] (xCA|-yMB) node[tlground] {};
+\draw (M3.D) to[short,*-] (xCA|-M3.D) to[C,l_=$C_{bd3}$,-] (xCA|-yA) node[vdd,anchor=north] {$V_{DD}$};
+\draw (xCB|-yPA) to[C,l=$C_{L}$,*-] (xCB|-yB) node[tlground] {};
+
+\xValBorder{xL}[-0.95]{xR}[1.15]{yB}[-0.6]{yA}[+0.7]*
+
+\end{tikzpicture}
+\end{document}

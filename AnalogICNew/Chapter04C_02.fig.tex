@@ -1,0 +1,39 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xSetX
+\xValDefine{xL}[-1.2]
+\xValDefine{xR}[+1.2]
+\xValPropor{xC}{xL}{xR}[0.6]
+
+\xSetY
+\xValDefine{yB}[-3]
+\xValDefine{yA}[+3]
+\xValMiddle{yC}{yA}{yB}
+\xValPropor{yPA}{yA}{yB}[1/3]
+\xValPropor{yPB}{yA}{yB}[2/3]
+\xValMiddle{yMA}{yA}{yPA}
+\xValMiddle{yMB}{yPA}{yPB}
+\xValMiddle{yMC}{yPB}{yB}
+
+\path (xC|-yMC) node[nmos] (M1) {$M_1$};
+\path (xC|-yMB) node[nmos] (M2) {$M_2$};
+\path (xC|-yMA) node[pmos] (M3) {$M_3$};
+
+\draw (xC|-yA) node[vdd,anchor=north] {$V_{DD}$} -- (M3.S);
+\draw (xC|-yB) node[tlground] {} -- (M1.S);
+\draw (M1.D) -- (M2.S);
+\draw (M2.D) -- (M3.D);
+
+\draw (xC|-yPA) to[short,*-o] (xR|-yPA) node[right] {$v_{OUT}$};
+
+\draw (xL|-yMC) node[left] {$v_{IN}$} to[short,o-] (M1.G);
+\draw (xL|-yMB) node[left] {$V_{G2}$} to[short,o-] (M2.G);
+\draw (xL|-yMA) node[left] {$V_{G3}$} to[short,o-] (M3.G);
+
+\xValBorder{xL}[-0.95]{xR}[1.15]{yB}[-0.6]{yA}[+0.7]*
+
+\end{tikzpicture}
+\end{document}

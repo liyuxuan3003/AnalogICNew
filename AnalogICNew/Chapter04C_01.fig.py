@@ -95,33 +95,48 @@ def SpiceWaveList(rdat,name):
 modelNMOSL1=r".model xNMOS NMOS(LEVEL=1,VTO=0.7,KP=110e-6,GAMMA=0.4,LAMBDA=0.04,PHIF=0.7,WD=0.0u,LD=0.016u,CGSO=220e-12,CGDO=220e-12,CGBO=700e-12,CJ=770e-6,CJSW=380e-12,MJ=0.5,MJSW=0.38)"
 modelPMOSL1=r".model xPMOS PMOS(LEVEL=1,VTO=-0.7,KP=50e-6,GAMMA=0.57,LAMBDA=0.05,PHIF=0.8,WD=0.0u,LD=0.015u,NFS=6e11,CGSO=220e-12,CGDO=220e-12,CGBO=700e-12,CJ=560e-6,CJSW=350e-12,MJ=0.5,MJSW=0.38)"
 
-xVT0N=0.7
-xVT0P=0.7
-xgammaN=0.40
-xgammaP=0.57
-xphiN=0.7
-xphiP=0.8
-def xVT(xVBS,xVT0,xgamma,xphi):
-    return xVT0+xgamma*(np.sqrt(xphi-xVBS)-np.sqrt(xphi))
+xVT0={}
+xgamma={}
+xphi={}
+
+xVT0["N"]=0.7
+xVT0["P"]=0.7
+xgamma["N"]=0.40
+xgamma["P"]=0.57
+xphi["N"]=0.7
+xphi["P"]=0.8
+
+def xVT(t,xVBS):
+    return xVT0[t]+xgamma[t]*(np.sqrt(xphi[t]-xVBS)-np.sqrt(xphi[t]))
+
+def SatAnalyze(t,d,suffix,xVG,xVD,xVS,xVB):
+    sym=+1 if t=="N" else -1
+    d["VGS"+suffix]=sym*(xVG-xVS)
+    d["VDS"+suffix]=sym*(xVD-xVS)
+    d["VBS"+suffix]=sym*(xVB-xVS)
+    d["VT"+suffix]=xVT(t,d["VBS"+suffix])
+    d["VGT"+suffix]=d["VGS"+suffix]-d["VT"+suffix]
 
 #--------------------------------#
 
 dirBuild="./build"
-fileName="Chapter04A_03"
+fileName="Chapter04C_01"
 
 ExportInit(dirBuild,fileName)
 
-graphNum=5
+graphNum=6
 idVV=0
 idVA=1
 idM1=2
 idM2=3
-idLO=4
+idM3=4
+idLO=5
 MPLInit()
 MPLNewFigure(graphNum)
 
 xVDD=5.0
-xVG=2.5
+xVG3=3.0
+xVG2=3.6
 
 xVinMin=0.0
 xVinMax=xVDD
@@ -147,9 +162,12 @@ for nl in [nl0,nl1,nl2]:
     nl.add_instruction(modelNMOSL1)
     nl.add_instruction(modelPMOSL1)
     nl.set_component_value("VDD",str(xVDD))
+    nl.set_component_value("VG2",str(xVG2))
+    nl.set_component_value("VG3",str(xVG3))
     nl.set_component_value("Vin","0")
     nl.set_element_model("M1","xNMOS W=1u L=1u")
-    nl.set_element_model("M2","xPMOS W=2u L=1u")
+    nl.set_element_model("M2","xNMOS W=1u L=1u")
+    nl.set_element_model("M3","xPMOS W=2u L=1u")
 
 for nl in [nl0]:
     nl.add_instruction(" ".join([".dc","Vin",str(xVinMin),str(xVinMax),str(xVinStep)]))
@@ -166,41 +184,42 @@ rdat2=SpiceRun(runner,nl2)
 
 d["Vin"]=SpiceWave(rdat,"V(Vin)")
 d["Vout"]=SpiceWave(rdat,"V(Vout)")
+d["Vmid"]=SpiceWave(rdat,"V(Vmid)")
+d["VG2"]=SpiceWave(rdat,"V(VG2)")
+d["VG3"]=SpiceWave(rdat,"V(VG3)")
+d["VDD"]=SpiceWave(rdat,"V(VDD)")
+d["GND"]=np.zeros(len(d["VDD"]),dtype=np.float32)
 
 d["Av"]=NPDiff(d["Vin"],d["Vout"])
 
-d["VBS1"]=0
-d["VDS1"]=d["Vout"]
-d["VGS1"]=d["Vin"]
-d["VGT1"]=d["VGS1"]-xVT(d["VBS1"],xVT0N,xgammaN,xphiN)
-
-d["VBS2"]=0
-d["VDS2"]=xVDD-d["Vout"]
-d["VGS2"]=xVDD-d["Vin"]
-d["VGT2"]=d["VGS2"]-xVT(d["VBS2"],xVT0P,xgammaP,xphiP)
+SatAnalyze("N",d,"1",d["Vin"],d["Vmid"],d["GND"],d["GND"])
+SatAnalyze("N",d,"2",d["VG2"],d["Vout"],d["Vmid"],d["GND"])
+SatAnalyze("P",d,"3",d["VG3"],d["Vout"],d["VDD"],d["VDD"])
 
 d["lVout"]=SpiceWave(rdat1,"V(Vout)")
 d["lIdM1"]=SpiceWaveList(rdat1,"Id(M1)")
-d["lIdM2"]=SpiceWaveList(rdat2,"Is(M2)")
+d["lIdM3"]=SpiceWave(rdat2,"Is(M3)")
 
 iM1o=NPCross(d["VGT1"],0)
 iM1s=NPCross(d["VGT1"],d["VDS1"])
-iM2o=NPCross(d["VGT2"],0)
 iM2s=NPCross(d["VGT2"],d["VDS2"])
+iM3s=NPCross(d["VGT3"],d["VDS3"])
 
 iLoad=[]
 for i in range(lenV2):
-    iLoad.append(NPCross(d["lIdM1"][i],d["lIdM2"][i]))
+    iLoad.append(NPCross(d["lIdM1"][i],d["lIdM3"]))
 
 plt.figure(idVV)
 plt.plot(d["Vin"],d["Vout"],c="k",label=r"$v_{OUT}$")
-plt.plot(d["Vin"],d["VGT1"],c="b",ls='dashed',lw=0.5,label=r"$M_1,sat$")
-plt.plot(d["Vin"],xVDD-d["VGT2"],c="r",ls='dashed',lw=0.5,label=r"$M_2,sat$")
-MPLDrawPoints(d["Vin"],d["Vout"],[iM1s,iM1o,iM2s,iM2o],"k","w",4)
+plt.plot(d["Vin"],d["Vmid"],c="gray",label=r"$v_{D1}$")
+plt.plot(2*[0.5*(xVG2+xVT0["N"])],[5.5,-0.5],c="b",ls='dotted',lw=0.8,label=r"$M_1,sat$")
+plt.plot(d["Vin"],d["VG2"]-d["VT2"],c="b",ls='dashed',lw=0.5,label=r"$M_2,sat$")
+plt.plot(d["Vin"],d["VG3"]+d["VT3"],c="r",ls='dashed',lw=0.5,label=r"$M_3,sat$")
+MPLDrawPoints(d["Vin"],d["Vout"],[iM1s,iM1o,iM2s,iM3s],"k","w",4)
 
 plt.figure(idVA)
 plt.plot(d["Vin"],d["Av"],c="k",label=r"$A_v$")
-MPLDrawPoints(d["Vin"],d["Av"],[iM1o,iM2o],"k","w",4)
+MPLDrawPoints(d["Vin"],d["Av"],[iM1o],"k","w",4)
 
 plt.figure(idM1)
 plt.plot(d["Vin"],d["VDS1"],c="green",label=r"$v_{DS1}$")
@@ -210,43 +229,43 @@ MPLDrawPoints(d["Vin"],d["VGT1"],[iM1s,iM1o],"k","w",4)
 plt.figure(idM2)
 plt.plot(d["Vin"],d["VDS2"],c="green",label=r"$v_{DS2}$")
 plt.plot(d["Vin"],d["VGT2"],c="purple",label=r"$v_{GS2}-V_T$")
-MPLDrawPoints(d["Vin"],d["VGT2"],[iM2s,iM2o],"k","w",4)
+MPLDrawPoints(d["Vin"],d["VGT2"],[iM2s],"k","w",4)
+
+plt.figure(idM3)
+plt.plot(d["Vin"],d["VDS3"],c="green",label=r"$v_{DS3}$")
+plt.plot(d["Vin"],d["VGT3"],c="purple",label=r"$v_{GS3}-V_T$")
+MPLDrawPoints(d["Vin"],d["VGT3"],[iM3s],"k","w",4)
 
 plt.figure(idLO)
-cola1=(0.00,0.00,1.00)
-colb1=(0.95,0.95,1.00)
-cola2=(1.00,0.00,0.00)
-colb2=(1.00,0.95,0.95)
+cola=(0.00,0.00,1.00)
+colb=(0.95,0.95,1.00)
 for i in range(lenV2):
     r=float(i)/float(lenV2)
-    ci1=tuple(x1*r+x2*(1-r) for x1,x2 in zip(cola1,colb1))
-    ci2=tuple(x1*r+x2*(1-r) for x1,x2 in zip(cola2,colb2))
-    label1={"label":r"$i_D(M_1)$"} if i==lenV2-1 else {}
-    label2={"label":r"$i_D(M_2)$"} if i==lenV2-1 else {}
-    plt.plot(d["lVout"],d["lIdM1"][i],c=ci1,lw=0.5,**label1)
-    plt.plot(d["lVout"],d["lIdM2"][i],c=ci2,lw=0.5,**label2)
-    
-for i in range(lenV2):
-    MPLDrawPoints(d["lVout"],d["lIdM2"][i],iLoad[i],"k","w",3) 
-     
+    ci=tuple(x1*r+x2*(1-r) for x1,x2 in zip(cola,colb))
+    label={"label":r"$i_D(M_1)$"} if i==lenV2-1 else {}
+    plt.plot(d["lVout"],d["lIdM1"][i],c=ci,lw=0.5,**label)
+plt.plot(d["lVout"],d["lIdM3"],c="r",lw=0.5,label=r"$i_D(M_3)$")
+MPLDrawPoints(d["lVout"],d["lIdM3"],iLoad,"k","w",3)
+
 for id in range(graphNum):
     plt.figure(id)
     axes=MPLAxesInit()
-    if id in[idVV,idM1,idM2,idVA,idLO]:
+    if id in[idVV,idM1,idM2,idM3,idVA,idLO]:
         axes.set_xlim(-0.2,5.2)
         axes.xaxis.set_major_locator(ticker.MultipleLocator(0.5))
         if id in[idLO]:
             axes.set_xlabel(r"$v_{OUT}~(\si{V})$")
         else:
             axes.set_xlabel(r"$v_{IN}~(\si{V})$")
-    if id in[idVV,idM1,idM2]:
+    if id in[idVV,idM1,idM2,idM3]:
         axes.set_ylim(-0.2,5.2)
         axes.yaxis.set_major_locator(ticker.MultipleLocator(0.5))
         if id in[idVV]:
             axes.set_ylabel(r"$v_{OUT}~(\si{V})$")
-        if id in[idM1,idM2]:
+            axes.legend(loc="lower left")
+        if id in[idM1,idM2,idM3]:
             axes.set_ylabel(r"$v~(\si{V})$")
-        axes.legend(loc="upper right")
+            axes.legend(loc="upper right")
     if id in[idVA]:
         axes.set_ylim(-37,2)
         axes.yaxis.set_major_locator(ticker.MultipleLocator(5))

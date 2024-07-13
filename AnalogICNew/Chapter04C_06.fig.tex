@@ -1,0 +1,68 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xSetX
+\xValDefine{xL}[-2]
+\xValDefine{xR}[+2]
+\xValOffset{xO}{xR}[+1.8]
+\xValOffset{xG}{xL}[-1.7]
+\xValMiddle{xC}{xL}{xR}
+
+\xSetY
+\xValDefine{yB}[0]
+\xValOffset{yM}{yB}[1.5]
+\xValOffset{yO}{yM}[1.5]
+\xValOffset{yA}{yO}[1.5]
+
+\draw (xC|-yA) -- (xR|-yA);
+\draw (xL|-yO) -- (xR|-yO);
+\draw (xL|-yM) -- (xR|-yM);
+\draw (xL|-yB) -- (xR|-yB);
+
+\draw (xL|-yM) to[cisource,l=$g_{m1}$] (xL|-yB);
+\draw (xR|-yM) to[cisource,l=$g_{ds1}$] (xR|-yB);
+
+\draw (xL|-yO) to[cisource,l=$g_{m2}$] (xL|-yM);
+\draw (xC|-yO) to[cisource,l=$g_{bs2}$] (xC|-yM);
+\draw (xR|-yO) to[cisource,l=$g_{ds2}$] (xR|-yM);
+\draw (xR|-yO) to[cisource,l_=$g_{ds3}$] (xR|-yA);
+
+\draw (xC|-yB) node[ground] {};
+\draw (xC|-yA) node[ground,yscale=-1] {};
+
+\draw (xG|-yM) node[ocirc] {} -- (xG|-yB) -- (xL|-yB);
+
+\draw (xR|-yM) to[short,-o,i<=$i_{d1}$] (xO|-yM);
+\draw (xR|-yB) to[short,-o] (xO|-yB);
+
+\path (xL|-yB) node[circ] {};
+\path (xL|-yM) node[circ] {};
+
+\path (xC|-yB) node[circ] {};
+\path (xC|-yM) node[circ] {};
+\path (xC|-yO) node[circ] {};
+
+\path (xR|-yB) node[circ] {};
+\path (xR|-yM) node[circ] {};
+\path (xR|-yO) node[circ] {};
+
+\path (xR|-yO) node[right] {$v_{out}$};
+
+\xDrawVoltage{B}(xO|-yM)(xO|-yB)[$v_{d1}$]
+
+\path (xG|-yM) node[above] {\tiny G$_1$};
+\path (xC|-yA) node[below right] {\tiny S$_3$,G$_3$};
+\path (xC|-yA) node[above right] {\tiny B$_3$};
+\path (xC|-yO) node[above right] {\tiny D$_3$};
+\path (xC|-yO) node[below right] {\tiny D$_2$};
+\path (xC|-yM) node[above right] {\tiny S$_2$};
+\path (xC|-yM) node[below right] {\tiny D$_1$};
+\path (xC|-yB) node[above right] {\tiny S$_1$,G$_2$};
+\path (xC|-yB) node[below right] {\tiny B$_1$,B$_2$};
+
+\xValBorder{xG}[-0.9]{xO}[+0.7]{yB}[-0.9]{yA}[0.9]*
+
+\end{tikzpicture}
+\end{document}

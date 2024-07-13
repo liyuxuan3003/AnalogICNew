@@ -243,7 +243,7 @@ for id in range(graphNum):
             axes.set_ylabel(r"$v~(\si{V})$")
         axes.legend(loc="upper right")
     if id in[idVA]:
-        axes.set_ylim(-32,2)
+        axes.set_ylim(-37,2)
         axes.yaxis.set_major_locator(ticker.MultipleLocator(5))
         axes.set_ylabel(r"$A_v$")
         axes.legend(loc="lower right")
