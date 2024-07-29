@@ -1,0 +1,85 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xSetX
+\xValDefine{xC}[0]
+\xValOffset{xLO}{xC}[-0.5]
+\xValOffset{xLA}{xC}[-1.5]
+\xValOffset{xLB}{xLA}[-2]
+\xValOffset{xLC}{xLB}[-2]
+\xValOffset{xLD}{xLC}[-1.7]
+\xValMirror{xRO}{xLO}{xC}
+\xValMirror{xRA}{xLA}{xC}
+\xValMirror{xRB}{xLB}{xC}
+\xValMirror{xRC}{xLC}{xC}
+\xValMirror{xRD}{xLD}{xC}
+
+\xSetY
+\xValDefine{yC}[0]
+\xValOffset{yB}{yC}[-1.5]
+\xValOffset{yS}{yB}[-1.5]
+\xValOffset{yA}{yC}[+1.5]
+
+\draw (xLC|-yB) to[short] (xRC|-yB);
+\draw (xLC|-yC) to[short] (xLA|-yC);
+\draw (xRC|-yC) to[short] (xRA|-yC);
+\draw (xLC|-yA) to[short] (xRC|-yA);
+
+\draw (xLA|-yC) to[short] (xRA|-yC);
+
+\draw (xLC|-yC) to[cisource,l=$g_{m1}$] (xLC|-yB);
+\draw (xLA|-yC) to[cisource,l=$g_{ds1}$] (xLA|-yB);
+\draw (xLB|-yC) to[cisource,l=$g_{bs1}$] (xLB|-yB);
+\draw (xRC|-yC) to[cisource,l_=$g_{m2}$] (xRC|-yB);
+\draw (xRA|-yC) to[cisource,l_=$g_{ds2}$] (xRA|-yB);
+\draw (xRB|-yC) to[cisource,l_=$g_{bs2}$] (xRB|-yB);
+
+\draw (xLC|-yC) to[cisource,l_=$g_{m3}$] (xLC|-yA);
+\draw (xLA|-yC) to[cisource,l_=$g_{ds3}$] (xLA|-yA);
+\draw (xRC|-yC) to[cisource,l=$g_{m4}$] (xRC|-yA);
+\draw (xRA|-yC) to[cisource,l=$g_{ds4}$] (xRA|-yA);
+\draw (xRA|-yB) to[cisource,l=$g_{ds5}$] (xRA|-yS) to[short] (xC|-yS);
+
+\foreach \p in {xLA|-yB,xLB|-yB,xRA|-yB,xRB|-yB,xLC|-yC,xLB|-yC,xLA|-yC,xRA|-yC,xRB|-yC,xRC|-yC,xLA|-yA,xC|-yA,xRA|-yA}
+{
+    \path (\p) node[circ] {};
+}
+
+\draw (xC|-yS) node[ground] {};
+\draw (xC|-yA) node[ground,yscale=-1] {};
+
+\path (xLD|-yC) node[ocirc] {};
+\path (xRD|-yC) node[ocirc] {};
+\path (xLD|-yS) node[ground] {};
+\path (xRD|-yS) node[ground] {};
+\path (xLD|-yS) node[ocirc] {};
+\path (xRD|-yS) node[ocirc] {};
+
+\xDrawVoltage{B}(xLD|-yC)(xLD|-yS)[$v_{ic}$]
+\xDrawVoltage{B}(xRD|-yC)(xRD|-yS)[$v_{ic}$]
+
+\draw (xRA|-yB) node[above right] {$v_{p}$};
+\draw (xLA|-yC) node[above left] {$v_{out1}$};
+\draw (xRA|-yC) node[above right] {$v_{out2}=v_{out}$};
+
+\path (xLD|-yC) node[above] {\tiny G$_1$};
+\path (xRD|-yC) node[above] {\tiny G$_2$};
+\path (xC|-yS) node[below right] {\tiny B$_1$,B$_2$};
+\path (xC|-yA) node[above right] {\tiny B$_3$,B$_4$};
+
+\path (xLC|-yB) node[above right] {\tiny S$_1$};
+\path (xLC|-yA) node[below right] {\tiny S$_3$};
+\path (xLC|-yC) node[above right] {\tiny D$_3$,G$_3$,G$_4$};
+\path (xLC|-yC) node[below right] {\tiny D$_1$};
+
+\path (xRC|-yB) node[above left] {\tiny S$_2$};
+\path (xRC|-yA) node[below left] {\tiny S$_4$};
+\path (xRC|-yC) node[above left] {\tiny D$_4$};
+\path (xRC|-yC) node[below left] {\tiny D$_2$};
+
+\xValBorder{xLD}[-0.7]{xRD}[+0.7]{yS}[-0.9]{yA}[0.9]*
+
+\end{tikzpicture}
+\end{document}

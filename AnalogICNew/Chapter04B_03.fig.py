@@ -114,6 +114,7 @@ def SatAnalyze(t,d,suffix,xVG,xVD,xVS,xVB):
     d["VGS"+suffix]=sym*(xVG-xVS)
     d["VDS"+suffix]=sym*(xVD-xVS)
     d["VBS"+suffix]=sym*(xVB-xVS)
+    d["VT"+suffix]=xVT(t,d["VBS"+suffix])
     d["VGT"+suffix]=d["VGS"+suffix]-xVT(t,d["VBS"+suffix])
 
 
@@ -199,7 +200,7 @@ iM5s=NPCross(d["VGT5"],d["VDS5"])
 plt.figure(idVV)
 plt.plot(d["VIC"],d["Vout1"],c='k',label="$v_{OUT1}=v_{OUT2}$")
 plt.plot(d["VIC"],d["Vp"],c="gray",ls='dashed',label="$v_{P}$")
-MPLDrawPoints(d["VIC"],d["Vout1"],[iM1o,iM5s,iM1s],"k","w",4)
+MPLDrawPoints(d["VIC"],d["Vout1"],[iM1o+10,iM5s,iM1s],"k","w",4)
 
 plt.figure(idIV)
 plt.plot(d["VIC"],d["ID1"],c='k',label="$i_{D1}=i_{D2}$")
@@ -222,7 +223,7 @@ plt.figure(idM[5])
 MPLDrawPoints(d["VIC"],d["VGT5"],[iM5s],"k","w",4)
 
 plt.figure(idAV)
-plt.plot(d["VIC"],d["AV"],c="k",label="$A_{v,C}$")
+plt.plot(d["VIC"],d["AV"],c="k",label="$A_{vc}$")
 
 
 for id in range(graphNum):
@@ -246,7 +247,10 @@ for id in range(graphNum):
         axes.set_ylabel(r"$i~(\si{mA})$")
         axes.legend(loc="upper left")
     if id in [idAV]:
-        axes.set_ylim(-0.21,0.01)
+        axes.set_ylim(-0.85,0.05)
+        axes.yaxis.set_major_locator(ticker.MultipleLocator(0.1))
+        axes.set_ylabel(r"$A_{vc}$")
+        axes.legend(loc="lower right")
     plt.savefig(ExportNameGen(dirBuild,fileName,id),bbox_inches ="tight")
 
 SpiceDelNet(fileName)

@@ -1,0 +1,1187 @@
+\section{差分放大器}
+在本节，我们将研究差分放大器。差分放大器和我们先前在\xref{sec:反相放大器}和\xref{sec:共源共栅放大器}中学习的单端放大器不同，其具有两个输入端$v_{IN1},v_{IN2}$，基于$v_{IN1},v_{IN2}$，我们可以定义差模和共模的概念
+\begin{Equation}
+    v_{ID}=v_{IN1}-v_{IN2}\qquad v_{IC}=\frac{v_{IN1}+v_{IN2}}{2}
+\end{Equation}
+换言之，差模$v_{ID}$是两路信号的差，共模$v_{IC}$是两路信号的均值。在差分放大器中信号是通过差模输入的，这样做的好处是可以避免干扰，试想，存在一些干扰会让信号发生波动，但这些干扰往往对两路信号的影响是相同的。这样一来，共模$v_{IC}$可能会发生变化但差模$v_{ID}$不会，而差分放大器的设计会保证其“放大差模，抑制共模”，从而避免了干扰对信号的影响。
+
+差分放大器的输入一定是差分的，但其输出则不一定，可以是单端的，可以是差分的，后者被称为“全差分放大器”。在本节，我们将分别介绍两种差分放大器，恰好对应这两种情况
+\begin{enumerate}
+    \item 电流镜负载的差分放大器，单端输出。
+    \item 电流源负载的差分放大器，差分输出。
+\end{enumerate}
+差分放大器使用单端输出的情况比较常见，故我们介绍也以前者为主。
+
+
+
+\subsection{电流镜负载差分放大器的大信号特性}
+\xref{fig:电流镜负载差分放大器}是电流镜负载差分放大器。它看上去是由两个单端放大器组成：左边$M_1,M_3$是二极管负载反相器，右边$M_2,M_4$是电流源负载反相器，其中$M_3,M_4$的栅极连接在一起共同构成电流镜。这里的$M_5$是一个新结构，称为尾电流源，它被偏置为$I_{SS}$并使得$i_{D1}+i_{D2}=I_{SS}$。
+
+\xref{fig:电流镜负载差分放大器}中标注了两个输出$v_{OUT1},v_{OUT2}$，但我们仅使用后者$v_{OUT}=v_{OUT2}$作为输出。
+
+\begin{Figure}[电流镜负载差分放大器]
+    \includegraphics[scale=0.8]{build/Chapter04B_06.fig.pdf}
+\end{Figure}
+
+
+尾电流源对于差分放大器的意义是什么？或者我们换一种问法，为什么差分放大器不能简单的由两个独立的单端放大器构成？要明确的是，差分放大器要满足两个特性，第一是具有差分的输入，第二是对共模输入有很强的抑制。试想，若这里我们移除$M_5$构成的尾电流源，让两侧的$M_1,M_2$分别接地。现考虑差模的变化，令$v_{IN1},v_{IN2}$同时增大，由于两边现在是两个独立的反相器，我们可以预期的是由于$i_{D1},i_{D2}$的增大使$v_{OUT1},v_{OUT2}$减小，而这里的输出$v_{OUT}=v_{OUT2}$，这就意味着差模的输入会导致输出发生变化。换言之，尾电流源被移除的差分放大器根本无法抑制共模输入，是徒有其表的！由此可见，尾电流源的意义就是抑制共模增益。那么，尾电流源是如何通过$i_{D1}+i_{D2}=I_{SS}$的约束实现这一点呢？下面将进行分析。
+
+首先，差模输入$v_{ID}$是两个输入的差$v_{IN1}-v_{IN2}$，亦是$M_1,M_2$栅源电压的差\setpeq{尾电流源的意义}
+\begin{Equation}&[1]
+    v_{ID}=v_{GS1}-v_{GS2}=\sqrt{\frac{2i_{D1}}{\beta}}-\sqrt{\frac{2i_{D2}}{\beta}}
+\end{Equation}
+将\xrefpeq{1}两边平方
+\begin{Equation}
+    v_{ID}^2=\frac{2}{\beta}(i_{D1}+i_{D2})-4\sqrt{\frac{i_{D1}i_{D2}}{\beta^2}}
+\end{Equation}
+由于$i_{D1}+i_{D2}=I_{SS}$
+\begin{Equation}
+    v_{ID}^2=\frac{2}{\beta}I_{SS}-4\sqrt{\frac{i_{D1}i_{D2}}{\beta^2}}
+\end{Equation}
+两边同乘$\beta$，除$2$
+\begin{Equation}
+    \frac{1}{2}\beta v_{ID}^2=I_{SS}-2\sqrt{i_{D1}i_{D2}}
+\end{Equation}
+将$I_{SS}$移至左侧
+\begin{Equation}
+    \frac{1}{2}\beta v_{ID}^2-I_{SS}=-2\sqrt{i_{D1}i_{D2}}
+\end{Equation}
+两边平方
+\begin{Equation}
+    \frac{1}{4}\beta^2v_{ID}^4-\beta v_{ID}^2I_{SS}+I_{SS}^2=4i_{D1}i_{D2}
+\end{Equation}
+整理得到
+\begin{Equation}
+    I_{SS}^2-4i_{D1}i_{D2}=\beta v_{ID}^2I_{SS}-\frac{1}{4}\beta^2v_{ID}^4
+\end{Equation}
+而我们知道
+\begin{Equation}
+    I_{SS}^2-4i_{D1}i_{D2}=(i_{D1}+i_{D2})^2-4i_{D1}i_{D2}=(i_{D1}-i_{D2})^2
+\end{Equation}
+因此
+\begin{Equation}
+    i_{D1}-i_{D2}=\sqrt{\beta v_{ID}^2I_{SS}-\frac{1}{4}\beta^2v_{ID}^4}
+\end{Equation}
+或者
+\begin{Equation}
+    i_{D1}-i_{D2}=\frac{I_{SS}}{2}\sqrt{\frac{\beta v_{ID}^2}{I_{SS}}-\frac{\beta^2v_{ID}^4}{I_{SS}^2}}
+\end{Equation}
+而我们又知道
+\begin{Equation}
+    i_{D1}+i_{D2}=I_{SS}
+\end{Equation}
+求得$i_{D1}$为
+\begin{Equation}
+    i_{D1}=\frac{I_{SS}}{2}\qty[1+\sqrt{\frac{\beta v_{ID}^2}{I_{SS}}-\frac{\beta^2v_{ID}^4}{I_{SS}^2}}]
+\end{Equation}
+求得$i_{D2}$为
+\begin{Equation}
+    i_{D2}=\frac{I_{SS}}{2}\qty[1-\sqrt{\frac{\beta v_{ID}^2}{I_{SS}}-\frac{\beta^2v_{ID}^4}{I_{SS}^2}}]
+\end{Equation}
+由此可见，$i_{D1},i_{D2}$仅是差模$v_{ID}$的函数，而与共模$v_{IC}$无关。这就论证了尾电流源可以完全抑制共模的影响！而且上述推导中仅涉及了$M_1,M_2$和$M_5$，与负载$M_3,M_4$无关，这就说明尾电流源的有效性是无关负载的。不过还应指出的是，不要指望这里$i_{D1},i_{D2}$的公式就能完整描述差分放大器的大信号特性，因为上述公式的推导过程是建立在所有MOS管均饱和的前提下，故仅在$v_{ID}$位于零附近时成立。当$v_{ID}$在更大尺度上变化时，必有MOS管退出饱和。
+
+理解尾电流源的用途后，现在正式开始分析大信号特性，对于差分放大器，要分为两步
+\begin{itemize}
+    \item 差模特性分析：令$v_{IC}$为一个合适的值，改变$v_{ID}$观察$v_{OUT}$的变化。
+    \item 共模特性分析：令$v_{ID}$为零，改变$v_{IC}$观察$v_{OUT}$的变化。
+\end{itemize}
+
+现在进行差模特性分析，差模的大信号特性仿真如\xref{fig:电流镜负载的差分放大器的差模特性}所示。
+
+\begin{Figure}[电流镜负载的差分放大器的差模特性]
+    \begin{FigureSub}[电压特性;电压特性--电流镜差分放大器差模]
+        \includegraphics[scale=0.6]{build/Chapter04B_01_0.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[电流特性;电流特性--电流镜差分放大器差模]
+        \includegraphics[scale=0.6]{build/Chapter04B_01_1.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.75cm}
+    \begin{FigureSub}[差模增益;增益特性--电流镜差分放大器差模]
+        \includegraphics[scale=0.6]{build/Chapter04B_01_7.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[$M_5$管工作区分析;M5管工作区分析--电流镜差分放大器差模]
+        \includegraphics[scale=0.6]{build/Chapter04B_01_6.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.75cm}
+    \begin{FigureSub}[$M_1$管工作区分析;M1管工作区分析--电流镜差分放大器差模]
+        \includegraphics[scale=0.6]{build/Chapter04B_01_2.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[$M_2$管工作区分析;M2管工作区分析--电流镜差分放大器差模]
+        \includegraphics[scale=0.6]{build/Chapter04B_01_3.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.75cm}
+    \begin{FigureSub}[$M_3$管工作区分析;M3管工作区分析--电流镜差分放大器差模]
+        \includegraphics[scale=0.6]{build/Chapter04B_01_4.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[$M_4$管工作区分析;M4管工作区分析--电流镜差分放大器差模]
+        \includegraphics[scale=0.6]{build/Chapter04B_01_5.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+首先，关于大信号特性的分析，有一个常用的技巧。电路的基本原理指出，两个串联在一起的MOS管上的电流相同。但如果，过驱电压又认为其中某一MOS管上的电流比另一MOS管更大，那么，过驱电压分析认为电流较大的MOS管将工作在线性区！换言之，其实质上没有这么大的电流，只是因为我们误认为其处于饱和区罢了。用“一山不容两虎”可以很精辟的概况该想法：两个串联的MOS管中电流较大的一方将被迫进入线性区以保证串联电流相等。
+
+电流镜负载差分放大器的差模工作原理可以论述如下
+\begin{itemize}
+    \item 当$v_{IN1}>v_{IN2}$时，有$i_{D1}>i_{D2}$，由于$M_3,M_1$串联而$M_3,M_4$又构成电流镜，从而就有$i_{D4}>i_{D2}$，但$M_4,M_2$是串联的，$M_4$电流较大进入线性区，为此$v_{OUT}$需增加。
+    \item 当$v_{IN1}<v_{IN2}$时，有$i_{D1}<i_{D2}$，由于$M_3,M_1$串联而$M_3,M_4$又构成电流镜，从而就有$i_{D4}<i_{D2}$，但$M_4,M_2$是串联的，$M_2$电流较大进入线性区，为此$v_{OUT}$需减小。
+\end{itemize}
+由此可见，$M_2,M_4$的饱和分别确定了放大状态的下界和上界，\xref{fig:电压特性--电流镜差分放大器差模}亦论证了这一点。
+
+$M_2$的饱和条件是
+\begin{Equation}
+    v_{DS2}> v_{GS2}-V_{T2}
+\end{Equation}
+代入$v_{DS2}=v_{OUT}-v_P$和$v_{GS2}=v_{IN2}-v_{P}$
+\begin{Equation}
+    v_{OUT}-v_{P}>v_{IN2}-v_{P}-V_{T2}
+\end{Equation}
+注意到$v_P$可以被约掉
+\begin{Equation}
+    v_{OUT}>v_{IN2}-V_{T2} 
+\end{Equation}
+由于该饱和必定发生在$v_{ID}=0$附近，此时可近似认为$v_{IN1}=v_{IN2}=V_{IC}$
+\begin{Equation}
+    v_{OUT}>V_{IC}-V_{T2}
+\end{Equation}
+$M_4$的饱和条件是
+\begin{Equation}
+    v_{DS4}>v_{GS4}-V_{T4}
+\end{Equation}
+代入$v_{DS4}=V_{DD}-v_{OUT}$和$v_{GS4}-V_{T4}=V_{ON4}$
+\begin{Equation}
+    V_{DD}-v_{OUT}>V_{ON4}
+\end{Equation}
+即
+\begin{Equation}
+    v_{OUT}<V_{DD}-V_{ON4}
+\end{Equation}
+我们将结果整理如下
+\begin{BoxFormula}[电流镜负载差分放大器--差模--饱和分析]
+    电流镜负载差分放大器中，在差模下，$M_4,M_2$的饱和将确保所有管的饱和
+    \begin{Equation}
+        v_{OUT}<V_{DD}-V_{ON4}\qquad v_{OUT}>V_{IC}-V_{T2}
+    \end{Equation}
+\end{BoxFormula}
+
+\begin{BoxFormula}[电流镜负载差分放大器--差模--饱和输出电压范围--最大值]
+    电流镜负载差分放大器，在差模下，当所有管饱和时，输出电压的最大值是
+    \begin{Equation}
+        V_{OUT,\max}=V_{DD}-V_{ON4}
+    \end{Equation}
+\end{BoxFormula}
+\begin{BoxFormula}[电流镜负载差分放大器--差模--饱和输出电压范围--最小值]
+    电流镜负载差分放大器，在差模下，当所有管饱和时，输出电压的最小值是
+    \begin{Equation}
+        V_{OUT,\min}=V_{IC}-V_{T2}
+    \end{Equation}
+\end{BoxFormula}
+
+关于\xref{fig:电流镜负载的差分放大器的差模特性}的仿真，有两个参数要指定，即$V_{G5}$和$V_{IC}$。在\xref{subsec:共源共栅放大器的设计}中我们知道$V_G$最终都是通过电流镜偏置得到的，而对于差分放大器，我们最关心的也是电流$I_{SS}$的大小。故这里直接规定$I_{SS}=\SI{0.6}{mA}$，当$v_{ID}=\SI{0}{V}$时应有$I_{D1}=I_{D2}=\SI{0.3}{mA}$。在NMOS和PMOS的尺寸分别取$(W/L)=1,2$时，$\SI{0.6}{mA}$对应$V_{ON}=\SI{1.0}{V}$，$\SI{0.3}{mA}$对应$V_{ON}=\SI{0.7}{V}$，因此这里$M_1,M_2,M_3,M_4$的过驱电压为约$\SI{0.7}{V}$而$M_5$的过驱电压约为$\SI{1.0}{V}$。而$V_{IC}$取$V_{IC}=\SI{3.0}{V}$。
+
+基于上述设定，可以预期$V_{OUT,\min}=\SI{2.7}{V}$和$V_{OUT,\max}=\SI{3.7}{V}$，在\xref{fig:电压特性--电流镜差分放大器差模}中的蓝虚线和红虚线对应这两项预测，可以看出其与实际$M_2,M_4$的饱和点基本接近。$V_{OUT,\min}$的偏差是因为$M_2$的体效应对$V_{T2}$的影响未考虑，$V_{OUT,\max}$的偏差是因为$V_{ON4}$不是精确的$\SI{0.7}{V}$。
+
+通过\xref{fig:电流镜负载的差分放大器的差模特性}中，我们还注意到
+\begin{itemize}
+    \item $M_2$的饱和点确定了放大状态的左侧边界。
+    \item $M_4$的饱和点确定了放大状态的右侧边界。
+    \item $M_5$通常是饱和的，但$v_{IN}$太小时会进入线性区，此时$I_{SS}$将减小。
+    \item $M_2$在$v_{IN}$过大时会截止，此时$i_{D2}=0$且$v_{OUT}=V_{DD}$。
+    \item 在$v_{IC}=0$附近，$v_{OUT2}$变化非常迅速，$v_{OUT1}$则相当平缓，这意味着电流镜负载差分放大器的两个输出端具有相当不对称的特性！也因此输出$v_{OUT}$是从$v_{OUT2}$处引出。
+    \item 差模增益$A_{DM}=\pdv*{v_{OUT}}{v_{ID}}$接近70，是较大的。
+\end{itemize}
+现在进行共模特性分析，共模的大信号特性仿真如\xref{fig:电流镜负载的差分放大器的共模特性}所示。首先要弄清的一点是，在共模输入的情况下，输入$v_{IN1}=v_{IN2}=v_{IC}$，输出$v_{OUT1}=v_{OUT2}=v_{OC}$，电流$i_{D1}=i_{D2}$，若再结合$i_{D1}+i_{D2}=I_{SS}$就可以说明$i_{D1},i_{D2}$是恒定的，换言之$v_{GS1},v_{GS2}$应当不随$v_{IC}$变化。
+
+这个事实是进行共模饱和分析的基础：为保持$v_{GS1},v_{GS2}$不变，$v_P$将跟随$v_{IC}$变化
+\begin{itemize}
+    \item 当$v_{IC}$过小，此时$v_{P}$将减小令$M_5$的$v_{DS}$不足，退出饱和。
+    \item 当$v_{IC}$过大，此时$v_{P}$将增大令$M_1,M_2$的$v_{DS}$不足，退出饱和。
+\end{itemize}
+应指出，这里$M_1,M_2$的特性是完全对称的，进行饱和分析时取其中一者就可以了。\goodbreak
+
+$M_2$的饱和条件是
+\begin{Equation}
+    v_{DS2}>v_{GS2}-V_{T2}
+\end{Equation}
+代入$v_{DS2}>v_{OUT2}-v_P$和$v_{GS2}=v_{IC}-v_P$
+\begin{Equation}
+    v_{OUT2}-v_P>v_{IC}-v_{P}-V_{T2}
+\end{Equation}
+注意到$v_{P}$是可以被约掉的
+\begin{Equation}
+    v_{IC}<v_{OUT2}+V_{T2}
+\end{Equation}
+注意到$v_{OUT2}=V_{DD}-v_{DS4}+V_T$
+\begin{Equation}
+    v_{IC}<V_{DD}-v_{DS4}+V_T
+\end{Equation}
+这里的一个陷阱是认为$v_{DS4}=V_{ON4}$，然而我们需要考虑到$M_4,M_3$构成了电流镜而$M_3$使用二极管接法，因此这里实际上会多一个阈值，即$v_{DS4}=V_{ON4}+V_{T4}$，故有
+\begin{Equation}
+    v_{IC}<V_{DD}-V_{ON4}-V_{T4}+V_{T2}
+\end{Equation}
+% 若近似认为$V_{T4}+V_{T2}$，这里实际上就是$v_{IC}<V_{DD}-V_{ON4}$，即电源电压减掉一个过驱电压。
+
+$M_5$的饱和条件是
+\begin{Equation}
+    v_{DS5}>v_{GS5}-V_{T5}
+\end{Equation}
+代入$v_{DS5}=v_P$以及$v_{GS5}-V_{T5}=V_{ON5}$
+\begin{Equation}
+    v_{P}>V_{ON5}
+\end{Equation}
+这里$v_P$是未知的，继续代入$v_{P}=v_{IC}-v_{GS2}$
+\begin{Equation}
+    v_{IC}-v_{GS2}>V_{ON5}
+\end{Equation}
+这里$v_{GS2}=V_{ON2}+V_{T2}$，得到
+\begin{Equation}
+    v_{IC}>V_{ON5}+V_{ON2}+V_{T2}
+\end{Equation}
+我们将结论整理如下
+\begin{BoxFormula}[电流镜负载差分放大器--共模--饱和分析]
+    电流镜负载差分放大器中，在共模下，$M_2,M_5$的饱和将确保所有管的饱和
+    \begin{Equation}
+        v_{IC}<V_{DD}-V_{ON4}-V_{T4}+V_{T2}\qquad v_{IC}>V_{ON5}+V_{ON2}+V_{T2}
+    \end{Equation}
+\end{BoxFormula}
+这里我们也可以写出$V_{IC,\max}$和$V_{IC,\min}$的式子，分别代表共模输入下令所有管饱和的最高和最低的共模电平，这个概念被称为共模输入范围（Input Common-mode Range, ICMR）。
+
+\begin{Figure}[电流镜负载的差分放大器的共模特性]
+    \begin{FigureSub}[电压特性;电压特性--电流镜差分放大器共模]
+        \includegraphics[scale=0.6]{build/Chapter04B_03_0.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[电流特性;电流特性--电流镜差分放大器共模]
+        \includegraphics[scale=0.6]{build/Chapter04B_03_1.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.75cm}
+    \begin{FigureSub}[共模增益;增益特性--电流镜差分放大器共模]
+        \includegraphics[scale=0.6]{build/Chapter04B_03_7.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[$M_5$管工作区分析;M5管工作区分析--电流镜差分放大器共模]
+        \includegraphics[scale=0.6]{build/Chapter04B_03_6.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.75cm}
+    \begin{FigureSub}[$M_1$管工作区分析;M1管工作区分析--电流镜差分放大器共模]
+        \includegraphics[scale=0.6]{build/Chapter04B_03_2.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[$M_2$管工作区分析;M2管工作区分析--电流镜差分放大器共模]
+        \includegraphics[scale=0.6]{build/Chapter04B_03_3.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.75cm}
+    \begin{FigureSub}[$M_3$管工作区分析;M3管工作区分析--电流镜差分放大器共模]
+        \includegraphics[scale=0.6]{build/Chapter04B_03_4.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[$M_4$管工作区分析;M4管工作区分析--电流镜差分放大器共模]
+        \includegraphics[scale=0.6]{build/Chapter04B_03_5.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+\begin{BoxFormula}[电流镜负载差分放大器--共模--饱和输入电压范围--最大值]
+    电流镜负载差分放大器，在共模下，当所有管饱和时，输入电压的最大值是
+    \begin{Equation}
+        V_{IC,\max}=V_{DD}-V_{ON4}-V_{T4}+V_{T2}
+    \end{Equation}
+\end{BoxFormula}
+
+\begin{BoxFormula}[电流镜负载差分放大器--共模--饱和输入电压范围--最小值]
+    电流镜负载差分放大器，在共模下，当所有管饱和时，输出电压的最小值是
+    \begin{Equation}
+        V_{IC,\min}=V_{ON5}+V_{ON2}+V_{T2}
+    \end{Equation}
+\end{BoxFormula}
+
+通过\xref{fig:电流镜负载的差分放大器的共模特性}，我们还注意到
+\begin{itemize}
+    \item $M_5$的饱和点确定了共模输入范围的左边界。
+    \item $M_2,M_1$的饱和点（两者特性完全相同）确定了共模输入范围的右边界。
+    \item $M_4,M_3$在共模下总是饱和的。
+    \item 当$v_{IC}$在共模输入范围内，$v_{OUT}$几乎不变！这意味着极好的共模抑制特性。
+    \item 当$v_{IC}$渐减小离开共模输入范围后，$v_{OUT}$会增大并在$M_1,M_2$截止后变为定值。
+    \item 共模增益$A_{CM}=\pdv*{v_{OUT}}{v_{IC}}$仅约$-0.01$（共模输入范围内），相较$A_{DM}$是非常小的。
+\end{itemize}
+
+通过上述图像，我们可以直观的看到差分放大器确实可以实现“放大差模，抑制共模”。
+
+\subsection{电流镜负载差分放大器的小信号特性}
+在开始小信号特性的分析前，我们有必要先说明两点
+\begin{itemize}
+    \item 差分放大器中，增益要分别讨论差模$A_{vd}$和共模$A_{vc}$两种情况。除此之外，我们还要分别分析两个输出节点各自的输出电阻$R_{out1},R_{out2}$，尽管只有$R_{out2}$是放大器真正的输出电阻$R_{out}$（介于$v_{OUT}=v_{OUT2}$），但$R_{out1}$的结果对后续频率特性的分析非常重要。
+    \item 差分放大器中，由于节点众多，可以预期的是直接列写方程将导致无比复杂的结果，以至于对结果进行近似都成为一件很困难的事情。因此，有必要根据差模和共模的各自特性，分别先对电路进行不同的简化。换言之，这里不仅要对电路的计算结果做近似，还要对电路本身做近似，而且这种近似还要根据差模和共模的特性分别选定，是不同的。
+\end{itemize}
+
+第一步，我们分析差模，差模下输入$v_{in1}=+v_{id}/2$而$v_{in2}=-v_{id}/2$。差模下的核心近似假设是令$v_p=0$，换言之，在差模小信号下我们不考虑尾电流源$M_5$的影响，认为两侧的电路是直接交流接地。这是合理的，从\xref{fig:电压特性--电流镜差分放大器差模}中我们看到$v_P$在$v_{ID}=0$附近基本是平直的，这意味着小信号下应当可以近似$v_p=0$。另外，可以预期取$v_p=0$的近似对简化电路分析相当有效，因为忽略尾电流源$M_5$可以令两侧支路的$M_1,M_3$和$M_2,M_4$变成两个“基本”相互独立的部分，称“基本”是因为$M_3$和$M_4$仍然构成电流镜，故两侧支路势必还是会相互影响。
+
+\begin{Figure}[电流镜负载差分放大器的小信号电路]
+    \begin{FigureSub}[差模增益;差模增益--电流镜负载差分]
+        \includegraphics[scale=0.8]{build/Chapter04B_08.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.7cm}
+    \begin{FigureSub}[左侧输出电阻;左侧输出电阻--电流镜负载差分]
+        \includegraphics[scale=0.8]{build/Chapter04B_09.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.7cm}
+    \begin{FigureSub}[右侧输出电阻;右侧输出电阻--电流镜负载差分]
+        \includegraphics[scale=0.8]{build/Chapter04B_10.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.7cm}
+    \begin{FigureSub}[共模增益;共模增益--电流镜负载差分]
+        \includegraphics[scale=0.8]{build/Chapter04B_11.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+差模增益的小信号电路如\xref{fig:差模增益--电流镜负载差分}所示，列出$v_{out1},v_{out2}$处的方程\setpeq{差模增益--电流镜负载差分}
+\begin{Gather}
+    g_{m1}v_{gs1}+g_{ds1}v_{ds1}+g_{m3}v_{gs3}+g_{ds3}v_{ds3}=0\xlabelpeq{1}\\
+    g_{m2}v_{gs2}+g_{ds2}v_{ds2}+g_{m4}v_{gs4}+g_{ds4}v_{ds4}=0\xlabelpeq{2}
+\end{Gather}
+电压矩阵为（这里$v_{in1}=+v_{id}/2$而$v_{in2}=-v_{id}/2$）
+\begin{Equation}&[3]
+    \qquad\qquad\qquad
+    \begin{pmatrix}
+        v_{gs1}&v_{gs2}&v_{gs3}&v_{gs4}\\
+        v_{bs1}&v_{bs2}&v_{bs3}&v_{bs4}\\
+        v_{ds1}&v_{ds2}&v_{ds3}&v_{ds4}\\
+    \end{pmatrix}=
+    \begin{pmatrix}
+        +v_{id}/2&-v_{id}/2&v_{out1}&v_{out1}\\
+        0&0&0&0\\
+        v_{out1}&v_{out2}&v_{out1}&v_{out2}\\
+    \end{pmatrix}
+    \qquad\qquad\qquad
+\end{Equation}
+代入得到
+\begin{Gather}
+    g_{m1}v_{id}/2+(g_{m3}+g_{ds1}+g_{ds3})v_{out1}=0\xlabelpeq{4}\\
+    -g_{m2}v_{id}/2+(g_{ds2}+g_{ds4})v_{out2}-g_{m1}g_{m4}(g_{m3}+g_{ds1}+g_{ds3})^{-1}v_{out1}=0\xlabelpeq{5}
+\end{Gather}
+由\xrefpeq{4}可以解出$v_{out1}$
+\begin{Equation}&[6]
+    v_{out1}=-g_{m1}(g_{m3}+g_{ds1}+g_{ds3})^{-1}v_{id}/2
+\end{Equation}
+将\xrefpeq{6}代入\xrefpeq{5}
+\begin{Equation}&[7]
+    \qquad\qquad\quad
+    -[g_{m2}+g_{m1}g_{m4}(g_{m3}+g_{ds1}+g_{ds3})^{-1}]v_{id}/2+(g_{ds2}+g_{ds4})v_{out2}=0
+    \qquad\qquad\quad
+\end{Equation}
+由\xrefpeq{7}可以解出$v_{out2}$
+\begin{Equation}&[8]
+    \qquad\qquad\qquad
+    v_{out2}=[g_{m2}+g_{m1}g_{m4}(g_{m3}+g_{ds1}+g_{ds3})^{-1}](g_{ds2}+g_{ds4})^{-1}v_{id}/2
+    \qquad\qquad\qquad
+\end{Equation}
+通过\xrefpeq{8}就可以解得$v_{id}$至$v_{out2}$的差模增益$A_{vd2}$
+\begin{Equation}&[9]
+    \qquad\qquad\quad
+    A_{vd2}=\frac{v_{out2}}{v_{id}}=[g_{m2}+g_{m1}g_{m4}(g_{m3}+g_{ds1}+g_{ds3})^{-1}](g_{ds2}+g_{ds4})^{-1}/2
+    \qquad\qquad\quad
+\end{Equation}
+通过\xrefpeq{6}就可以解得$v_{id}$至$v_{out1}$的差模增益$A_{vd1}$
+\begin{Equation}&[10]
+    A_{vd1}=\frac{v_{out1}}{v_{id}}=-g_{m1}(g_{m3}+g_{ds1}+g_{ds3})^{-1}/2
+\end{Equation}
+
+对于\xrefpeq{9}，若假定$g_{m1}=g_{m2}$并应用$g_{m}\gg g_{bs},g_{ds}$
+\begin{Equation}
+    A_{vd2}=g_{m2}(g_{ds2}+g_{ds4})^{-1}
+\end{Equation}
+对于\xrefpeq{10}，若假定$g_{m}\gg g_{bs},g_{ds}$
+\begin{Equation}
+    A_{vd1}=-g_{m1}g_{m3}^{-1}/2
+\end{Equation}
+应指出，由于$v_{out}=v_{out2}$，故通常关心的差模增益$A_{vd}=A_{vd2}$，但了解$A_{vd1}$并没有坏处。\goodbreak
+
+将上述结论整理如下
+\begin{BoxFormula}[电流镜负载差分放大器--右侧输出--差模增益]
+    电流镜负载差分放大器中，右侧的差模增益为
+    \begin{Equation}
+        \qquad\qquad\qquad
+        A_{vd2}=[g_{m2}+g_{m1}g_{m4}(g_{m3}+g_{ds1}+g_{ds3})^{-1}](g_{ds2}+g_{ds4})^{-1}/2
+        \qquad\qquad\qquad
+    \end{Equation}
+    近似结果为
+    \begin{Equation}
+        A_{vd2}=g_{m2}(g_{ds2}+g_{ds4})^{-1}
+    \end{Equation}
+\end{BoxFormula}
+\begin{BoxFormula}[电流镜负载差分放大器--左侧输出--差模增益]
+    电流镜负载差分放大器中，左侧的差模增益为
+    \begin{Equation}
+        A_{vd1}=-g_{m1}(g_{m3}+g_{ds1}+g_{ds3})^{-1}/2
+    \end{Equation}
+    近似结果为
+    \begin{Equation}
+        A_{vd1}=-g_{m1}g_{m3}^{-1}/2
+    \end{Equation}
+\end{BoxFormula}
+让我们对上述差模增益的结论做一些思考是很有价值的
+\begin{itemize}
+    \item 关于$A_{vd1}=-g_{m1}g_{m3}^{-1}/2$，参见\xref{fml:二极管负载反相放大器--电压增益}，这是一个典型的二极管负载反相器的增益，但刚好小了一半！这是因为，如果我们单独看差分放大器左边的$M_1,M_3$，这两者确实是构成一个二极管负载反相器，但同时，由于输入现在只有$v_{id}/2$，因此增益也只有一半。
+    \item 关于$A_{vd2}=g_{m2}(g_{ds2}+g_{ds4})^{-1}$，参见\xref{fml:电流源负载反相放大器--电压增益}，这是一个电流源负载反相器的增益，这本身很合理，因为$M_2,M_4$确实是组成了电流源负载反相器，但是存在两个疑点：第一点是为什么增益是正的？第二点是为什么这里不存在增益减半的问题？前者的回答很简单，因为右端的输入是$-v_{id}/2$，这里的负号和反相放大的负号约掉了。后者的回答则与电流镜有关，正如前面在绘制小信号电路时所提到的，这里$M_1,M_3$和$M_2,M_4$并不是相互独立的，其中$M_3$和$M_4$构成了电流镜。这意味着右侧电流其实有两个部分，一部分是$M_2$直接在右侧产生的$g_{m2}v_{id}/2$，一部分是$M_1$产生的$g_{m1}v_{id}/2$通过$M_3,M_4$电流镜复制进入右侧的\footnote{换个角度，可以认为负载$M_4$也参与了放大，类似推挽放大器，只不过这里PMOS不是直接连接了输入罢了。}，两部分电流应叠加，由于器件对称有$g_{m1}=g_{m2}$，两部分电流的和就可以写作$g_{m2}v_{id}$，这些电流最终将流过右侧的负载，即$(g_{ds2}+g_{ds4})^{-1}$形成$v_{out2}$。
+\end{itemize}
+综上，我们可以得到一个重要结论，对于$A_{vd}=A_{vd2}$，电流镜负载差分放大器具有与电流源负载反相器相同的增益！不过增益是同相而不是反相的。另外，也注意到$A_{vd2}\gg A_{vd1}$，这再次验证了电流镜负载差分放大器的两个输出端$v_{OUT2},v_{OUT1}$的电压特性是高度不对称的。
+
+第二步，我们分析输出电阻。应指出，输出电阻并不分“差模输出电阻”和“共模输出电阻”，介于讨论输出电阻时输入都短接了，也就无所谓差模共模了。不过从电路分析的角度，这里输出电阻分析时可以套用差模增益的假设，即忽略$M_5$的影响，如\xref{fig:左侧输出电阻--电流镜负载差分}和\xref{fig:右侧输出电阻--电流镜负载差分}所示。\setpeq{输出电阻--电流镜负载差分}
+
+对于\xref{fig:左侧输出电阻--电流镜负载差分}，\xrefpeq[差模增益--电流镜负载差分]{4}和\xrefpeq[差模增益--电流镜负载差分]{5}要改写为（移除$v_{id}$项，增加$i_{out1}$）
+\begin{Gather}
+    (g_{m3}+g_{ds1}+g_{ds3})v_{out1}=i_{out1}\xlabelpeq{1}\\
+    (g_{ds2}+g_{ds4})v_{out2}-g_{m1}g_{m4}(g_{m3}+g_{ds1}+g_{ds3})^{-1}v_{out1}=0\xlabelpeq{2}
+\end{Gather}
+\xrefpeq{2}这里无用，\xrefpeq{1}就可以告诉我们$R_{out1}$
+\begin{Equation}
+    R_{out1}=\frac{v_{out1}}{i_{out1}}=(g_{m3}+g_{ds1}+g_{ds3})^{-1}
+\end{Equation}
+当然也可以近似为
+\begin{Equation}
+    R_{out1}=g_{m3}^{-1}
+\end{Equation}
+对于\xref{fig:右侧输出电阻--电流镜负载差分}，\xrefpeq[差模增益--电流镜负载差分]{4}和\xrefpeq[差模增益--电流镜负载差分]{5}要改写为（移除$v_{id}$项，增加$i_{out2}$）
+\begin{Gather}
+    (g_{m3}+g_{ds1}+g_{ds3})v_{out1}=0\xlabelpeq{3}\\
+    (g_{ds2}+g_{ds4})v_{out2}-g_{m1}g_{m4}(g_{m3}+g_{ds1}+g_{ds3})^{-1}v_{out1}=i_{out2}\xlabelpeq{4}
+\end{Gather}
+\xrefpeq{3}指出$v_{out1}=0$，故\xrefpeq{4}马上简化为
+\begin{Equation}
+    (g_{ds2}+g_{ds4})v_{out2}=i_{out2}
+\end{Equation}
+这就得到
+\begin{Equation}
+    R_{out2}=\frac{v_{out2}}{i_{out2}}=(g_{ds2}+g_{ds4})^{-1}
+\end{Equation}
+将上述结论整理如下
+\begin{BoxFormula}[电流镜负载差分放大器--右侧输出--输出电阻]
+    电流镜负载差分放大器中，右侧的输出电阻为
+    \begin{Equation}
+        R_{out2}=(g_{ds2}+g_{ds4})^{-1}
+    \end{Equation}
+\end{BoxFormula}
+\begin{BoxFormula}[电流镜负载差分放大器--左侧输出--输出电阻]
+    电流镜负载差分放大器中，左侧的输出电阻为
+    \begin{Equation}
+        R_{out1}=(g_{m3}+g_{ds1}+g_{ds3})^{-1}
+    \end{Equation}
+    近似结果为
+    \begin{Equation}
+        R_{out1}=g_{m3}^{-1}
+    \end{Equation}
+\end{BoxFormula}
+第三步，我们分析共模，共模下输入$v_{in1}=v_{in2}=v_{ic}$。共模下$M_5$是不可以忽略的，故其小信号电路会复杂一些，如\xref{fig:共模增益--电流镜负载差分}所示。但另外一方面，共模下差分放大器两侧的特性是对称的，因此有$v_{out}=v_{out1}=v_{out2}$成立，两个输出端相当于短接，这也能让电路分析简单些。
+
+共模增益的小信号电路如\xref{fig:共模增益--电流镜负载差分}所示，列出$v_{out},v_p$处的方程\setpeq{共模增益--电流镜负载差分}
+\begin{Split}&[1]
+    g_{m1}&v_{gs1}+g_{bs1}v_{bs1}+g_{ds1}v_{ds1}+g_{m2}v_{gs2}+g_{bs2}v_{bs2}+g_{ds2}v_{ds2}+\\
+    g_{m3}&v_{gs3}+g_{ds3}v_{ds3}+g_{m4}v_{gs4}+g_{ds4}v_{ds4}=0
+\end{Split}\vspace{-3ex}
+\begin{Equation}&[2]
+    g_{ds4}v_{ds5}+g_{m3}v_{gs3}+g_{ds3}v_{ds3}+g_{m4}v_{gs4}+g_{ds4}v_{ds4}=0
+\end{Equation}
+电压矩阵为（这里$v_{in1}=v_{in2}=v_{ic}$，同时$v_{out1}=v_{out2}=v_{out}$）
+\begin{Equation}&[3]
+    \qquad
+    \begin{pmatrix}
+        v_{gs1}&v_{gs2}&v_{gs3}&v_{gs4}&v_{gs5}\\
+        v_{bs1}&v_{bs2}&v_{bs3}&v_{bs4}&v_{bs5}\\
+        v_{ds1}&v_{ds2}&v_{ds3}&v_{ds4}&v_{ds5}\\
+    \end{pmatrix}=
+    \begin{pmatrix}
+        v_{ic}-v_{p}&v_{ic}-v_{p}&v_{out}&v_{out}&0\\
+        -v_p&-v_p&0&0&0\\
+        v_{out}-v_p&v_{out}-v_p&v_{out}&v_{out}&v_p\\
+    \end{pmatrix}
+    \qquad
+\end{Equation}
+
+代入得到
+\begin{Split}&[4]
+    (g_{m1}+g_{m2})v_{ic}&+(g_{m3}+g_{m4}+g_{ds1}+g_{ds2}+g_{ds3}+g_{ds4})v_{out}\\
+    &-(g_{m1}+g_{m2}+g_{bs1}+g_{bs2}+g_{ds1}+g_{ds2})v_p=0
+\end{Split}\vspace{-3ex}
+\begin{Equation}&[5]
+    g_{ds5}v_p+(g_{m3}+g_{m4}+g_{ds3}+g_{ds4})v_{out}=0
+\end{Equation}
+由\xrefpeq{5}可以解出$v_p$关于$v_{out}$的表达式
+\begin{Equation}&[6]
+    v_p=-g_{ds5}^{-1}(g_{m3}+g_{m4}+g_{ds3}+g_{ds4})v_{out}
+\end{Equation}
+现在将\xrefpeq{6}代入\xrefpeq{4}
+\begin{Split}&[7]
+    \quad
+    (g_{m1}+&g_{m2})v_{ic}+[(g_{m3}+g_{m4}+g_{ds1}+g_{ds2}+g_{ds3}+g_{ds4})+\\
+    &g_{ds5}^{-1}(g_{m3}+g_{m4}+g_{ds3}+g_{ds4})(g_{m1}+g_{m2}+g_{bs1}+g_{bs2}+g_{ds1}+g_{ds2})
+    ]v_{out}=0\quad
+\end{Split}
+故有
+\begin{Split}&[8]
+    A_{vc}=\frac{v_{out}}{v_{ic}}=-(g_{m1}+&g_{m2})[(g_{m3}+g_{m4}+g_{ds1}+g_{ds2}+g_{ds3}+g_{ds4})+\\
+    &g_{ds5}^{-1}(g_{m3}+g_{m4}+g_{ds3}+g_{ds4})(g_{m1}+g_{m2}+g_{bs1}+g_{bs2}+g_{ds1}+g_{ds2})
+    ]^{-1}
+\end{Split}
+这个结果显然太复杂了，应用$g_{m}\gg g_{bs},g_{ds}$的近似以及$g_{m1}=g_{m2}$和$g_{m3}=g_{m4}$
+\begin{Equation}
+    A_{vc}=-2g_{m2}[2g_{m4}+4g_{ds5}^{-1}g_{m4}g_{m2}]^{-1}
+\end{Equation}
+约去一个$2$
+\begin{Equation}
+    A_{vc}=-g_{m2}[g_{m4}+2g_{ds5}^{-1}g_{m4}g_{m2}]^{-1}
+\end{Equation}
+这里$g_{m4}$相较$2g_{ds5}^{-1}g_{m4}g_{m2}$可以忽略
+\begin{Equation}
+    A_{vc}=-g_{m4}^{-1}g_{ds5}/2
+\end{Equation}
+将上述结论整理如下
+\begin{BoxFormula}[电流镜负载差分放大器--共模增益]
+    电流镜负载差分放大器中，共模增益为
+    \begin{Split}
+        A_{vc}=-(g_{m1}+&g_{m2})[(g_{m3}+g_{m4}+g_{ds1}+g_{ds2}+g_{ds3}+g_{ds4})+\\
+        &g_{ds5}^{-1}(g_{m3}+g_{m4}+g_{ds3}+g_{ds4})(g_{m1}+g_{m2}+g_{bs1}+g_{bs2}+g_{ds1}+g_{ds2})
+        ]^{-1}
+    \end{Split}
+    第一级近似为
+    \begin{Equation}
+        A_{vc}=-g_{m2}[g_{m4}+2g_{ds5}^{-1}g_{m4}g_{m2}]^{-1}
+    \end{Equation}
+    第二级近似为
+    \begin{Equation}
+        A_{vc}=-g_{m4}^{-1}g_{ds5}/2
+    \end{Equation}
+\end{BoxFormula}
+
+请注意，这里$A_{vc}=g_{m4}^{-1}g_{ds5}/2$，其数量级是$(g_mg_{ds}^{-1})^{-1}$，而通常增益的数量级是$(g_mg_{ds}^{-1})$，这说明该处共模增益相较差模增益是非常小的，符合\xref{fig:增益特性--电流镜差分放大器差模}和\xref{fig:增益特性--电流镜差分放大器共模}中的直观观察。
+
+这里我们引入共模抑制比（Common Mode Rejection Ratio, CMRR）的概念，其定义是
+\begin{BoxDefinition}[共模抑制比]
+    共模抑制比定义为差模增益和共模增益的绝对值之比
+    \begin{Equation}
+        \te{CMRR}=\frac{|v_{out}/v_{id}|}{|v_{out}/v_{ic}|}
+    \end{Equation}
+\end{BoxDefinition}
+谨慎的说，共模抑制比就是考察对于某一输出量$v_{out}$，差模输入$v_{id}$和共模输入$v_{ic}$在该输出形成的增益之比。这里$v_{out}=v_{out2}$，故有下式，并根据\xref{fml:电流镜负载差分放大器--右侧输出--差模增益}和\xref{fml:电流镜负载差分放大器--共模增益}
+\begin{Equation}
+    \qquad\qquad
+    \te{CMRR}=\frac{|A_{vd2}|}{|A_{vc}|}=\frac{g_{m2}(g_{ds2}+g_{ds4})^{-1}}{g_{m4}^{-1}g_{ds5}/2}=2g_{m2}g_{m4}(g_{ds2}+g_{ds4})^{-1}g_{ds5}^{-1}
+    \qquad\qquad
+\end{Equation}
+将该结论整理如下
+\begin{BoxFormula}[电流镜负载差分放大器--共模抑制比]
+    电流镜负载差分放大器中，共模抑制比为
+    \begin{Equation}
+        \te{CMRR}=2g_{m2}g_{m4}(g_{ds2}+g_{ds4})^{-1}g_{ds5}^{-1}
+    \end{Equation}
+\end{BoxFormula}
+这表明，电流镜负载差分放大器的共模抑制比达到了$(g_{m}g_{ds}^{-1})^2$的数量级！
+
+\subsection{电流镜负载差分放大器的频率特性}
+\xref{fig:电流镜负载差分放大器的电容分布}展示了电流镜负载差分放大器中所有的寄生电容的分布
+\begin{Figure}[电流镜负载差分放大器的电容分布]
+    \includegraphics[scale=0.8]{build/Chapter04B_15.fig.pdf}
+\end{Figure}
+\xref{fig:电流镜负载差分放大器的电容分布}中，注意到尾电流源$M_5$再次被忽略，这是因为频率特性的分析主要也是针对差模增益而言，因此可以适用计算差模增益的近似，另外如果不做该近似又要考虑电容将过于复杂。
+
+通过观察，我们注意到所有电容可以划分为以下七类，如\xref{fig:电流镜负载差分放大器的等效电容分布}所示
+\begin{itemize}
+    \item 输入节点电容$C_{in1},C_{in2}$，即$v_{in1},v_{in2}$和地之间的电容。
+    \item 输出节点电容$C_{out1},C_{out2}$，即$v_{out1},v_{out2}$和地之间的电容。
+    \item 输出和输入间的跨接电容$C_{m1},C_{m2}$，即$v_{in1},v_{in2}$分别与$v_{out1},v_{out2}$间的电容。
+    \item 输出和输出间的跨接电容$C_{m,out}$，即$v_{out1}$和$v_{out2}$之间的电容。
+\end{itemize}
+
+\begin{Figure}[电流镜负载差分放大器的等效电容分布]
+    \includegraphics[scale=0.8]{build/Chapter04B_16.fig.pdf}
+\end{Figure}
+
+\begin{BoxFormula}[电流镜负载差分放大器--电容]
+    电流镜负载差分放大器中，电容$C_{in1},C_{in2},C_{out1},C_{out2},C_{m1},C_{m2},C_{m,out}$分别为
+    \begin{Gather}
+        C_{in1}=C_{gs1}\\
+        C_{in2}=C_{gs2}\\
+        C_{out1}=C_{bd1}+C_{bd3}+C_{gs3}+C_{gs4}\\
+        C_{out2}=C_{bd2}+C_{bd4}+C_L\\
+        C_{m1}=C_{gd1}\\
+        C_{m2}=C_{gd2}\\
+        C_{m,out}=C_{gd4}
+    \end{Gather}
+\end{BoxFormula}
+
+这么多电容应当如何进行频率分析呢？首先$C_{in1},C_{in2}$不必考虑，这里不涉及高阻源输入的问题。其次假设$C_{m,out}$近似为零，由于$C_{m,out}$连接了两个输出节点，将其忽略可以极大程度的简化分析。这样一来，就只剩下$C_{out1},C_{m1},C_{out2},C_{m2}$，它们分别对应两个输出节点$v_{out1},v_{out2}$。
+
+对于$v_{out2}$处，电阻$R_{out2}$参见\xref{fml:电流镜负载差分放大器--右侧输出--输出电阻}，电容$C_{out2}+C_{m2}$
+\begin{Equation}
+    \qquad\qquad\qquad
+    \omega_{p1}=-R_{out2}^{-1}(C_{out2}+C_{m2})^{-1}=-(g_{ds2}+g_{ds4})(C_{out2}+C_{m2})^{-1}
+    \qquad\qquad\qquad
+\end{Equation}
+对于$v_{out1}$处，电阻$R_{out1}$参见\xref{fml:电流镜负载差分放大器--左侧输出--输出电阻}，电容$C_{out1}+C_{m1}$
+\begin{Equation}
+    \omega_{p2}=-R_{out1}^{-1}(C_{out1}+C_{m1})^{-1}=-g_{m3}(C_{out1}+C_{m1})^{-1}
+\end{Equation}
+这里$\omega_{p1},\omega_{p2}$对应的却分别是$v_{out2},v_{out1}$是有意为之，因为按照前面的惯例$\omega_{p1},\omega_{p2}$是按照极点频率从低到高进行排序，而由于$C_{out2}$中包含了$C_L$我们又知道负载电容$C_L$远大于所有的寄生电容，因此$v_{out2}$对应的一定是频率最低的主极点，故记为$\omega_{p1}$。将结论整理如下。
+\begin{BoxFormula}[电流镜负载差分放大器--零极点]
+    电流镜负载差分放大器中，极点是
+    \begin{Gather}
+        \omega_{p1}=-(g_{ds2}+g_{ds4})(C_{out2}+C_{m2})^{-1}\\
+        \omega_{p2}=-g_{m3}(C_{out1}+C_{m1})^{-1}
+    \end{Gather}
+\end{BoxFormula}
+应指出，这里仅考虑了与节点相关极点，没有考虑$C_{m1},C_{m2}$以及$C_{m,out}$导致的零点。
+
+\subsection{电流镜负载差分放大器的噪声特性}
+\xref{fig:电流镜负载差分放大器的噪声}展示了电流镜负载差分放大器中的$M_1,M_2,M_3,M_4$噪声分布，并忽略$M_5$的噪声。
+\begin{Figure}[电流镜负载差分放大器的噪声]
+    \includegraphics[scale=0.8]{build/Chapter04B_17.fig.pdf}
+\end{Figure}
+汲取\xref{subsec:反相放大器的噪声特性}的经验，这一次我们也用直观的方式来分析噪声！
+\begin{itemize}
+    \item $M_2,M_4$分别通过$g_{m2},g_{m4}$在右端产生噪声电流。
+    \item $M_1,M_3$分别通过$g_{m1},g_{m3}$在左端产生噪声电流并被电流镜复制至右侧。
+    \item 右侧的噪声电流通过$R_{out2}=(g_{ds2}+g_{ds4})^{-1}$转化为噪声电压。
+\end{itemize}
+故$M_1,M_2,M_3,M_4$四者分别在输出端产生的噪声电压为（符号实际并不重要了）
+\begin{Gather}
+    v_{n,out1}=+g_{m1}(g_{ds2}+g_{ds4})^{-1}v_{n1}\\
+    v_{n,out2}=-g_{m2}(g_{ds2}+g_{ds4})^{-1}v_{n2}\\
+    v_{n,out3}=-g_{m3}(g_{ds2}+g_{ds4})^{-1}v_{n3}\\
+    v_{n,out4}=-g_{m4}(g_{ds2}+g_{ds4})^{-1}v_{n4}
+\end{Gather}
+将上述四者平方相加，并考虑到$g_{m1}=g_{m2}$以及$g_{m3}=g_{m4}$
+\begin{Equation}
+    v_{n,out}^2=[g_{m2}^2(v_{n1}^2+v_{n2}^2)+g_{m4}^2(v_{n3}^2+v_{n4}^2)](g_{ds2}+g_{ds4})^{-2}
+\end{Equation}
+将噪声折算到输入端口，并考虑到$A_{vd2}=g_{m2}(g_{ds2}+g_{ds4})^{-1}$
+\begin{Equation}
+    v_{n,in}^2=\frac{v_{n,out}^2}{A_{vd2}^2}=v_{n1}^2+v_{n2}^2+\qty(\frac{g_{m4}}{g_{m2}})^2(v_{n3}^2+v_{n4}^2)
+\end{Equation}
+整理如下
+\begin{BoxFormula}[电流镜负载反相放大器--噪声]
+    电流镜负载反相放大器中，等效输入噪声为
+    \begin{Equation}
+        v_{n,in}^2=v_{n1}^2+v_{n2}^2+\qty(\frac{g_{m4}}{g_{m2}})^2(v_{n3}^2+v_{n4}^2)
+    \end{Equation}
+\end{BoxFormula}
+
+\subsection{电流源负载差分放大器的大信号特性}
+\xref{fig:电流源负载差分放大器}是电流源负载差分放大器，它和前面介绍的电流镜负载差分放大器有几点不同
+\begin{itemize}
+    \item 负载$M_3,M_4$从电流镜（一个二极管一个电流源）变为了两个电流源。
+    \item 负载是对称的，故两侧的输出完全对称，可以差分输出。
+\end{itemize}
+
+\begin{Figure}[电流源负载差分放大器]
+    \includegraphics[scale=0.8]{build/Chapter04B_07.fig.pdf}
+\end{Figure}
+
+由于这里$M_5$和$M_3,M_4$均为独立电流源，故$V_{G3},V_{G5}$要谨慎的保证$I_{D3}+I_{D4}=I_{SS}$的成立，否则电路无法工作在饱和区。这一点上，电流源负载和电流镜负载相当不同的
+\begin{itemize}
+    \item 电流镜负载中$M_3,M_4$通过电流镜结构保证了$I_{D3}=I_{D4}$，但是这个结构本身并不会约束$I_{D3},I_{D4}$的值，尾电流源在保证$I_{D3}+I_{D4}=I_{SS}$时确定$I_{D3},I_{D4}$的值，不会冲突。
+    \item 电流源负载中$M_3,M_4$通过连接相同的偏置$V_{G3}$获得$I_{D3}=I_{D4}$，并确定了$I_{D3},I_{D4}$的值，然而，尾电流源$I_{D3}+I_{D4}=I_{SS}$也试图确定$I_{D3},I_{D4}$的值。换言之，$V_{G3}$和$V_{G5}$对电流$I_{D3},I_{D4}$产生了过约束。$V_{G3}$和$V_{G5}$若取值不当，则可能有管子无法处于饱和区。
+\end{itemize}
+
+电流源负载差分放大器的差模工作原理可以论述如下
+\begin{itemize}
+    \item 当$v_{IN1}>v_{IN2}$，$i_{D1}>i_{D3}=i_{D4}>i_{D2}$，$M_1,M_4$进入线性区。
+    \item 当$v_{IN1}<v_{IN2}$，$i_{D1}<i_{D3}=i_{D4}<i_{D2}$，$M_2,M_3$进入线性区。
+\end{itemize}
+
+\xref{fig:电流源负载的差分放大器的差模特性}和\xref{fig:电流源负载的差分放大器的差模输出电压}展示了电流源负载差分放大器的差模特性，这里要说明的是为什么比过去多了一张\xref{fig:电流源负载的差分放大器的差模输出电压}？因为在\xref{fig:增益特性--电流源差分放大器差模}中$A_{vd}$是指$v_{ID}$到$v_{OD}$的增益$A_{vd,d}$，而$v_{OD}=v_{OUT1}-v_{OUT2}$作为一个差分电压无法合并至\xref{fig:电压特性--电流源差分放大器差模}，因此需要单独的\xref{fig:电流源负载的差分放大器的差模输出电压}展示$v_{OD}$随$v_{ID}$的变化。
+
+\begin{Figure}[电流源负载的差分放大器的差模特性]
+    \begin{FigureSub}[电压特性;电压特性--电流源差分放大器差模]
+        \includegraphics[scale=0.6]{build/Chapter04B_02_0.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[电流特性;电流特性--电流源差分放大器差模]
+        \includegraphics[scale=0.6]{build/Chapter04B_02_1.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.75cm}
+    \begin{FigureSub}[差模增益;增益特性--电流源差分放大器差模]
+        \includegraphics[scale=0.6]{build/Chapter04B_02_8.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[$M_5$管工作区分析;M5管工作区分析--电流源差分放大器差模]
+        \includegraphics[scale=0.6]{build/Chapter04B_02_6.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.75cm}
+    \begin{FigureSub}[$M_1$管工作区分析;M1管工作区分析--电流源差分放大器差模]
+        \includegraphics[scale=0.6]{build/Chapter04B_02_2.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[$M_2$管工作区分析;M2管工作区分析--电流源差分放大器差模]
+        \includegraphics[scale=0.6]{build/Chapter04B_02_3.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.75cm}
+    \begin{FigureSub}[$M_3$管工作区分析;M3管工作区分析--电流源差分放大器差模]
+        \includegraphics[scale=0.6]{build/Chapter04B_02_4.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[$M_4$管工作区分析;M4管工作区分析--电流源差分放大器差模]
+        \includegraphics[scale=0.6]{build/Chapter04B_02_5.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+\begin{Figure}[电流源负载的差分放大器的差模输出电压]
+    \includegraphics[scale=0.6]{build/Chapter04B_02_7.fig.pdf}
+\end{Figure}
+
+关于\xref{fig:电流源负载的差分放大器的差模特性}和\xref{fig:电流源负载的差分放大器的差模输出电压}，有三个参数要指定，即$V_{G5},V_{G3}$和$V_{IC}$，这里仍取$V_{IC}=\SI{3.0}{V}$，而这里$V_{G5},V_{G3}$也是通过电流镜偏置的，我们分别令$I_{SS}=\SI{0.6}{mA}$以及$I_{D3}=I_{D4}=\SI{0.3}{mA}$。
+
+$M_1,M_2$的饱和条件是
+\begin{Equation}
+    v_{DS1}>v_{GS1}-V_{T1}\qquad
+    v_{DS2}>v_{GS2}-V_{T2}
+\end{Equation}
+代入$v_{DS}=v_{OUT}-v_{P}$以及$v_{GS}=v_{IN}-v_{P}$
+\begin{Equation}
+    v_{OUT1}-v_P>v_{IN1}-v_{P}-V_{T1}\qquad
+    v_{OUT2}-v_P>v_{IN2}-v_{P}-V_{T2}
+\end{Equation}
+注意到$v_{P}$可以被约掉，并考虑到饱和时近似有$v_{IN1}=v_{IN2}=V_{IC}$
+\begin{Equation}
+    v_{OUT1}>V_{IC}-V_{T1}\qquad
+    v_{OUT2}>V_{IC}-V_{T2}
+\end{Equation}
+$M_3,M_4$的饱和条件是
+\begin{Equation}
+    v_{DS3}>v_{GS3}-V_{T3}\qquad
+    v_{DS4}>v_{GS4}-V_{T4}
+\end{Equation}
+代入$v_{DS}=V_{DD}-v_{OUT}$以及$v_{GS}-V_T=V_{ON}$
+\begin{Equation}
+    V_{DD}-v_{OUT1}>V_{ON3}\qquad
+    V_{DD}-v_{OUT2}>V_{ON4}
+\end{Equation}
+整理得到
+\begin{Equation}
+    v_{OUT1}<V_{DD}-V_{ON3}\qquad
+    v_{OUT2}<V_{DD}-V_{ON4}
+\end{Equation}
+将结论整理如下
+\begin{BoxFormula}[电流源负载差分放大器--差模--饱和分析]
+    电流源负载差分放大器中，在差模下，$M_1,M_2,M_3,M_4$的饱和条件为
+    \begin{Gather}
+        v_{OUT1}>V_{IC}-V_{T1}\qquad
+        v_{OUT2}>V_{IC}-V_{T2}\\
+        v_{OUT1}<V_{DD}-V_{ON3}\qquad
+        v_{OUT2}<V_{DD}-V_{ON4}
+    \end{Gather}
+\end{BoxFormula}
+这里有一个误区，关于$v_{OUT1},v_{OUT2}$，似乎$M_1,M_2$给出了下限而$M_3,M_4$给出了其上限？事实上这并不正确，以$M_1$的$v_{OUT1}>V_{IC}-V_{T1}$为例，由于$v_{OUT1},v_{OUT2}$是沿相反方向变化的，这实际上也同时指定了$v_{OUT2}$的一个上限，但这个上限具体是多少我们并不知道。更一般的说，$M_1,M_2$和$M_3,M_4$分别给出了两组不同的饱和区间，但通过理论分析，我们只能知道$M_1,M_2$的区间下限和$M_3,M_4$的区间上限，最终实际的饱和区间要看仿真结果
+\begin{itemize}
+    \item 在\xref{fig:M1管工作区分析--电流源差分放大器差模}\hspace{0.08em}和\xref{fig:M2管工作区分析--电流源差分放大器差模}\hspace{0.12em}中，我们看到$M_1,M_2$的饱和点是较靠外的。
+    \item 在\xref{fig:M3管工作区分析--电流源差分放大器差模}和\xref{fig:M4管工作区分析--电流源差分放大器差模}中，我们看到$M_3,M_4$的饱和点是较靠内的。
+    \item 在\xref{fig:电压特性--电流源差分放大器差模}中，外侧的大点是$M_1,M_2$的饱和点，内侧的小点是$M_3,M_4$的饱和点，由此可见，这里决定放大器饱和工作状态的是$M_3,M_4$！不过该结果可能会与参数的选取有关，未必对于所有的电流源差分放大器都是适用的。\xref{fig:电压特性--电流源差分放大器差模}中的蓝虚线和红虚线分别就是\xref{fml:电流源负载差分放大器--差模--饱和分析}中$M_1,M_2$和$M_3,M_4$的饱和条件，它们分别对准下侧大点和上侧小点。
+    \item 在\xref{fig:M5管工作区分析--电流源差分放大器差模}中，注意到$M_5$在$v_{ID}$较大时也会退出饱和区，此时$I_{SS}$开始减小。
+\end{itemize}
+
+现在进行共模特性分析，电流源负载差分放大器的共模工作原理和电流镜负载差分放大器完全相同，具体而言：当$v_{IC}$过小$M_5$退出饱和，当$v_{IC}$过大$M_1,M_2$退出饱和。
+
+$M_2$的饱和条件是
+\begin{Equation}
+    v_{DS2}>v_{GS2}-V_{T2}
+\end{Equation}
+代入$v_{DS2}>v_{OUT2}-v_P$和$v_{GS2}=v_{IC}-v_P$
+\begin{Equation}
+    v_{OUT2}-v_P>v_{IC}-v_{P}-V_{T2}
+\end{Equation}
+注意到$v_{P}$是可以被约掉的
+\begin{Equation}
+    v_{IC}<v_{OUT2}+V_{T2}
+\end{Equation}
+注意到$v_{OUT2}=V_{DD}-v_{DS4}+V_T$
+\begin{Equation}
+    v_{IC}<V_{DD}-v_{DS4}+V_T
+\end{Equation}
+这里是电流源负载和电流镜负载共模饱和分析唯一的一处不同！由于$M_3,M_4$现在都是电流源了，因此不再是$v_{DS4}=V_{ON4}+V_{T4}$，而是改为$v_{DS4}=V_{ON4}$，这样就有
+\begin{Equation}
+    v_{IC}<V_{DD}-V_{ON4}-V_{T4}+V_{T2}
+\end{Equation}
+% 若近似认为$V_{T4}+V_{T2}$，这里实际上就是$v_{IC}<V_{DD}-V_{ON4}$，即电源电压减掉一个过驱电压。
+
+$M_5$的饱和条件是
+\begin{Equation}
+    v_{DS5}>v_{GS5}-V_{T5}
+\end{Equation}
+代入$v_{DS5}=v_P$以及$v_{GS5}-V_{T5}=V_{ON5}$
+\begin{Equation}
+    v_{P}>V_{ON5}
+\end{Equation}
+这里$v_P$是未知的，继续代入$v_{P}=v_{IC}-v_{GS2}$
+\begin{Equation}
+    v_{IC}-v_{GS2}>V_{ON5}
+\end{Equation}
+这里$v_{GS2}=V_{ON2}+V_{T2}$，得到
+\begin{Equation}
+    v_{IC}>V_{ON5}+V_{ON2}+V_{T2}
+\end{Equation}
+这里电流源负载的$M_5$的共模饱和分析结果与电流镜负载中完全一致。
+
+\begin{BoxFormula}[电流源负载差分放大器--共模--饱和分析]
+    电流源负载差分放大器中，在共模下，$M_2,M_5$的饱和将确保所有管的饱和
+    \begin{Equation}
+        v_{IC}<V_{DD}-V_{ON4}+V_{T2}\qquad v_{IC}>V_{ON5}+V_{ON2}+V_{T2}
+    \end{Equation}
+\end{BoxFormula}
+
+\begin{BoxFormula}[电流源负载差分放大器--共模--饱和输入电压范围--最大值]
+    电流镜负载差分放大器，在共模下，当所有管饱和时，输入电压的最大值是
+    \begin{Equation}
+        V_{IC,\max}=V_{DD}-V_{ON4}+V_{T2}
+    \end{Equation}
+\end{BoxFormula}
+
+\begin{BoxFormula}[电流源负载差分放大器--共模--饱和输入电压范围--最小值]
+    电流镜负载差分放大器，在共模下，当所有管饱和时，输出电压的最小值是
+    \begin{Equation}
+        V_{IC,\min}=V_{ON5}+V_{ON2}+V_{T2}
+    \end{Equation}
+\end{BoxFormula}
+若比较\xref{fml:电流镜负载差分放大器--共模--饱和输入电压范围--最大值}和\xref{fml:电流源负载差分放大器--共模--饱和输入电压范围--最大值}，我们会注意到两者共模饱和分析唯一的差别是
+\begin{itemize}
+    \item 电流镜负载差分放大器中$V_{IC,\max}=V_{DD}-V_{ON4}-V_{T4}+V_{T2}$。
+    \item 电流源负载差分放大器中$V_{IC,\max}=V_{DD}-V_{ON4}+V_{T2}$。
+\end{itemize}
+这本质上是因为从电流镜到电流源，$v_{DS4}$从$v_{DS4}=V_{ON4}+V_T$变为$v_{DS4}=V_{ON4}$，换言之，电流源负载中不涉及二极管，故在$v_{DS4}$上节约了一个阈值电压。由此我们可以得到这样一个结论：电流源负载差分放大器具有比电流镜负载差分放大器更大的共模输入范围ICMR。然而，遗憾的是，这个结论实际上并不正确，是粗糙的理论分析带来的错误！稍后将具体说明。
+
+\xref{fig:电流源负载的差分放大器的共模特性}展示了电流源负载差分放大器的共模特性，我们观察到
+\begin{itemize}
+    \item \xref{fig:电压特性--电流镜差分放大器共模}中，从左至右依次是$M_1$截止、$M_3,M_4$饱和、$M_5$饱和、$M_1,M_2$饱和（曲线上依次是大点、小点、小点、大点）。正如前面论述的那样，后两者确定了ICMR的范围。
+    \item \xref{fig:电压特性--电流镜差分放大器共模}中，注意到在ICMR范围内，共模输出电压并不是定值，而是会随着$v_{IC}$的增大缓慢减小。这一点从\xref{fig:增益特性--电流源差分放大器共模}看出，电流源负载共模增益约为$A_{vc}=-0.7$，而如果比较先前\xref{fig:增益特性--电流镜差分放大器共模}，电流镜负载的共模增益仅有不到$A_{vc}=-0.01$！这里$A_{vc}$显著增大了。
+\end{itemize}
+
+
+\newpage
+\begin{Figure}[电流源负载的差分放大器的共模特性]
+    \begin{FigureSub}[电压特性;电压特性--电流源差分放大器共模]
+        \includegraphics[scale=0.6]{build/Chapter04B_04_0.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[电流特性;电流特性--电流源差分放大器共模]
+        \includegraphics[scale=0.6]{build/Chapter04B_04_1.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.75cm}
+    \begin{FigureSub}[共模增益;增益特性--电流源差分放大器共模]
+        \includegraphics[scale=0.6]{build/Chapter04B_04_7.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[$M_5$管工作区分析;M5管工作区分析--电流源差分放大器共模]
+        \includegraphics[scale=0.6]{build/Chapter04B_04_6.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.75cm}
+    \begin{FigureSub}[$M_1$管工作区分析;M1管工作区分析--电流源差分放大器共模]
+        \includegraphics[scale=0.6]{build/Chapter04B_04_2.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[$M_2$管工作区分析;M2管工作区分析--电流源差分放大器共模]
+        \includegraphics[scale=0.6]{build/Chapter04B_04_3.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.75cm}
+    \begin{FigureSub}[$M_3$管工作区分析;M3管工作区分析--电流源差分放大器共模]
+        \includegraphics[scale=0.6]{build/Chapter04B_04_4.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[$M_4$管工作区分析;M4管工作区分析--电流源差分放大器共模]
+        \includegraphics[scale=0.6]{build/Chapter04B_04_5.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+现在让我们回到前面的问题。理论预期电流源负载差分放大器具有更大的ICMR，然而，比较\xref{fig:电压特性--电流源差分放大器共模}和\xref{fig:电压特性--电流镜差分放大器共模}就会发现，电流源负载的$V_{IC,\max}$甚至比电流镜负载的$V_{IC,\max}$的更小了（理论分析认为前者要比后者大一个阈值电压）。换言之，仿真表明ICMR不仅没有按理论预期变大，反而变小了！这里，理论分析犯的错误是理所当然的认为作为电流源的$M_4$刚好处于饱和，故有$v_{DS4}=V_{ON4}$，但这不正确，按$I_{D4}=\SI{0.03}{mA}$这里$v_{DS4}=\SI{0.7}{V}$，然而我们在\xref{fig:电压特性--电流源差分放大器共模}中看到，当$M_4$退出饱和时$v_{DS4}=V_{DD}-v_{OUT2}$已经接近$v_{DS4}=\SI{2.0}{V}$。这背后的本质逻辑是：电流镜负载时二极管接法的$M_3$确定了$v_{DS4}=V_{ON4}+V_{T4}$，电流源负载时的$v_{DS4}$是无约束的，取决于外部情况，假定$v_{DS4}=V_{ON4}$并不合理。这也解释了为什么电流源负载下共模输出不随$v_{IC}$恒定，因为决定输出的$v_{DS4}$取决于外部，当然会受到$v_{IC}$的影响。
+
+最后，我们再考虑一个问题，前面提到$V_{G3},V_{G5}$的偏置要谨慎的保证$I_{D3}+I_{D4}=I_{SS}$，我们当然期望如此，但由于器件的工艺误差，仍可能会出现$I_{D3}+I_{D4}\neq I_{SS}$的情况。此时，共模输出将会发生变化，使有一方进入线性区，这是我们要避免的。为此，共模反馈可以被引入以在$I_{D3}+I_{D4}\neq I_{SS}$稳定共模输出，保障放大器的正常工作。后续会再讨论共模反馈的细节。
+
+\subsection{电流源负载差分放大器的小信号特性}
+差模增益的小信号电路如\xref{fig:差模增益--电流源负载差分}所示，列出$v_{out1}$和$v_{out2}$的方程\setpeq{差模增益--电流源负载差分}
+\begin{Gather}
+    g_{m1}v_{gs1}+g_{ds1}v_{ds1}+g_{ds3}v_{ds3}=0\\
+    g_{m2}v_{gs2}+g_{ds2}v_{ds2}+g_{ds4}v_{ds4}=0
+\end{Gather}
+电压矩阵为（这里$v_{in1}=+v_{id}/2$而$v_{in2}=-v_{id}/2$）
+\begin{Equation}&[3]
+    \qquad\qquad\qquad
+    \begin{pmatrix}
+        v_{gs1}&v_{gs2}&v_{gs3}&v_{gs4}\\
+        v_{bs1}&v_{bs2}&v_{bs3}&v_{bs4}\\
+        v_{ds1}&v_{ds2}&v_{ds3}&v_{ds4}\\
+    \end{pmatrix}=
+    \begin{pmatrix}
+        +v_{id}/2&-v_{id}/2&0&0\\
+        0&0&0&0\\
+        v_{out1}&v_{out2}&v_{out1}&v_{out2}\\
+    \end{pmatrix}
+    \qquad\qquad\qquad
+\end{Equation}
+代入得到
+\begin{Gather}
+    +g_{m1}v_{id}/2+(g_{ds1}+g_{ds3})v_{out1}=0\xlabelpeq{4}\\
+    -g_{m1}v_{id}/2+(g_{ds2}+g_{ds4})v_{out2}=0\xlabelpeq{5}
+\end{Gather}
+这样就得到$v_{out1},v_{out2}$
+\begin{Gather}
+    v_{out1}=-g_{m1}(g_{ds1}+g_{ds3})^{-1}v_{id}/2\\
+    v_{out2}=+g_{m2}(g_{ds2}+g_{ds4})^{-1}v_{id}/2
+\end{Gather}
+由于差分放大器的器件是对称的，我们可以都用$M_2,M_4$的$g_{m},g_{ds}$来表示结果
+\begin{Gather}
+    v_{out1}=-g_{m2}(g_{ds2}+g_{ds4})^{-1}v_{id}/2\\
+    v_{out2}=+g_{m2}(g_{ds2}+g_{ds4})^{-1}v_{id}/2
+\end{Gather}
+
+\begin{Figure}[电流源负载差分放大器的小信号电路]
+    \begin{FigureSub}[差模增益;差模增益--电流源负载差分]
+        \includegraphics[scale=0.8]{build/Chapter04B_12.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.7cm}
+    \begin{FigureSub}[输出电阻;输出电阻--电流源负载差分]
+        \includegraphics[scale=0.8]{build/Chapter04B_13.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.7cm}
+    \begin{FigureSub}[共模增益;共模增益--电流源负载差分]
+        \includegraphics[scale=0.8]{build/Chapter04B_14.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+输出端的差分电压$v_{od}$是$v_{out1},v_{out2}$的差
+\begin{Equation}
+    v_{od}=-g_{m2}(g_{ds2}+g_{ds4})^{-1}v_{id}
+\end{Equation}
+我们用$A_{vd1},A_{vd2},A_{vd,d}$表示$v_{id}$到$v_{out1},v_{out2},v_{od}$的增益
+\begin{Gather}[10pt]
+    A_{vd1}=\frac{v_{out1}}{v_{id}}=-g_{m2}(g_{ds2}+g_{ds4})^{-1}/2\\
+    A_{vd2}=\frac{v_{out2}}{v_{id}}=+g_{m2}(g_{ds2}+g_{ds4})^{-1}/2\\
+    A_{vd,d}=\frac{v_{od}}{v_{id}}=-g_{m2}(g_{ds2}+g_{ds4})^{-1}
+\end{Gather}
+将结论整理如下
+\begin{BoxFormula}[电流源负载差分放大器--差分输出--差模增益]
+    电流源负载差分放大器中，差分输出的差模增益为
+    \begin{Equation}
+        A_{vd,d}=-g_{m2}(g_{ds2}+g_{ds4})^{-1}
+    \end{Equation}
+\end{BoxFormula}
+\begin{BoxFormula}[电流源负载差分放大器--右侧输出--差模增益]
+    电流源负载差分放大器中，右侧的差模增益为
+    \begin{Equation}
+        A_{vd2}=+g_{m2}(g_{ds2}+g_{ds4})^{-1}/2
+    \end{Equation}
+\end{BoxFormula}
+\begin{BoxFormula}[电流源负载差分放大器--左侧输出--差模增益]
+    电流源负载差分放大器中，左侧的差模增益为
+    \begin{Equation}
+        A_{vd1}=-g_{m2}(g_{ds2}+g_{ds4})^{-1}/2
+    \end{Equation}
+\end{BoxFormula}
+电流源负载差分放大器的输出方式是可以灵活选择的，取决于$v_{out}$
+\begin{itemize}
+    \item 若$v_{out}=v_{od}$，此时输出是差分的，增益$A_{vd}=A_{vd,d}$，比较\xref{fml:电流源负载差分放大器--差分输出--差模增益}和\xref{fml:电流镜负载差分放大器--右侧输出--差模增益}可以看出，使用差分输出时，电流源负载差分放大器可以实现于电流镜负载差分放大器相当的增益！不计正负，两者都达到了$g_{m2}(g_{ds2}+g_{ds4})^{-1}$即电流镜负载反相器的增益水平。
+    \item 若$v_{out}=v_{out1},v_{out2}$，此时输出是单端的，增益$A_{vd}=A_{vd1},A_{vd2}$，分别为负或正。这表明，尽管电流源负载差分放大器具有差分输出，但我们可以通过简单的舍弃一个输出端将其变为单端输出，然而，这样做的代价是，此时的增益只有差分输出的一半！即增益的大小从$g_{m2}(g_{ds2}+g_{ds4})^{-1}$减小到了$g_{m2}(g_{ds2}+g_{ds4})^{-1}/2$，换言之，其不适合单端输出。
+\end{itemize}
+输出电阻的小信号电路如\xref{fig:输出电阻--电流源负载差分}所示，这里我们只考虑差分输出下的输出电阻$R_{out,d}$。
+
+此时\xrefpeq[差模增益--电流源负载差分]{4}和\xrefpeq[差模增益--电流源负载差分]{5}相应修改为
+\begin{Gather}
+    (g_{ds1}+g_{ds3})v_{out1}=+i_{od}\setpeq{4}\\
+    (g_{ds2}+g_{ds4})v_{out2}=-i_{od}\setpeq{5}
+\end{Gather}
+两式相减，考虑到$(g_{ds1}+g_{ds3})=(g_{ds2}+g_{ds4})$以及$v_{out1}-v_{out2}=v_{od}$
+\begin{Equation}
+    (g_{ds2}+g_{ds4})v_{od}=2i_{od}
+\end{Equation}
+由此得到
+\begin{Equation}
+    R_{out,d}=\frac{v_{od}}{i_{od}}=2(g_{ds2}+g_{ds4})^{-1}
+\end{Equation}
+这是需要注意的。差分输出下，输出电阻并不是$(g_{ds2}+g_{ds4})^{-1}$，而是翻了一倍！
+\begin{BoxFormula}[电流源负载差分放大器--差分输出--差模增益]
+    电流源负载差分放大器中，差分输出的输出电阻为
+    \begin{Equation}
+        R_{out,d}=2(g_{ds2}+g_{ds4})^{-1}
+    \end{Equation}
+\end{BoxFormula}
+共模增益的小信号电路如\xref{fig:共模增益--电流源负载差分}所示，列出$v_{out},v_p$处的方程\setpeq{差模增益--电流源负载差分}
+\begin{Gather}
+    g_{m1}v_{gs1}+g_{bs1}v_{bs1}+g_{ds1}v_{ds1}+g_{m2}v_{gs2}+g_{bs2}v_{bs2}+g_{ds3}v_{ds3}+g_{ds4}v_{ds4}=0\\
+    g_{ds5}v_{ds5}+g_{ds3}v_{ds3}+g_{ds4}v_{ds4}=0
+\end{Gather}
+电压矩阵为（这里$v_{in1}=v_{in2}=v_{ic}$，同时$v_{out1}=v_{out2}=v_{oc}$）
+\begin{Equation}
+    \qquad\quad
+    \begin{pmatrix}
+        v_{gs1}&v_{gs2}&v_{gs3}&v_{gs4}&v_{gs5}\\
+        v_{bs1}&v_{bs2}&v_{bs3}&v_{bs4}&v_{bs5}\\
+        v_{ds1}&v_{ds2}&v_{ds3}&v_{ds4}&v_{ds5}\\
+    \end{pmatrix}=
+    \begin{pmatrix}
+        v_{ic}-v_p&v_{ic}-v_p&0&0&0\\
+        -v_p&-v_p&0&0&0\\
+        v_{oc}-v_p&v_{oc}-v_p&v_{oc}&v_{oc}&v_p\\
+    \end{pmatrix}
+    \qquad\quad
+\end{Equation}
+代入得到
+\begin{Gather}
+    (g_{m1}+g_{m2})v_{ic}+(g_{ds1}+g_{ds2}+g_{ds3}+g_{ds4})v_{oc}-(g_{m1}+g_{m2}+g_{bs1}+g_{bs2}+g_{ds1}+g_{ds2})v_p=0\xlabelpeq{4}\\
+    g_{ds5}v_p+(g_{ds3}+g_{ds4})v_{oc}=0\xlabelpeq{5}
+\end{Gather}
+由\xrefpeq{5}可以得到
+\begin{Equation}&[6]
+    v_{p}=-g_{ds5}^{-1}(g_{ds3}+g_{ds4})v_{oc}
+\end{Equation}
+将\xrefpeq{6}代入\xrefpeq{4}，得到
+\begin{Split}&[7]
+    (g_{m1}+g_{m2})v_{ic}+[&(g_{ds1}+g_{ds2}+g_{ds3}+g_{ds4})+\\
+    g_{ds5}^{-1}&(g_{ds3}+g_{ds4})(g_{m1}+g_{m2}+g_{bs1}+g_{bs2}+g_{ds1}+g_{ds2})]v_{oc}=0
+\end{Split}
+因此
+\begin{Split}
+    A_{vc}=\frac{v_{oc}}{v_{ic}}=-(g_{m1}+g_{m2})[&(g_{ds1}+g_{ds2}+g_{ds3}+g_{ds4})+\\
+    g_{ds5}^{-1}&(g_{ds3}+g_{ds4})(g_{m1}+g_{m2}+g_{bs1}+g_{bs2}+g_{ds1}+g_{ds2})]^{-1}
+\end{Split}
+这个结果很复杂，应用$g_{m}\gg g_{bs},g_{ds}$的近似以及$g_{m1}=g_{m2}$和$g_{m3}=g_{m4}$
+\begin{Equation}
+    A_{vc}=-2g_{m2}\qty[2(g_{ds2}+g_{ds4})+4g_{ds5}^{-1}g_{ds4}g_{m2}]^{-1}
+\end{Equation}
+这里$2$是可以被约掉的
+\begin{Equation}
+    A_{vc}=-g_{m2}\qty[(g_{ds2}+g_{ds4})+2g_{ds5}^{-1}g_{ds4}g_{m2}]^{-1}
+\end{Equation}
+如果我们认为方括号中包含$g_m$的第二项远大于第一项，则有
+\begin{Equation}
+    A_{vc}=-g_{ds4}^{-1}g_{ds5}/2
+\end{Equation}
+如果我们认为$g_{ds4}=g_{ds5}$，则可以得到相当简洁的结果
+\begin{Equation}
+    A_{vc}=-1/2
+\end{Equation}
+将结果整理如下
+\begin{BoxFormula}[电流源负载差分放大器--共模增益]
+    电流源负载差分放大器中，共模增益为
+    \begin{Split}
+        A_{vc}=-(g_{m1}+g_{m2})[&(g_{ds1}+g_{ds2}+g_{ds3}+g_{ds4})+\\
+        g_{ds5}^{-1}&(g_{ds3}+g_{ds4})(g_{m1}+g_{m2}+g_{bs1}+g_{bs2}+g_{ds1}+g_{ds2})]^{-1}
+    \end{Split}
+    第一级近似为
+    \begin{Equation}
+        A_{vc}=-g_{m2}\qty[(g_{ds2}+g_{ds4})+2g_{ds5}^{-1}g_{ds4}g_{m2}]^{-1}
+    \end{Equation}
+    第二级近似为
+    \begin{Equation}
+        A_{vc}=-g_{ds4}^{-1}g_{ds5}/2
+    \end{Equation}
+    第三级近似为
+    \begin{Equation}
+        A_{vc}=-1/2
+    \end{Equation}
+\end{BoxFormula}
+比较\xref{fml:电流镜负载差分放大器--共模增益}和\xref{fml:电流源负载差分放大器--共模增益}，我们注意到
+\begin{itemize}
+    \item 电流镜负载下，共模增益$A_{vc}=-g_{m4}^{-1}g_{ds5}/2$。
+    \item 电流源负载下，共模增益$A_{vc}=-g_{ds4}^{-1}g_{ds4}/2=-1/2$
+\end{itemize}
+换言之，电流源负载的共模增益$A_{vc}$变得更大了！这一点通过\xref{fig:增益特性--电流镜差分放大器共模}和\xref{fig:增益特性--电流源差分放大器共模}的对比也可以看出。然而这能否说明，对于差分放大器，电流源负载的共模抑制特性不如电流镜负载？并不能！至少这一点要分情况讨论。首先，如果这里试图用$\te{CMRR}=|A_{vd,d}/A_{vc}|$计算共模抑制比，那是绝对错误的，$A_{vd,d}$是$v_{id}$至$v_{od}$的增益，$A_{vc}$是$v_{ic}$至$v_{oc}$即$v_{out1}=v_{out2}$的增益。在计算$\te{CMRR}$时，必须要确保上下的差模增益和共模增益，是到同一$v_{out}$的增益！
+
+若电流源负载差分放大器使用单端输出，此时$v_{out}=v_{out2}$，则有
+\begin{Equation}
+    \qquad\qquad\quad
+    \te{CMRR}=\frac{|A_{vd2}|}{|A_{vc}|}=\frac{g_{m2}(g_{ds2}+g_{ds4})^{-1}/2}{1/2}=g_{m2}(g_{ds2}+g_{ds4})^{-1}
+    \qquad\qquad\quad
+\end{Equation}
+若电流源负载差分放大器使用差分输出，此时$v_{out}=v_{od}$，则有
+\begin{Equation}
+    \te{CMRR}=\frac{|A_{vd,d}|}{|A_{vc,d}|}=\frac{g_{m2}(g_{ds2}+g_{ds4})}{0}=\infty
+\end{Equation}
+这里$A_{vc,d}=v_{od}/v_{ic}$代表$v_{ic}$到$v_{od}$的增益，与$A_{vd,d}=v_{od}/v_{id}$相互对应。然而，我们知道在共模输入$v_{ic}$下输出$v_{out1}=v_{out2}=v_{oc}$，因此$v_{od}=0$即$A_{vc,d}=0$，换言之，不存在共模输入到差模输出的增益。所以，若使用差分输出，共模抑制比$\te{CMRR}$实际上是无穷大！
+
+\begin{BoxFormula}[电流源负载差分放大器--单端输出--共模抑制比]
+    电流源负载差分放大器中，若使用单端输出，共模抑制比为
+    \begin{Equation}
+        \te{CMRR}=g_{m2}(g_{ds2}+g_{ds4})^{-1}
+    \end{Equation}
+\end{BoxFormula}
+
+\begin{BoxFormula}[电流源负载差分放大器--差分输出--共模抑制比]
+    电流源负载差分放大器中，若使用差分输出，共模抑制比为
+    \begin{Equation}
+        \te{CMRR}=\infty
+    \end{Equation}
+\end{BoxFormula}
+
+综合\xref{fml:电流镜负载差分放大器--共模抑制比}、\xref{fml:电流源负载差分放大器--单端输出--共模抑制比}、\xref{fml:电流源负载差分放大器--差分输出--共模抑制比}，我们可以得出以下结论
+\begin{itemize}
+    \item 电流镜负载差分放大器，使用单端输出，共模抑制比在$(g_{m}g_{ds}^{-1})^2$的数量级。
+    \item 电流源负载差分放大器，使用单端输出，共模抑制比在$(g_{m}g_{ds}^{-1})$的数量级。
+    \item 电流源负载差分放大器，使用差分输出，共模抑制比为无穷大。
+\end{itemize}
+应指出，差分输出时$\te{CMRR}=\infty$只是理想情况，若器件存在失配，则$\te{CMRR}$将是有限值。
+
+\subsection{差分放大器的设计}
+在这一小节，我们尝试设计一个电流镜负载差分放大器！电路如\xref{fig:差分放大器的设计}所示。
+
+
+\begin{Figure}[差分放大器的设计]
+    \includegraphics[scale=0.8]{build/Chapter04B_18.fig.pdf}
+\end{Figure}
+在\xref{tab:共源共栅放大器的设计指标}中，我们给出了设计指标。这里新增的一个设计指标是所谓的$-3\si{dB}$带宽，尽管这听上去是一个新概念，但其实它要计算的就是主极点的频率。而关于频率分析，在最简单的考虑下，由于负载电容$C_L$远大于所有寄生电容，我们可以只考虑负载电容$C_L$的影响，按照极点和节点关联，有$\omega_{-3\si{dB}}=1/(R_{out}C_L)$，而$f_{-3\si{dB}}$只需要变成$f_{-3\si{dB}}=1/(2\pi R_{out}C_L)$即可。
+
+\begin{Tablex}[差分放大器的设计指标]{lXrrr}
+    <设计指标&符号&数值&单位\\>
+    电源电压&$V_{DD}$&$=5$&\si{V}\\
+    增益&$A_{v}$&$=100$&--\\
+    最小饱和输入电压（ICMR下限）&$V_{IC,\min}$&$=1.0$&\si{V}\\
+    最大饱和输入电压（ICMR上限）&$V_{IC,\max}$&$=4.5$&\si{V}\\
+    $-3\si{dB}$带宽（在$C_L=\SI{5}{pF}$负载上）&$f_{-3\si{dB}}$&$\geq 100$&\si{kHz}\\
+    摆率（在$C_L=\SI{5}{pF}$负载上）&$\te{SR}$&$\geq 10$&\si{V.us^{-1}}\\
+    功率&$P_{diss}$&$\leq 1$&\si{mW}\\
+\end{Tablex}
+
+接下来我们可以开始设计了，这里的设计参量是$I_{SS},I_{REF}$以及各管的$(W/L)$。
+
+根据$P_{diss}=I_{SS}V_{DD}\leq\SI{1}{mW}$，以及$V_{DD}=\SI{5}{V}$，可确定
+\begin{Equation}
+    I_{SS}\leq 200\si{uA}
+\end{Equation}
+根据$\te{SR}=I_{SS}/C_L\geq\SI{10}{V.us^{-1}}$，以及$C_L=\SI{5}{pF}$，可确定
+\begin{Equation}
+    I_{SS}\geq 50\si{uA}
+\end{Equation}
+根据$f_{-3\si{dB}}=1/(2\pi R_{out}C_L)\geq\SI{100}{kHz}$，并注意到
+\begin{Equation}
+    \qquad
+    f_{-3\si{dB}}=\frac{1}{2\pi R_{out}C_L}=\frac{1}{2\pi(g_{ds2}+g_{ds4})^{-1}C_L}=\frac{1}{2\pi(\lambda_n I_{SS}/2+\lambda_p I_{SS}/2)^{-1}C_L}
+    \qquad
+\end{Equation}
+再结合$C_L=\SI{5}{pF}$，可确定
+\begin{Equation}
+    I_{SS}\geq\SI{70}{mA}
+\end{Equation}
+
+我们不妨取一中间值
+\begin{Equation}
+    I_{SS}=\SI{100}{uA}
+\end{Equation}
+我们不妨将$I_{REF}$定为与$I_{SS}$一致
+\begin{Equation}
+    I_{REF}=\SI{100}{uA}
+\end{Equation}
+
+
+根据\xref{fml:电流镜负载差分放大器--共模--饱和输入电压范围--最大值}给出的$V_{IC,\max}$（忽略$M_2$的体效应则$V_{T2}=V_{T4}$可以约掉）
+\begin{Equation}
+    V_{IC,\max}=V_{DD}-V_{ON4}=V_{DD}-\sqrt{\frac{I_{SS}}{K_p'(W_4/L_4)}}=\SI{4.5}{V}
+\end{Equation}
+解得$M_4$的宽长比
+\begin{Equation}
+    (W_4/L_4)=8.00
+\end{Equation}
+进而可求出$M_4$的过驱电压
+\begin{Equation}
+    V_{ON4}=\sqrt{\frac{I_{SS}}{K_p'(W_4/L_4)}}=\SI{0.50}{V}
+\end{Equation}
+
+根据\xref{fml:电流镜负载差分放大器--右侧输出--差模增益}给出的$A_{vd2}=A_{v}$
+\begin{Equation}
+    A_{v}=g_{m2}(g_{ds2}+g_{ds4})^{-1}=\frac{\sqrt{K_n'(W_2/L_2)I_{SS}}}{\lambda_n I_{SS}/2+\lambda_p I_{SS}/2}=100
+\end{Equation}
+解得$M_2$的宽长比
+\begin{Equation}
+    (W_2/L_2)=18.41
+\end{Equation}
+进而可求出$M_2$的过驱电压
+\begin{Equation}
+    V_{ON2}=\sqrt{\frac{I_{SS}}{K_n'(W_2/L_2)}}=\SI{0.22}{V}
+\end{Equation}
+根据\xref{fml:电流镜负载差分放大器--共模--饱和输入电压范围--最小值}给出的$V_{IC,\min}$
+\begin{Equation}
+    \qquad\qquad
+    V_{IC,\min}=V_{ON2}+V_{ON5}+V_{T2}=V_{ON2}+V_{T2}+\sqrt{\frac{2I_{SS}}{K_n'(W_5/L_5)}}=\SI{1.0}{V}
+    \qquad\qquad
+\end{Equation}
+解得$M_5$的宽长比
+\begin{Equation}
+    (W_5/L_5)=300.56
+\end{Equation}
+进而可求出$M_5$的过驱电压
+\begin{Equation}
+    V_{ON5}=\sqrt{\frac{2I_{SS}}{K_n'(W_5/L_5)}}=\SI{0.08}{V}
+\end{Equation}
+至此，我们确定了$M_2,M_4,M_5$。最后，由于差分放大器的对称性，$M_1,M_2$及$M_3,M_4$具有相同的尺寸和过驱电压，另外由于我们前面令$I_{REF}=I_{SS}$，因此$M_6$和$M_5$也是完全相同的。
+
+
+\begin{Tablex}[差分放大器的设计结果]{lXr}
+    <设计参量&设计结果&备注\\>
+    $I_{SS}$&$\SI{100}{uA}$\\
+    $I_{REF}$&$\SI{100}{uA}$\\
+    $(W_1/L_1)$&$18.41$&$V_{ON1}=\SI{0.22}{V}$\\
+    $(W_2/L_2)$&$18.41$&$V_{ON2}=\SI{0.22}{V}$\\
+    $(W_3/L_3)$&$8.00$&$V_{ON3}=\SI{0.50}{V}$\\
+    $(W_4/L_4)$&$8.00$&$V_{ON4}=\SI{0.50}{V}$\\
+    $(W_5/L_5)$&$300.56$&$V_{ON5}=\SI{0.08}{V}$\\
+    $(W_6/L_6)$&$300.56$&$V_{ON6}=\SI{0.08}{V}$\\
+\end{Tablex}

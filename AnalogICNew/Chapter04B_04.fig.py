@@ -114,6 +114,7 @@ def SatAnalyze(t,d,suffix,xVG,xVD,xVS,xVB):
     d["VGS"+suffix]=sym*(xVG-xVS)
     d["VDS"+suffix]=sym*(xVD-xVS)
     d["VBS"+suffix]=sym*(xVB-xVS)
+    d["VT"+suffix]=xVT(t,d["VBS"+suffix])
     d["VGT"+suffix]=d["VGS"+suffix]-xVT(t,d["VBS"+suffix])
 
 
@@ -124,7 +125,7 @@ fileName="Chapter04B_04"
 
 ExportInit(dirBuild,fileName)
 
-graphNum=7
+graphNum=8
 idVV=0
 idIV=1
 idM={}
@@ -133,6 +134,7 @@ idM[2]=3
 idM[3]=4
 idM[4]=5
 idM[5]=6
+idAV=7
 MPLInit()
 MPLNewFigure(graphNum)
 
@@ -179,6 +181,7 @@ d["ID1"]=SpiceWave(rdat,"Id(M1)")
 d["ID2"]=SpiceWave(rdat,"Id(M2)")
 d["ISS"]=SpiceWave(rdat,"Id(M5)")
 d["IREF"]=SpiceWave(rdat,"Id(M6)")
+d["AV"]=NPDiff(d["VIC"],d["Vout1"])
 
 # G D S B
 SatAnalyze("N",d,"1",d["Vin1"],d["Vout1"],d["Vp"],d["GND"])
@@ -187,23 +190,29 @@ SatAnalyze("P",d,"3",d["Vm3"],d["Vout1"],d["VDD"],d["VDD"])
 SatAnalyze("P",d,"4",d["Vm3"],d["Vout2"],d["VDD"],d["VDD"])
 SatAnalyze("N",d,"5",d["Vm5"],d["Vp"],d["GND"],d["GND"])
 
-# iM1o=NPCross(d["VGT1"],0)
-# iM2o=NPCross(d["VGT2"],0)
+iM1o=NPCross(d["VGT1"],0)
+iM2o=NPCross(d["VGT2"],0)
 
-# iM1s=NPCross(d["VGT1"],d["VDS1"])
-# iM2s=NPCross(d["VGT2"],d["VDS2"])
-# iM5s=NPCross(d["VGT5"],d["VDS5"])
+iM1s=NPCross(d["VGT1"],d["VDS1"])
+iM2s=NPCross(d["VGT2"],d["VDS2"])
+iM3s=NPCross(d["VGT3"],d["VDS3"])
+iM4s=NPCross(d["VGT3"],d["VDS4"])
+iM5s=NPCross(d["VGT5"],d["VDS5"])
 
 plt.figure(idVV)
 plt.plot(d["VIC"],d["Vout1"],c='k',label="$v_{OUT1}=v_{OUT2}$")
 plt.plot(d["VIC"],d["Vp"],c="gray",ls='dashed',label="$v_{P}$")
-# MPLDrawPoints(d["VIC"],d["Vout1"],[iM1o,iM5s,iM1s],"k","w",4)
+MPLDrawPoints(d["VIC"],d["Vout1"],[iM1o,iM1s],"k","w",4)
+MPLDrawPoints(d["VIC"],d["Vout1"],[iM5s,iM3s],"k","w",2)
 
 plt.figure(idIV)
 plt.plot(d["VIC"],d["ID1"],c='k',label="$i_{D1}=i_{D2}$")
 plt.plot(d["VIC"],d["ISS"],c='gray',label="$i_{SS}$")
-# MPLDrawPoints(d["VIC"],d["ISS"],[iM1o,iM5s,iM1s],"k","w",4)
-# MPLDrawPoints(d["VIC"],d["ID1"],[iM1o,iM5s,iM1s],"k","w",4)
+MPLDrawPoints(d["VIC"],d["ISS"],[iM1o,iM1s],"k","w",4)
+MPLDrawPoints(d["VIC"],d["ISS"],[iM5s,iM3s],"k","w",2)
+MPLDrawPoints(d["VIC"],d["ID1"],[iM1o,iM1s],"k","w",4)
+MPLDrawPoints(d["VIC"],d["ID1"],[iM5s,iM3s],"k","w",2)
+
 
 for i in [1,2,3,4,5]:
     plt.figure(idM[i])
@@ -211,13 +220,22 @@ for i in [1,2,3,4,5]:
     plt.plot(d["VIC"],d["VGT"+str(i)],c="purple",label="$v_{GS"+str(i)+"}-V_T$")
 
 plt.figure(idM[1])
-# MPLDrawPoints(d["VIC"],d["VGT1"],[iM1o,iM1s],"k","w",4)
+MPLDrawPoints(d["VIC"],d["VGT1"],[iM1o,iM1s],"k","w",4)
 
 plt.figure(idM[2])
-# MPLDrawPoints(d["VIC"],d["VGT2"],[iM2o,iM2s],"k","w",4)
+MPLDrawPoints(d["VIC"],d["VGT2"],[iM2o,iM2s],"k","w",4)
+
+plt.figure(idM[3])
+MPLDrawPoints(d["VIC"],d["VGT3"],[iM3s],"k","w",4)
+
+plt.figure(idM[4])
+MPLDrawPoints(d["VIC"],d["VGT4"],[iM4s],"k","w",4)
 
 plt.figure(idM[5])
-# MPLDrawPoints(d["VIC"],d["VGT5"],[iM5s],"k","w",4)
+MPLDrawPoints(d["VIC"],d["VGT5"],[iM5s],"k","w",4)
+
+plt.figure(idAV)
+plt.plot(d["VIC"],d["AV"],c="k",label="$A_{vc}$")
 
 
 for id in range(graphNum):
@@ -240,6 +258,11 @@ for id in range(graphNum):
         axes.yaxis.set_major_formatter(lambda x, pos:"$"+"{:.2f}".format(x/1e-3)+"$")
         axes.set_ylabel(r"$i~(\si{mA})$")
         axes.legend(loc="upper left")
+    if id in [idAV]:
+        axes.set_ylim(-0.85,0.05)
+        axes.yaxis.set_major_locator(ticker.MultipleLocator(0.1))
+        axes.set_ylabel(r"$A_{vc}$")
+        axes.legend(loc="lower right")
     plt.savefig(ExportNameGen(dirBuild,fileName,id),bbox_inches ="tight")
 
 SpiceDelNet(fileName)

@@ -1,0 +1,64 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\ctikzset{capacitors/scale=0.5}
+
+\xSetX
+\xValDefine{xL}[-2]
+\xValDefine{xR}[+2]
+\xValMiddle{xC}{xL}{xR}
+\xValOffset{xO}{xR}[2.5]
+\xValOffset{xF}{xL}[-2.5]
+\xValPropor{xCO}{xR}{xO}[0.87]
+\xValPropor{xCF}{xL}{xF}[0.87]
+\xValPropor{xLx}{xL}{xC}[0.4]
+\xValPropor{xRx}{xR}{xC}[0.4]
+
+\xSetY
+\xValDefine{yB}[-4]
+\xValDefine{yA}[+4]
+\xValMiddle{yC}{yA}{yB}
+\xValPropor{yPB}{yA}{yB}[0.85]
+\xValPropor{yPA}{yPB}{yA}[0.5]
+\xValMiddle{yMA}{yA}{yPA}
+\xValMiddle{yMB}{yPA}{yPB}
+\xValMiddle{yMC}{yPB}{yB}
+
+\draw (xL|-yMB) node[nmos] (M1) {$M_1$};
+\draw (xR|-yMB) node[nmos,xscale=-1] (M2) {\ctikzflipx{$M_2$}};
+\draw (xL|-yMA) node[pmos,xscale=-1] (M3) {\ctikzflipx{$M_3$}};
+\draw (xR|-yMA) node[pmos] (M4) {$M_4$}; 
+
+\draw (M1.G) -- ++(-0.25,0) node[ocirc] {} node[left]  {$v_{IN1}$};
+\draw (M2.G) -- ++(0.25,0)node[ocirc] {} node[right] {$v_{IN2}$};
+\draw (M1.S) -- (M1.S|-yPB) -- (M2.S|-yPB) -- (M2.S);
+\draw (M1.D) -- (M3.D);
+\draw (M2.D) -- (M4.D);
+\draw (M3.S) -- (M3.S|-yA) node[vdd,anchor=north] {$V_{DD}$};
+\draw (M4.S) -- (M4.S|-yA) node[vdd,anchor=north] {$V_{DD}$};
+\draw (M3.G) -- (M4.G);
+\draw (M3.G) node[circ] {} |- (M3.D) node[circ] {};
+\draw (xC|-yPB) node[circ] {} -- (xC|-yB) node[tlground] {};
+
+\draw (xL|-yPA) node[circ] {} node[above right] {$v_{OUT1}$}-- (xF|-yPA) node[ocirc] {};
+\draw (xR|-yPA) node[circ] {} node[above left] {$v_{OUT2}$} -- (xO|-yPA) node[ocirc] {} node[above left] {$v_{OUT}$};
+\draw (xC|-yPB) node[above] {$v_{P}$};
+
+% \draw ()
+
+\draw (M1.G) -- (M1.G|-yPB) to[C,l=$C_{in1}$] (M1.G|-yB) node[tlground] {};
+\draw (M2.G) -- (M2.G|-yPB) to[C,l_=$C_{in2}$] (M2.G|-yB) node[tlground] {};
+
+\draw (M1.G) to[C,l_=$C_{m1}$,*-*] (M1.G|-yPA);
+\draw (M2.G) to[C,l=$C_{m2}$,*-*] (M2.G|-yPA);
+\draw (xL|-yPA) to[C,l=$C_{m,out}$,-*] (xR|-yPA);
+ 
+\draw (xCO|-yPA) to[C,l_=$C_{out2}$,*-] (xCO|-yB) node[tlground] {};
+\draw (xCF|-yPA) to[C,l=$C_{out1}$,*-] (xCF|-yB) node[tlground] {};
+
+\xValBorder{xL}[-3]{xR}[3]{yB}[-0.6]{yA}[+0.7]*
+
+\end{tikzpicture}
+\end{document}

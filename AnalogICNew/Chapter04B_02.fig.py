@@ -114,6 +114,7 @@ def SatAnalyze(t,d,suffix,xVG,xVD,xVS,xVB):
     d["VGS"+suffix]=sym*(xVG-xVS)
     d["VDS"+suffix]=sym*(xVD-xVS)
     d["VBS"+suffix]=sym*(xVB-xVS)
+    d["VT"+suffix]=xVT(t,d["VBS"+suffix])
     d["VGT"+suffix]=d["VGS"+suffix]-xVT(t,d["VBS"+suffix])
 
 
@@ -170,6 +171,7 @@ d["Vin2"]=SpiceWave(rdat,"V(Vin2)")
 d["Vin1a"]=SpiceWave(rdat,"V(Vin1a)")
 d["Vin2a"]=SpiceWave(rdat,"V(Vin2a)")
 d["VID"]=d["Vin1"]-d["Vin1a"]
+d["VIC"]=d["Vin1a"]
 d["Vp"]=SpiceWave(rdat,"V(Vp)")
 d["Vout1"]=SpiceWave(rdat,"V(Vout1)")
 d["Vout2"]=SpiceWave(rdat,"V(Vout2)")
@@ -181,7 +183,8 @@ d["ID1"]=SpiceWave(rdat,"Id(M1)")
 d["ID2"]=SpiceWave(rdat,"Id(M2)")
 d["ISS"]=SpiceWave(rdat,"Id(M5)")
 d["IREF"]=SpiceWave(rdat,"Id(M6)")
-d["VOD"]=d["Vout2"]-d["Vout1"]
+d["VOD"]=d["Vout1"]-d["Vout2"]
+d["VOC"]=(d["Vout1"]+d["Vout2"])/2
 d["AV"]=NPDiff(d["VID"],d["VOD"])
 d["AV1"]=NPDiff(d["VID"],d["Vout1"])
 d["AV2"]=NPDiff(d["VID"],d["Vout2"])
@@ -204,8 +207,13 @@ plt.figure(idVV)
 plt.plot(d["VID"],d["Vout1"],c='r',label="$v_{OUT1}$")
 plt.plot(d["VID"],d["Vout2"],c='b',label="$v_{OUT2}$")
 plt.plot(d["VID"],d["Vp"],c="gray",ls='dashed',label="$v_{P}$")
+plt.plot(d["VID"],d["VOC"],c="black",ls='dotted',label="$v_{OC}$")
+plt.plot(d["VID"],d["VIC"]-xVT0["N"],c="b",ls='dashed',lw=0.5,label=r"$M_{1,2},sat$")
+plt.plot(d["VID"],d["VDD"]-0.7,c="r",ls='dashed',lw=0.5,label=r"$M_{3,4},sat$")
 MPLDrawPoints(d["VID"],d["Vout1"],[iMs[i] for i in [1,2]],"k","w",4)
 MPLDrawPoints(d["VID"],d["Vout2"],[iMs[i] for i in [1,2]],"k","w",4)
+MPLDrawPoints(d["VID"],d["Vout1"],[iMs[i] for i in [3,4]],"k","w",2)
+MPLDrawPoints(d["VID"],d["Vout2"],[iMs[i] for i in [3,4]],"k","w",2)
 
 plt.figure(idIV)
 plt.plot(d["VID"],d["ID1"],c='r',label="$i_{D1}$")
@@ -226,7 +234,7 @@ plt.plot(d["VID"],d["VOD"],c="k",label="$v_{OD}$")
 MPLDrawPoints(d["VID"],d["VOD"],[iMs[i] for i in [1,2]],"k","w",4)
 
 plt.figure(idAV)
-plt.plot(d["VID"],d["AV"],c="k",label="$A_{V}$")
+plt.plot(d["VID"],d["AV"],c="k",label="$A_{vd}$")
 # plt.plot(d["VID"],d["AV2"],c="k",label="$A_{V2}$")
 
 for id in range(graphNum):
@@ -240,7 +248,7 @@ for id in range(graphNum):
         axes.yaxis.set_major_locator(ticker.MultipleLocator(0.5))
         axes.set_ylabel(r"$v~(\si{V})$")
         if id in [idVV]:
-            axes.legend(loc="lower center",ncol=2)
+            axes.legend(loc="lower right",ncol=1)
         else:
             axes.legend(loc="upper left")
     if id in [idIV]:
@@ -253,12 +261,12 @@ for id in range(graphNum):
         axes.set_ylim(-5.4,5.4)
         axes.yaxis.set_major_locator(ticker.MultipleLocator(1.0))
         axes.set_ylabel(r"$v_{OD}~(\si{V})$")
-        axes.legend(loc="upper left")
+        axes.legend(loc="upper right")
     if id in [idAV]:
-        axes.set_ylim(-3,83)
+        axes.set_ylim(-83,3)
         axes.yaxis.set_major_locator(ticker.MultipleLocator(10))
-        axes.set_ylabel(r"$A_v$")
-        axes.legend(loc="upper left")
+        axes.set_ylabel(r"$A_{vd}$")
+        axes.legend(loc="lower right")
     plt.savefig(ExportNameGen(dirBuild,fileName,id),bbox_inches ="tight")
 
 SpiceDelNet(fileName)

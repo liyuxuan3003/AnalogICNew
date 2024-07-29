@@ -50,33 +50,33 @@
 
 \xref{fig:电压转移特性--二极管反相}展示了电压传输特性，事实上，尽管细节有所不同，所有反相放大器的电压传输特性都可以用“$v_{OUT}$随$v_{IN}$的增大而减小”一言以蔽之。但很显然，并不是整段曲线都适合用于放大，只有斜率较大的中间部分具有较大增益。实际上，电压传输特性曲线中适合放大的区域就是$M_1,M_2$管均工作在饱和区的区域，因此，探究$M_1,M_2$何时能同时处于饱和区就是一个相当重要的问题。对于二极管负载，由于$M_2$处于二极管接法始终饱和，只需考虑$M_1$即可。
 
-$M_1$的饱和--线性分界条件是$v_{GS1}-V_T<v_{DS1}$，即
+$M_1$的饱和--线性分界条件是$v_{GS1}-V_{T1}<v_{DS1}$，即
 \begin{Equation}
-    v_{IN}-V_T<v_{OUT}\qquad v_{OUT}>v_{IN}-V_T
+    v_{IN}-V_{T1}<v_{OUT}\qquad v_{OUT}>v_{IN}-V_{T1}
 \end{Equation}
 $M_1$的饱和--截止分界条件是$v_{GS1}-V_T>0$，即
 \begin{Equation}
-    v_{IN}-V_T>0\qquad v_{IN}>V_T
+    v_{IN}-V_{T1}>0\qquad v_{IN}>V_{T1}
 \end{Equation}
 \begin{BoxFormula}[二极管负载反相放大器--饱和分析]
     二极管负载反相放大器中，$M_1,M_2$同时饱和的条件是
     \begin{Equation}
-        v_{IN}>V_{T}\qquad v_{OUT}>v_{IN}-V_T
+        v_{IN}>V_{T1}\qquad v_{OUT}>v_{IN}-V_{T1}
     \end{Equation}
 \end{BoxFormula}
 我们会说，\xref{fml:二极管负载反相放大器--饱和分析}给出的饱和条件简直毫无意义！我们想了解的是输入电压$v_{IN}$满足什么条件时$M_1,M_2$能同时饱和，但是，这里求出的条件$v_{OUT}>v_{IN}-V_T$却包含了未知表达式的输出电压$v_{OUT}$。很显然$v_{OUT}$随$v_{IN}$的表达式必然是复杂且冗长的，以至于我们更愿意通过\xref{fig:电压转移特性--二极管反相}的仿真曲线而不是表达式来呈现它们间的关系。不过$v_{OUT}>v_{IN}-V_T$仍然是有意义的，我们可以将该条件以分界线的形式和电压转移曲线绘制在同一坐标下，如\xref{fig:电压转移特性--二极管反相}中的蓝虚线所示。此时，两者的交点就是分界点。因此，包含$v_{OUT}$的饱和条件尽管不能直接告诉我们$v_{IN}$取值范围，但只要与电压转移特性曲线结合在一起，这个取值范围就一目了然了！
 
-我们现在来解决另外一个大信号问题：输出电压的摆幅是多少？要明确的是，输出电压的摆幅并非是指$M_1,M_2$均位于饱和区时输出$v_{OUT}$的变化范围，而是指：输入$v_{IN}$从最小变化至最大，输出$v_{OUT}$的变化范围是多少？在理想状态下，输出摆幅应当是轨到轨的，换言之，应有$V_{OUT,\max}=V_{DD}$和$V_{OUT,\min}=0$。但是从\xref{fig:电压转移特性--二极管反相}中我们可以看出，这里两者均不满足。
+我们现在来解决另外一个大信号问题：输出电压的摆幅是多少？要明确的是，输出电压的摆幅并非是指$M_1,M_2$均位于饱和区时输出$v_{OUT}$的变化范围，而是指：输入$v_{IN}$从最小变化至最大，输出$v_{OUT}$的变化范围是多少？在理想状态下，输出摆幅应当是轨到轨的，换言之，应有$V_{OUT,\max}'=V_{DD}$和$V_{OUT,\min}'=0$。但从\xref{fig:电压转移特性--二极管反相}中我们可以看出，这里两者均不满足。\footnote{关于为何这里$V_{OUT,\max}’$和$V_{OUT,\min}'$要加撇，参见\xref{subsec:共源共栅放大器的大信号特性}。}
 
 输出电压的最大值从\xref{fig:电压转移特性--二极管反相}中可以看出为$\SI{4.3}{V}$，这实际上是
 \begin{Equation}
-    V_{OUT,\max}=V_{DD}-V_T
+    V_{OUT,\max}'=V_{DD}-V_T
 \end{Equation}
 原因很简单，当$v_{IN}<V_T$时$M_1$关断，此时$V_{DD}$将通过$M_2$对输出节点$v_{OUT}$充电，然而当$v_{OUT}$达到$V_{DD}-V_T$时，考虑到$M_2$的二极管接法，此时$v_{GS2}=V_T$使$M_2$也进入截止区关断。因此透过二极管接法的$M_2$输出$v_{OUT}$最大只能被$V_{DD}$上拉至$V_{DD}-V_T$。
-\begin{BoxFormula}[二极管负载反相放大器--最大输出电压]
+\begin{BoxFormula}[二极管负载反相放大器--最大输出电压范围--最大值]
     二极管负载反相放大器中，输出电压的最大值为
     \begin{Equation}
-        V_{OUT,\max}=V_{DD}-V_T
+        V_{OUT,\max}'=V_{DD}-V_T
     \end{Equation}
 \end{BoxFormula}
 
@@ -111,7 +111,7 @@ $M_1$的饱和--截止分界条件是$v_{GS1}-V_T>0$，即
 \begin{BoxFormula}[二极管负载反相放大器--最小输出电压]
     二极管负载反相放大器中，输出电压的最小值为
     \begin{Equation}
-        V_{OUT,\min}=(V_{DD}-V_T)+(V_{DD}-V_T)\sqrt{1-\frac{\beta_2}{\beta_1+\beta_2}}
+        V_{OUT,\min}'=(V_{DD}-V_T)+(V_{DD}-V_T)\sqrt{1-\frac{\beta_2}{\beta_1+\beta_2}}
     \end{Equation}
 \end{BoxFormula}
 
@@ -250,13 +250,13 @@ $M_1$的饱和--截止分界条件是$v_{GS1}-V_T>0$，即
 \end{itemize}
 这两者分别是大信号特性中的摆幅问题和工作区问题，我们下面逐一分析。
 
-$M_1$的饱和--线性分界条件是$v_{GS1}-V_T<v_{DS1}$，即
+$M_1$的饱和--线性分界条件是$v_{GS1}-V_{T1}<v_{DS1}$，即
 \begin{Equation}
-    v_{IN}-V_T<v_{OUT}\qquad v_{OUT}>v_{IN}-V_T
+    v_{IN}-V_{T1}<v_{OUT}\qquad v_{OUT}>v_{IN}-V_{T1}
 \end{Equation}
-$M_2$的饱和--线性分界条件是$v_{GS2}-V_T<v_{DS2}$，即
+$M_2$的饱和--线性分界条件是$v_{GS2}-V_{T2}<v_{DS2}$，即
 \begin{Equation}
-    V_{DD}-V_{G}-V_T<V_{DD}-v_{OUT}\qquad v_{OUT}<V_{G}+V_T
+    V_{DD}-V_{G}-V_{T2}<V_{DD}-v_{OUT}\qquad v_{OUT}<V_{G}+V_{T2}
 \end{Equation}
 
 \begin{Figure}[电流源负载反相放大器的大信号特性]
@@ -281,17 +281,17 @@ $M_2$的饱和--线性分界条件是$v_{GS2}-V_T<v_{DS2}$，即
 \begin{BoxFormula}[电流源负载反相放大器--饱和分析]
     电流源负载反相放大器中，$M_1,M_2$同时饱和的条件是
     \begin{Equation}
-        v_{OUT}>v_{IN}-V_T\qquad v_{OUT}<V_{G}+V_T
+        v_{OUT}>v_{IN}-V_{T1}\qquad v_{OUT}<V_{G}+V_{T2}
     \end{Equation}
 \end{BoxFormula}
 这里$V_{G}=\SI{2.5}{V}$而$V_T=\SI{0.7}{V}$，\xref{fig:电压转移特性--电流源反相}中红虚线代表的$v_{OUT}<V_{G}+V_T$就位于$\SI{3.2}{V}$。
 
 输出电压的最大值现在就是$V_{DD}$，采用电流源接法后，$M_2$不会因为$v_{OUT}$接近$V_{DD}$关断。
 
-\begin{BoxFormula}[电流源负载反相放大器--最大输出电压]
+\begin{BoxFormula}[电流源负载反相放大器--最大输出电压范围--最大值]
     电流源负载反相放大器中，输出电压的最大值为
     \begin{Equation}
-        V_{OUT,\max}=V_{DD}
+        V_{OUT,\max}'=V_{DD}
     \end{Equation}
 \end{BoxFormula}
 
@@ -321,11 +321,11 @@ $M_2$的饱和--线性分界条件是$v_{GS2}-V_T<v_{DS2}$，即
     v_{OUT}=(V_{DD}-V_T)-(V_{DD}-V_T)\sqrt{1-\frac{\beta_2}{\beta_1}\frac{(V_{DD}-V_G-V_T)^2}{(V_{DD}-V_T)^2}}
 \end{Equation}
 整理如下
-\begin{BoxFormula}[电流源负载反相放大器--最小输出电压]
-    电流源负载反相放大器，输出电压的最大值为
+\begin{BoxFormula}[电流源负载反相放大器--最大输出电压范围--最小值]
+    电流源负载反相放大器，输出电压的最小值为
     \begin{Equation}
         \qquad\qquad
-        V_{OUT,\min}=(V_{DD}-V_T)-(V_{DD}-V_T)\sqrt{1-\frac{\beta_2}{\beta_1}\frac{(V_{DD}-V_G-V_T)^2}{(V_{DD}-V_T)^2}}
+        V_{OUT,\min}'=(V_{DD}-V_T)-(V_{DD}-V_T)\sqrt{1-\frac{\beta_2}{\beta_1}\frac{(V_{DD}-V_G-V_T)^2}{(V_{DD}-V_T)^2}}
         \qquad\qquad
     \end{Equation}
 \end{BoxFormula}\goodbreak
@@ -430,34 +430,34 @@ $M_2$的饱和--线性分界条件是$v_{GS2}-V_T<v_{DS2}$，即
 
 推挽反相放大器的大信号特性如\xref{fig:电流源负载反相放大器的大信号特性}所示。由于推挽放大器中$M_1,M_2$均与$v_{IN}$有关，故其负载图较为复杂，如\xref{fig:负载图--推挽反相}所示，对于每一个$v_{IN}$的取值，现在$M_1,M_2$都各有一条曲线。
 
-$M_1$的饱和--线性分界条件是$v_{GS1}-V_T<v_{DS1}$，即
+$M_1$的饱和--线性分界条件是$v_{GS1}-V_{T1}<v_{DS1}$，即
 \begin{Equation}
-    v_{IN}-V_T<v_{OUT}\qquad v_{OUT}>v_{IN}-V_T
+    v_{IN}-V_{T1}<v_{OUT}\qquad v_{OUT}>v_{IN}-V_{T1}
 \end{Equation}
-$M_2$的饱和--线性分界条件是$v_{GS2}-V_T<v_{DS2}$，即
+$M_2$的饱和--线性分界条件是$v_{GS2}-V_{T2}<v_{DS2}$，即
 \begin{Equation}
-    V_{DD}-v_{IN}-V_T<V_{DD}-v_{OUT}\qquad v_{OUT}<v_{IN}+V_T
+    V_{DD}-v_{IN}-V_{T2}<V_{DD}-v_{OUT}\qquad v_{OUT}<v_{IN}+V_{T2}
 \end{Equation}
 整理如下
 \begin{BoxFormula}[推挽反相放大器--饱和分析]
     推挽反相放大器中，$M_1,M_2$同时饱和的条件是
     \begin{Equation}
-        v_{OUT}>v_{IN}-V_T\qquad
-        v_{OUT}<v_{IN}+V_T
+        v_{OUT}>v_{IN}-V_{T1}\qquad
+        v_{OUT}<v_{IN}+V_{T22}
     \end{Equation}
 \end{BoxFormula}
 
 推挽反相器的摆幅是特别简单的，如\xref{fig:电压转移特性--推挽反相}所示，分别为$0$和$V_{DD}$。
-\begin{BoxFormula}[推挽反相放大器--最大输出电压]
+\begin{BoxFormula}[推挽反相放大器--最大输出电压范围--最大值]
     推挽反相放大器中，输出电压的最大值为
     \begin{Equation}
-        V_{OUT,\max}=V_{DD}
+        V_{OUT,\max}'=V_{DD}
     \end{Equation}
 \end{BoxFormula}
-\begin{BoxFormula}[推挽反相放大器--最小输出电压]
+\begin{BoxFormula}[推挽反相放大器--最大输出电压范围--最小值]
     推挽反相放大器中，输出电压的最小值为
     \begin{Equation}
-        V_{OUT,\min}=0
+        V_{OUT,\min}'=0
     \end{Equation}
 \end{BoxFormula}
 这是一个很重要的特性：推挽反相放大器可以实现轨到轨的全摆幅输出！
@@ -918,7 +918,7 @@ $M_2$的饱和--线性分界条件是$v_{GS2}-V_T<v_{DS2}$，即
 \end{enumerate}
 在本章稍后，我们将看到更复杂的放大器设计是如何减轻米勒效应的影响的。
 
-\subsection{反相器的噪声特性}
+\subsection{反相放大器的噪声特性}
 在本小节，我们来分析反相放大器的噪声特性。我们知道，MOS的噪声特性可以由一个串联在其栅端的噪声源来模拟，\xref{fig:反相放大器的噪声}中展现了考虑噪声源后三种反相放大器的电路结构。
 
 现在的问题是，我们如何来评估一个放大器的噪声特性呢？可以分为四个步骤

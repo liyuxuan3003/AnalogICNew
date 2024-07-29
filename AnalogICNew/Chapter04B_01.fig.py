@@ -114,6 +114,7 @@ def SatAnalyze(t,d,suffix,xVG,xVD,xVS,xVB):
     d["VGS"+suffix]=sym*(xVG-xVS)
     d["VDS"+suffix]=sym*(xVD-xVS)
     d["VBS"+suffix]=sym*(xVB-xVS)
+    d["VT"+suffix]=xVT(t,d["VBS"+suffix])
     d["VGT"+suffix]=d["VGS"+suffix]-xVT(t,d["VBS"+suffix])
 
 
@@ -168,6 +169,7 @@ d["Vin2"]=SpiceWave(rdat,"V(Vin2)")
 d["Vin1a"]=SpiceWave(rdat,"V(Vin1a)")
 d["Vin2a"]=SpiceWave(rdat,"V(Vin2a)")
 d["VID"]=d["Vin1"]-d["Vin1a"]
+d["VIC"]=d["Vin1a"]
 d["Vp"]=SpiceWave(rdat,"V(Vp)")
 d["Vout1"]=SpiceWave(rdat,"V(Vout1)")
 d["Vout2"]=SpiceWave(rdat,"V(Vout2)")
@@ -196,6 +198,8 @@ plt.figure(idVV)
 plt.plot(d["VID"],d["Vout1"],c='r',label="$v_{OUT1}$")
 plt.plot(d["VID"],d["Vout2"],c='b',label="$v_{OUT2}$")
 plt.plot(d["VID"],d["Vp"],c="gray",ls='dashed',label="$v_{P}$")
+plt.plot(d["VID"],d["VIC"]-xVT0["N"],c="b",ls='dashed',lw=0.5,label=r"$M_{2},sat$")
+plt.plot(d["VID"],d["VDD"]-0.7,c="r",ls='dashed',lw=0.5,label=r"$M_{4},sat$")
 MPLDrawPoints(d["VID"],d["Vout2"],[iM2o,iM2s,iM4s],"k","w",4)
 
 plt.figure(idIV)
@@ -220,7 +224,7 @@ plt.figure(idM[5])
 MPLDrawPoints(d["VID"],d["VGT5"],[iM5s],"k","w",4)
 
 plt.figure(idAV)
-plt.plot(d["VID"],d["AV"],c="k",label="$A_V$")
+plt.plot(d["VID"],d["AV"],c="k",label="$A_{vd}$")
 
 
 for id in range(graphNum):
@@ -234,9 +238,9 @@ for id in range(graphNum):
         axes.yaxis.set_major_locator(ticker.MultipleLocator(0.5))
         axes.set_ylabel(r"$v~(\si{V})$")
         if id in [idVV]:
-            axes.legend(loc="upper left",ncol=2)
+            axes.legend(loc="upper left",ncol=1)
         else:
-            axes.legend(loc="lower right")
+            axes.legend(loc="upper right")
     if id in [idIV]:
         axes.set_ylim(-0.005e-3,0.085e-3)
         axes.yaxis.set_major_locator(ticker.MultipleLocator(0.01e-3))
@@ -246,7 +250,7 @@ for id in range(graphNum):
     if id in [idAV]:
         axes.set_ylim(-3,83)
         axes.yaxis.set_major_locator(ticker.MultipleLocator(10))
-        axes.set_ylabel(r"$A_v$")
+        axes.set_ylabel(r"$A_{vd}$")
         axes.legend(loc="upper left")
     plt.savefig(ExportNameGen(dirBuild,fileName,id),bbox_inches ="tight")
 

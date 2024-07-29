@@ -22,17 +22,17 @@
     \item \xref{fig:电压增益特性--共源共栅}对比\xref{fig:电压增益特性--电流源反相}，共源共栅的增益大约是电流源反相器的一倍，稍后解释原因。
 \end{itemize}
 
-$M_3$的饱和--线性分界条件是$v_{GS3}-V_T<v_{DS3}$，即
+$M_3$的饱和--线性分界条件是$v_{GS3}-V_{T3}<v_{DS3}$，即
 \begin{Equation}
-    V_{DD}-V_{G3}-V_T<V_{DD}-v_{OUT}\qquad v_{OUT}<V_{G3}+V_T
+    V_{DD}-V_{G3}-V_{T3}<V_{DD}-v_{OUT}\qquad v_{OUT}<V_{G3}+V_{T3}
 \end{Equation}
-$M_2$的饱和--线性分界条件是$v_{GS2}-V_T<v_{DS2}$，即
+$M_2$的饱和--线性分界条件是$v_{GS2}-V_{T2}<v_{DS2}$，即
 \begin{Equation}
-    v_{OUT}-v_{D1}>V_{G2}-v_{D1}-V_T\qquad v_{OUT}>V_{G2}-V_T
+    v_{OUT}-v_{D1}>V_{G2}-v_{D1}-V_{T2}\qquad v_{OUT}>V_{G2}-V_{T2}
 \end{Equation}
-$M_1$的饱和--线性分界条件是$v_{GS2}-V_T<v_{DS2}$，即
+$M_1$的饱和--线性分界条件是$v_{GS1}-V_{T1}<v_{DS1}$，即
 \begin{Equation}
-    v_{D1}>v_{IN}-V_T
+    v_{D1}>v_{IN}-V_{T1}
 \end{Equation}
 
 \begin{Figure}[共源共栅放大器的大信号特性]
@@ -58,32 +58,32 @@ $M_1$的饱和--线性分界条件是$v_{GS2}-V_T<v_{DS2}$，即
 
 将$v_{D1}$用$V_{G2}-v_{GS2}$表示
 \begin{Equation}
-    V_{G2}-v_{GS2}>v_{IN}-V_T
+    V_{G2}-v_{GS2}>v_{IN}-V_{T2}
 \end{Equation}
 我们认为$v_{GS2}=v_{IN}$，因为两管的过驱电压应当相同
 \begin{Equation}
-    V_{G2}-v_{IN}>v_{IN}-V_T
+    V_{G2}-v_{IN}>v_{IN}-V_{T2}
 \end{Equation}
 我们最终得到
 \begin{Equation}
-    v_{IN}<\frac{1}{2}(V_{G2}+V_T)
+    v_{IN}<\frac{1}{2}(V_{G2}+V_{T2})
 \end{Equation}
 总结如下
 \begin{BoxFormula}[共源共栅放大器--饱和分析]
     共源共栅放大器中，$M_1,M_2,M_3$同时饱和的条件是
     \begin{Gather}
-        v_{OUT}<V_{G3}+V_T\qquad v_{OUT}>V_{G2}-V_T\\
-        v_{IN}<\frac{1}{2}(V_{G2}+V_T)
+        v_{OUT}<V_{G3}+V_{T3}\qquad v_{OUT}>V_{G2}-V_{T2}\\
+        v_{IN}<\frac{1}{2}(V_{G2}+V_{T2})
     \end{Gather}
 \end{BoxFormula}
 
-通过\xref{fig:共源共栅放大器的大信号特性}中，我们看到饱和分析的效果并不好\footnote{\xref{fig:共源共栅放大器的大信号特性}绘制$M_2$的饱和线$V_{G2}-V_T$考虑了$V_T$因体效应随$v_{D1}$的变化，手工分析是无法考虑这点的。手工分析的结果其实比较接近于\xref{fig:共源共栅放大器的大信号特性}所示$M_2$饱和线的右端，此处$V_{D1}$接近零，体效应的影响很小了。故$M_2$实际的饱和点比手工分析的要更低些。}，$M_2$的饱和点比预期的偏上，$M_1$的饱和点比预期的偏左。但作为手工分析的估测，这些结果还是很有价值的，例如$M_2,M_3$的条件就告诉我们放大状态下$v_{OUT}$介于$V_{G2}-V_T$和$V_{G3}+V_T$之间，即$\SI{2.9}{V}$至$\SI{3.7}{V}$间，而$M_1$的条件则指出$v_{IN}$必须小于$(V_{G2}+V_T)/2$，这个值在这里是$\SI{2.15}{V}$，这个值必须要大于先前通过电流$I_D$一致确定的放大状态下$v_{IN}$的工作点$\SI{2.0}{V}$。由此可见，尽管饱和分析的结果不是特别精确，但是可以帮助我们在做进一步仿真前，先简单的验算一下取值是否是大致合理的。
+通过\xref{fig:共源共栅放大器的大信号特性}中，我们看到饱和分析的效果并不好\footnote{\xref{fig:共源共栅放大器的大信号特性}绘制$M_2$的饱和线$V_{G2}-V_{T2}$考虑了$V_{T2}$因体效应随$v_{D1}$的变化，手工分析是无法考虑这点的。手工分析的结果其实比较接近于\xref{fig:共源共栅放大器的大信号特性}所示$M_2$饱和线的右端，此处$V_{D1}$接近零，体效应的影响很小了。故$M_2$实际的饱和点比手工分析的要更低些。}，$M_2$的饱和点比预期的偏上，$M_1$的饱和点比预期的偏左。但作为手工分析的估测，这些结果还是很有价值的，例如$M_2,M_3$的条件就告诉我们放大状态下$v_{OUT}$介于$V_{G2}-V_{T2}$和$V_{G3}+V_{T3}$之间，即$\SI{2.9}{V}$至$\SI{3.7}{V}$间，而$M_1$的条件则指出$v_{IN}$必须小于$(V_{G2}+V_{T2})/2$，这个值在这里是$\SI{2.15}{V}$，这个值必须要大于先前通过电流$I_D$一致确定的放大状态下$v_{IN}$的工作点$\SI{2.0}{V}$。由此可见，尽管饱和分析的结果不是特别精确，但是可以帮助我们在做进一步仿真前，先简单的验算一下取值是否是大致合理的。
 
 输出电压的最大值显然是$V_{DD}$，这是由电流源负载不会关断的特性决定的。
-\begin{BoxFormula}[共源共栅放大器--最大输出电压]
+\begin{BoxFormula}[共源共栅放大器--最大输出电压范围--最大值]
     共源共栅放大器中，输出电压的最大值为
     \begin{Equation}
-        V_{OUT,\max}=V_{DD}
+        V_{OUT,\max}'=V_{DD}
     \end{Equation}
 \end{BoxFormula}
 输出电压的最小值的计算比较麻烦，当$v_{IN}=V_{DD}$时，$M_1,M_2$处于线性区，$M_3$处于饱和区。
@@ -123,28 +123,43 @@ $M_3$的电流方程如下，代入得到
     v_{OUT}=\frac{\beta_3}{2\beta_2}(V_{DD}-V_{G3}-V_T)^2\qty(\frac{1}{V_{G2}-V_T}+\frac{1}{V_{DD}-V_T})
 \end{Equation}
 整理如下
-\begin{BoxFormula}[共源共栅放大器--最小输出电压]
+\begin{BoxFormula}[共源共栅放大器--最大输出电压范围--最小值]
     共源共栅放大器中，输出电压的最小值为
     \begin{Equation}
         \qquad\qquad\qquad
-        V_{OUT,\min}=\frac{\beta_3}{2\beta_2}(V_{DD}-V_{G3}-V_T)^2\qty(\frac{1}{V_{G2}-V_T}+\frac{1}{V_{DD}-V_T})
+        V_{OUT,\min}'=\frac{\beta_3}{2\beta_2}(V_{DD}-V_{G3}-V_T)^2\qty(\frac{1}{V_{G2}-V_T}+\frac{1}{V_{DD}-V_T})
         \qquad\qquad\qquad
     \end{Equation}
 \end{BoxFormula}
 
-我们要明确的是，这里计算得到的$V_{OUT,\min}$和$V_{OUT,\max}$是当$v_{IN}$从$0$变化至$V_{DD}$时$v_{OUT}$的范围，但有些情况下更关心的是，当所有管子均在饱和区，放大器处于放大状态时$v_{OUT}$的变化范围。作为区分，称为最小/最大饱和输出电压并记作$V_{OUT,sat,\min}$和$V_{OUT,sat,\max}$，不过这里我们实际上已经解出这两个量了，参见饱和分析的\xref{fml:共源共栅放大器--饱和分析}中$v_{OUT}$的两个不等式。
-\begin{BoxFormula}[共源共栅放大器--最大饱和输出电压]
-    共源共栅放大器，当所有管饱和时，输出电压的最大值是
+实际上，关于输出电压$v_{OUT}$的最大值和最小值，有两种不同的考虑
+\begin{itemize}
+    \item 最大输出范围，定义为输入$0$至$V_{DD}$的输出范围，记为$V_{OUT,\min}'$和$V_{OUT,\max}'$
+    \item 饱和输出范围，定义为所有MOS管均饱和时的输出范围，记为$V_{OUT,\min}$和$V_{OUT,\max}$
+\end{itemize}
+两者的记号用是否加撇区分。尽管先前我们一直考虑的都是前者，但实际上后者才是更有价值的，毕竟只有所有管都处于饱和状态，放大器才能进行正常放大。这里，饱和输出范围其实已经由\xref{fml:共源共栅放大器--饱和分析}的饱和分析确定了，即$V_{OUT,\max}=V_{G3}+V_{T3}$和$V_{OUT,\min}=V_{G2}-V_{T2}$。不过我们愿意对其形式做一些变换，因为这两个量是直接面向设计的，而在实际设计中$V_{G3},V_{G2}$并非一个设计量，而是由电流镜偏置的，因此更希望将他们转换为基于过驱电压$V_{ON}$的形式。\goodbreak
+
+对于$V_{OUT,\max}=V_{G3}+V_{T3}$，由于$V_{G3}=V_{DD}-v_{GS3}=V_{DD}-V_{ON3}+V_{T3}$
+\begin{BoxFormula}[共源共栅放大器--饱和输出电压范围--最大值]
+    共源共栅放大器中，当所有管饱和时，输出电压的最大值是
     \begin{Equation}
-        V_{OUT,sat,\max}=V_{G3}+V_T
+        V_{OUT,\max}=V_{DD}-V_{ON3}
     \end{Equation}
 \end{BoxFormula}
-\begin{BoxFormula}[共源共栅放大器--最小饱和输出电压]
-    共源共栅放大器，当所有管饱和时，输出电压的最小值是
+
+对于$V_{OUT,\min}=V_{G2}-V_{T2}$，由于$V_{G2}=v_{DS1}+v_{GS2}=V_{ON1}+V_{ON2}+V_{T2}$
+\begin{BoxFormula}[共源共栅放大器--饱和输出电压范围--最小值]
+    共源共栅放大器中，当所有管饱和时，输出电压的最小值是
     \begin{Equation}
-        V_{OUT,sat,\min}=V_{G2}-V_T
+        V_{OUT,\min}=V_{ON1}+V_{ON2}
     \end{Equation}
 \end{BoxFormula}
+
+该结果也符合我们的直观感受：在$v_{OUT}$的下方是$M_1,M_2$故其饱和下限就是由两者的过驱电压之和$V_{ON1}+V_{ON2}$组成，类似的，在$v_{OUT}$的上方是$M_3$故其饱和上限是$V_{DD}-V_{ON3}$。
+
+
+% 我们要明确的是，这里计算得到的$V_{OUT,\min}$和$V_{OUT,\max}$是当$v_{IN}$从$0$变化至$V_{DD}$时$v_{OUT}$的范围，但有些情况下更关心的是，当所有管子均在饱和区，放大器处于放大状态时$v_{OUT}$的变化范围。作为区分，称为最小/最大饱和输出电压并记作$V_{OUT,sat,\min}$和$V_{OUT,sat,\max}$，不过这里我们实际上已经解出这两个量了，参见饱和分析的\xref{fml:共源共栅放大器--饱和分析}中$v_{OUT}$的两个不等式。
+
 
 \subsection{共源共栅放大器的小信号特性}
 关于共源共栅放大器的小信号特性，我们计算的东西要比过去多些
@@ -155,17 +170,6 @@ $M_3$的电流方程如下，代入得到
 \end{itemize}
 这里有关中间节点$v_{d1}$的增益$A_{d1}$和电阻$R_{d1}$对后续分析有重要作用。另外，要注意的是，计算$R_{d1}$必须用\xref{fig:中间节点电阻--共源共栅放大器}，通过\xref{fig:输出电阻--共源共栅放大器}中计算出的$v_{d1}/i_{out}$不是$R_{d1}$，这个结果无意义。
 
-\begin{Figure}[共源共栅放大器的小信号电路]
-    \begin{FigureSub}[电压增益;电压增益--共源共栅放大器]
-        \includegraphics[scale=0.8]{build/Chapter04C_04.fig.pdf}
-    \end{FigureSub}\\ \vspace{0.1cm}
-    \begin{FigureSub}[输出电阻（输出节点）;输出电阻--共源共栅放大器]
-        \includegraphics[scale=0.8]{build/Chapter04C_05.fig.pdf}
-    \end{FigureSub}
-    \begin{FigureSub}[输出电阻（中间节点）;中间节点电阻--共源共栅放大器]
-        \includegraphics[scale=0.8]{build/Chapter04C_06.fig.pdf}
-    \end{FigureSub}
-\end{Figure}
 
 关于\xref{fig:电压增益--共源共栅放大器}，我们分别对$v_{d1}$节点和$v_{out}$节点列出电流方程
 \begin{Gather}
@@ -182,9 +186,22 @@ $M_3$的电流方程如下，代入得到
     \begin{pmatrix}
         v_{in}&-v_{d1}&0\\
         0&-v_{d1}&0\\
-        v_{b1}&v_{out}-v_{d1}&v_{out}\\
+        v_{d1}&v_{out}-v_{d1}&v_{out}\\
     \end{pmatrix}
 \end{Equation}
+
+\begin{Figure}[共源共栅放大器的小信号电路]
+    \begin{FigureSub}[电压增益;电压增益--共源共栅放大器]
+        \includegraphics[scale=0.8]{build/Chapter04C_04.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.1cm}
+    \begin{FigureSub}[输出电阻（输出节点）;输出电阻--共源共栅放大器]
+        \includegraphics[scale=0.8]{build/Chapter04C_05.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[输出电阻（中间节点）;中间节点电阻--共源共栅放大器]
+        \includegraphics[scale=0.8]{build/Chapter04C_06.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
 比较共源管和共栅管的差异是很有意思的，从电压矩阵可以看出，对于$g_mv_{gs}$项
 \begin{itemize}
     \item 共源管中$v_{s}=0$，因此$g_m$放大的是（正的）栅端电压。
@@ -248,9 +265,9 @@ $M_3$的电流方程如下，代入得到
 \begin{Gather}
     g_{m1}v_{gs1}+g_{ds1}v_{ds1}-g_{m2}v_{gs2}-g_{bs2}v_{bs2}-g_{ds2}v_{ds2}=0\\
     g_{m2}v_{gs2}+g_{bs2}v_{bs2}+g_{ds2}v_{ds2}+g_{ds3}v_{ds3}=i_{d1}
-\end{Gather}\nopagebreak
+\end{Gather}
 代入电压矩阵并令$v_{in}=0$，分别用Mathematica解出$R_{out}=v_{out}/i_{out}$和$R_{d1}=v_{d1}/i_{d1}$\goodbreak
-\begin{BoxFormula}[共源共栅放大器--输出节点--输出电阻]
+\begin{BoxFormula}[共源共栅放大器--输出节点--输出电阻]*
     共源共栅放大器中，输出节点处的输出电阻为
     \begin{Equation}
         \qquad
@@ -409,3 +426,136 @@ $M_3$的电流方程如下，代入得到
     \includegraphics[scale=0.8]{build/Chapter04C_03.fig.pdf}
 \end{Figure}
 进一步，如果考虑增益$A_v$的话，使用共源共栅电流源作为负载的共源共栅放大器，首次将增益从过去的$g_{m}g_{ds}^{-1}$提升至$(g_mg_{ds}^{-1})^2$数量级。这才是共源共栅放大器真正的高增益潜力！
+
+\subsection{共源共栅放大器的设计}
+设计是什么？到目前为止，我们已经做过各类反相器和共源共栅放大器的仿真了，这些仿真能否称得上设计呢？并不是，因为在这个过程中，例如宽场比$W/L$和偏置电压$V_G$等各种参量的取值是比较随意的，只要能令放大器正常工作，并能尽可能简化结果分析（例如，先前所有仿真中都令NMOS的$(W/L)=1$而令PMOS的$(W/L)=2$就是为了让两者的$\beta$基本一致）即可。诚然，这些仿真显著增进了我们对放大器电路的认识和理解，但这并不是设计。
+
+设计的本质是：根据给定的设计指标，确定一组设计参量使之满足这些指标。
+\begin{Figure}[共源共栅放大器的设计]
+    \includegraphics[scale=0.8]{build/Chapter04C_10.fig.pdf}
+\end{Figure}
+
+在本小节，我们就通过\xref{fig:共源共栅放大器的设计}所示的电路，以共源共栅放大器为例了解设计的基本流程。注意到这里的\xref{fig:共源共栅放大器的设计}和\xref{fig:共源共栅放大器}有一些不同，这是因为，在实际的电路中$V_{G2},V_{G3}$这样的偏置电压是通过电流镜结构偏置，换言之$V_{G2},V_{G3}$并不是一个设计参量，它们由$M_4,M_5$和$I_{REF}$产生。
+
+在\xref{tab:共源共栅放大器的设计指标}中，我们给出了设计指标
+\begin{Tablex}[共源共栅放大器的设计指标]{lXrrr}
+    <设计指标&符号&数值&单位\\>
+    电源电压&$V_{DD}$&$=5$&\si{V}\\
+    增益&$A_v$&$=-50$&--\\
+    最小饱和输出电压&$V_{OUT,\min}$&$=1.5$&\si{V}\\
+    最大饱和输出电压&$V_{OUT,\max}$&$=4.0$&\si{V}\\
+    摆率（在$C_L=\SI{5}{pF}$负载上）&$\te{SR}$&$\geq 10$&\si{V.us^{-1}}\\
+    功率&$P_{diss}$&$\leq 1$&\si{mW}\\
+\end{Tablex}
+这里需要解释的是功率$P_{diss}$和摆率$\te{SR}$的概念，它们分别定义如下
+\begin{BoxDefinition}[功率]
+    功率$P_{diss}$的定义为
+    \begin{Equation}
+        P_{diss}=I_{SS} V_{DD}
+    \end{Equation}
+\end{BoxDefinition}
+\begin{BoxDefinition}[摆率]
+    摆率$\te{SR}$的定义为
+    \begin{Equation}
+        \te{SR}=I_{SS}/C_L
+    \end{Equation}
+\end{BoxDefinition}
+其中$I_{SS}$是放大器自$V_{DD}$至地的总电流，这里有$I_{D1}=I_{D2}=I_{D3}=I_{SS}$成立。另外应指出的是，摆率$\te{SR}=I_{SS}/C_L$反映的其实是放大器在一定电容负载上的开关速度，因此，其大小是和负载电容有关的，故说明摆率$\te{SR}$时，必须要加上该摆率$\te{SR}$对应负载电容$C_L$的大小。
+
+接下来我们可以开始设计了，这里的设计参量是$I_{SS},I_{REF}$以及各管的$(W/L)$。
+
+根据$P_{diss}=I_{SS}V_{DD}\leq\SI{1}{mW}$，以及$V_{DD}=\SI{5}{V}$，可确定
+\begin{Equation}
+    I_{SS}\leq 200\si{uA}
+\end{Equation}
+根据$\te{SR}=I_{SS}/C_L\geq\SI{10}{V.us^{-1}}$，以及$C_L=\SI{5}{pF}$，可确定
+\begin{Equation}
+    I_{SS}\geq 50\si{uA}
+\end{Equation}
+我们不妨取一中间值
+\begin{Equation}
+    I_{SS}=100\si{uA}
+\end{Equation}
+
+在设计中，结果是不唯一的，例如这里指标对$I_{SS}$的约束只是一个范围，可自由裁量。
+
+根据\xref{fml:共源共栅放大器--饱和输出电压范围--最大值}给出的$V_{OUT,\max}$
+\begin{Equation}
+    V_{OUT,\max}=V_{DD}-V_{ON3}=V_{DD}-\sqrt{\frac{2I_{SS}}{K_p'(W_3/L_3)}}=\SI{4.0}{V}
+\end{Equation}
+解得$M_3$的宽长比
+\begin{Equation}
+    (W_3/L_3)=4.00
+\end{Equation}
+进而可求出$M_3$的过驱电压
+\begin{Equation}
+    V_{ON3}=\sqrt{\frac{2I_{SS}}{K_p'(W_3/L_3)}}=\SI{1.0}{V}
+\end{Equation}
+这里$M_5$与$M_3$的过驱电压相同
+\begin{Equation}
+    V_{ON5}=V_{ON3}=\SI{1.0}{V}
+\end{Equation}
+根据\xref{fml:并联MOS管的特性关系}，这里$(W_5/L_5)$将取决于$I_{REF}$的取值
+\begin{Equation}
+    \frac{(W_5/L_5)}{(W_3/L_3)}=\frac{I_{REF}}{I_{SS}}
+\end{Equation}
+这里$I_{REF}$尚没有约束，不妨令$I_{REF}$和$I_{SS}$相同
+\begin{Equation}
+    I_{REF}=\SI{100}{uA}
+\end{Equation}
+这样$M_5$的宽长比就和$M_3$一致
+\begin{Equation}
+    (W_5/L_5)=4.00
+\end{Equation}
+根据\xref{fml:共源共栅放大器--输出节点--电压增益}给出的$A_v$
+\begin{Equation}
+    A_v=-g_{m1}g_{ds3}^{-1}=-\frac{\sqrt{2K_n'(W_1/L_1)I_{SS}}}{\lambda_p I_{SS}}=-50
+\end{Equation}
+解得$M_1$的宽长比
+\begin{Equation}
+    (W_1/L_1)=2.94
+\end{Equation}
+进而可求出$M_1$的过驱电压
+\begin{Equation}
+    V_{ON1}=\sqrt{\frac{2I_{SS}}{K_n'(W_1/L_1)}}=\SI{0.8}{V}
+\end{Equation}
+根据\xref{fml:共源共栅放大器--饱和输出电压范围--最小值}给出的$V_{OUT,\min}$
+\begin{Equation}
+    V_{OUT,\min}=V_{ON1}+V_{ON2}=V_{ON1}+\sqrt{\frac{2I_{SS}}{K_n'(W_2/L_2)}}=\SI{1.5}{V}
+\end{Equation}
+解得$M_2$的宽长比
+\begin{Equation}
+    (W_2/L_2)=3.71
+\end{Equation}
+进而可求出$M_2$的过驱电压
+\begin{Equation}
+    V_{ON2}=\sqrt{\frac{2I_{SS}}{K_n'(W_1/L_1)}}=\SI{0.7}{V}
+\end{Equation}
+
+现在的问题是为$M_2$提供偏置的$M_4$，尽管两者电流相同，但是两者的过驱电压不同
+\begin{Equation}
+    V_{ON4}=V_{ON1}+V_{ON2}=\SI{1.5}{V}
+\end{Equation}
+故两者的宽长比并不相同，根据\xref{fml:并联MOS管的特性关系}
+\begin{Equation}
+    \frac{(W_4/L_4)}{(W_2/L_2)}=\frac{V_{ON2}^2}{V_{ON4}^2}
+\end{Equation}
+解得$M_4$的宽长比
+\begin{Equation}
+    (W_4/L_4)=0.81
+\end{Equation}
+至此，我们就完成了设计，将求得的所有的设计参量记录在\xref{tab:共源共栅放大器的设计结果}中。
+
+
+\begin{Tablex}[共源共栅放大器的设计结果]{lXr}
+    <设计参量&设计结果&备注\\>
+    $I_{SS}$&$\SI{100}{uA}$\\
+    $I_{REF}$&$\SI{100}{uA}$\\
+    $(W_1/L_1)$&$2.94$&$V_{ON1}=\SI{0.8}{V}$\\
+    $(W_2/L_2)$&$3.71$&$V_{ON2}=\SI{0.7}{V}$\\
+    $(W_3/L_3)$&$4.00$&$V_{ON3}=\SI{1.0}{V}$\\
+    $(W_4/L_4)$&$0.81$&$V_{ON4}=\SI{1.5}{V}$\\
+    $(W_5/L_5)$&$4.00$&$V_{ON5}=\SI{1.0}{V}$\\
+\end{Tablex}
+
+需要指出的是，这里完成的设计距离实际还有一定距离。首先，我们定出的宽长比都不是整数，这是不现实的，应当就近取整并检验。其次，我们并没有考虑体效应对阈值电压的计算，这可能会使结果偏离预期。因此，一个好的设计需要在手工计算结果的基础上通过仿真不断调试。

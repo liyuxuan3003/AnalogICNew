@@ -1,0 +1,75 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xSetX
+\xValDefine{xL}[-3]
+\xValDefine{xC}[-0.5]
+\xValDefine{xR}[+3]
+\xValMiddle{xS}{xC}{xR}
+\xValOffset{xO}{xR}[1.2]
+
+\xSetY
+\xValDefine{yB}[-3]
+\xValDefine{yA}[+3]
+\xValMiddle{yC}{yA}{yB}
+\xValPropor{yPB}{yA}{yB}[0.73]
+\xValPropor{yPA}{yPB}{yA}[0.5]
+\xValMiddle{yMA}{yA}{yPA}
+\xValMiddle{yMB}{yPA}{yPB}
+\xValMiddle{yMC}{yPB}{yB}
+
+\path (xC|-yMB) node[nmos] (M1) {$M_1$};
+\path (xR|-yMB) node[nmos,xscale=-1] (M2) {\ctikzflipx{$M_2$}};
+\path (xC|-yMA) node[pmos,xscale=-1] (M3) {\ctikzflipx{$M_3$}};
+\path (xR|-yMA) node[pmos] (M4) {$M_4$};
+\path (xS|-yMC) node[nmos] (M5) {$M_5$};
+\path (xL|-yMC) node[nmos,xscale=-1] (M6) {\ctikzflipx{$M_6$}};
+
+\draw (xC|-yA) node[vdd,anchor=north] {$V_{DD}$} -- (M3.S);
+\draw (xR|-yA) node[vdd,anchor=north] {$V_{DD}$} -- (M4.S);
+\draw (M1.D) -- (M3.D);
+\draw (M2.D) -- (M4.D);
+\draw (M3.G) -- (M4.G);
+\draw (M5.G) -- (M6.G);
+\draw (M1.S) -- (M1.S|-yPB) -- (M2.S|-yPB) -- (M2.S);
+\draw (M5.D) -- (xS|-yPB) node[circ] {};
+
+\draw (M3.G) node[circ] {} |- (M3.D) node[circ] {};
+\draw (M6.G) node[circ] {} |- (M6.D) node[circ] {};
+
+\draw (M5.S) -- (M5.S|-yB) node[tlground] {};
+\draw (M6.S) -- (M6.S|-yB) node[tlground] {};
+
+\draw (xL|-yA) node[vdd,anchor=north] {$V_{DD}$} to[isource,l=$I_{REF}$] (xL|-M1.G) -- (M6.D);
+
+\draw (xR|-yPA) to[short,*-o] (xO|-yPA) node[right] {$v_{OUT}$};
+
+\path (M1.G) node[ocirc] {} node[left] {$v_{IN1}$};
+\path (M2.G) node[ocirc] {} node[right] {$v_{IN2}$};
+
+
+% \path (xC|-yMB) node[jump crossing] (C24) {};
+
+% \draw (xL|-yA) node[vdd,anchor=north] {$V_{DD}$} to[isource,l=$I_{REF}$] (xL|-yPA) to[short] (M4.D);
+% \draw (M4.S) to[short] (xL|-yB) node[tlground] {};
+
+% \draw (M4.G) -- (C24.west) (C24.east) -- (M2.G);
+
+% \draw (xC|-yA) node[vdd,anchor=north] {$V_{DD}$} to[short] (M5.S);
+% \draw (M5.D) -- (C24.north) (C24.south) to[isource,l_=$I_{REF}$] (xC|-yB) node[tlground] {};
+
+% \draw (M5.G) -- (M3.G);
+
+% \path (M4.G) node[circ] {};
+% \path (M4.D) node[circ] {};
+% \path (M5.G) node[circ] {};
+% \path (M5.D) node[circ] {};
+
+% \path (M1.G) node[ocirc] {} node[left] {$v_{IN}$};
+
+\xValBorder{xL}[-0.95]{xO}[1.15]{yB}[-0.6]{yA}[+0.7]*
+
+\end{tikzpicture}
+\end{document}
