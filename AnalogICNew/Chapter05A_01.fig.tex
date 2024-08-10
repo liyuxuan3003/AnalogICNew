@@ -1,0 +1,33 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xSetX
+\xValDefine{xL}[-4]
+\xValDefine{xR}[+4]
+\xValPropor{xC}{xL}{xR}[0.65]
+\xValPropor{xLin}{xL}{xC}[0.3]
+\xValPropor{xLx}{xLin}{xC}[0.5]
+\xValPropor{xRx}{xC}{xR}[0.65]
+
+\xSetY
+\xValDefine{yB}[-1]
+\xValDefine{yA}[+1]
+
+\path (xLx|-yB) node[draw,thick,circle,minimum size=0.8cm,inner sep=0cm] (S) {$\Sum$};
+\path (xC|-yB) node[draw,thick,rectangle,minimum height=0.8cm,minimum width=1.2cm,inner sep=0cm] (As) {$A(s)$}; 
+\path (xC|-yA) node[draw,thick,rectangle,minimum height=0.8cm,minimum width=1.2cm,inner sep=0cm] (F) {$F$}; 
+\path (xLin|-yB) node[draw,thick,rectangle,minimum height=0.8cm,minimum width=1.2cm,inner sep=0cm] (Ain) {$A_{in}$}; 
+
+\draw[-latex] (xL|-yB) node[ocirc] {} node[left] {$v_{in}(s)$} -- (Ain.west);
+\draw[-latex] (Ain.east) -- (S.west) node[below left] {$+$};
+\draw[-latex] (S.east) -- (As.west);
+\draw (As.east) -- (xR|-yB) node[ocirc] {} node[right] {$v_{out}(s)$};
+\draw[-latex] (xRx|-yB) node[circ] {} |- (F.east);
+\draw[-latex] (F.west) -| (S.north) node[above right] {$-$};
+
+\xValBorder{xL}[-1.2]{xR}[+1.35]{yB}[-0.8]{yA}[+0.8]*
+
+\end{tikzpicture}
+\end{document}
