@@ -58,11 +58,11 @@
     \end{Equation}
 \end{BoxFormula}
 
-我们或许会关心电流镜在小信号下的输出电阻$r_{out}$是多少？不过，由于电流镜的左右两侧是相互独立的，电流镜的$r_{out}$就是其右侧电流漏的$r_{out}$，我们可直接引用\xref{fml:MOS电流漏的输出电阻}的结果。
+我们或许会关心电流镜在小信号下的输出电阻$r_{out}$是多少？不过，由于电流镜的左右两侧是相互独立的，电流镜的$R_{out}$就是其右侧电流漏的$R_{out}$，我们可直接引用\xref{fml:MOS电流漏的输出电阻}的结果。
 \begin{BoxFormula}[简单电流镜的输出电阻]
     简单电流镜的输出电阻为
     \begin{Equation}
-        r_{out}=g_{ds2}^{-1}
+        R_{out}=g_{ds2}^{-1}
     \end{Equation}
 \end{BoxFormula}
 
@@ -161,7 +161,7 @@
 共源共栅电流镜是对简单电流镜的改进，其输出侧 改用了共源共栅电流漏，电路如\xref{fig:共源共栅电流镜}所示。\goodbreak
 
 \begin{Figure}[共源共栅电流镜]
-    \includegraphics{build/Chapter03D_08.fig.pdf}
+    \includegraphics[scale=0.8]{build/Chapter03D_08.fig.pdf}
 \end{Figure}
 
 我们先来推定所有节点的电压$v_D$，这会最终给出输出电压$v_{OUT}$的最小值$V_{\min}$
@@ -203,11 +203,11 @@
     \item 共源共栅电流镜的电流特性改善了很多，这是得益于共源共栅电流漏的高输出阻抗。
 \end{itemize}
 
-类似的，共源共栅电流镜的$r_{out}$也完全等同于共源共栅电流漏，引用\xref{fml:MOS共源共栅电流漏的输出电阻}，请注意从电流漏到电流镜，下标发生了变化，原先电流漏的$M_1,M_2$对应的是这里电流镜的$M_2,M_4$。
+类似的，共源共栅电流镜的$R_{out}$也完全等同于共源共栅电流漏，引用\xref{fml:MOS共源共栅电流漏的输出电阻}，请注意从电流漏到电流镜，下标发生了变化，原先电流漏的$M_1,M_2$对应的是这里电流镜的$M_2,M_4$。
 \begin{BoxFormula}[共源共栅电流镜的输出电阻]
     共源共栅电流镜的输出电阻为
     \begin{Equation}
-        r_{out}=g_{ds4}^{-1}\qty[1+g_{ds2}^{-1}(g_{m4}+g_{bs4}+g_{ds4})]
+        R_{out}=g_{ds4}^{-1}\qty[1+g_{ds2}^{-1}(g_{m4}+g_{bs4}+g_{ds4})]
     \end{Equation}
 \end{BoxFormula}
 
@@ -434,22 +434,22 @@
 这就得到
 \begin{Equation}&[12]
     \qquad
-    r_{out}=\frac{v_{out}}{i_{out}}=g_{ds4}^{-1}\qty[1+g_{m1}g_{m4}g_{ds1}^{-1}(g_{m2}+g_{ds2})^{-1}+(g_{bs4}+g_{ds4})(g_{m2}+g_{ds2})^{-1}]
+    R_{out}=\frac{v_{out}}{i_{out}}=g_{ds4}^{-1}\qty[1+g_{m1}g_{m4}g_{ds1}^{-1}(g_{m2}+g_{ds2})^{-1}+(g_{bs4}+g_{ds4})(g_{m2}+g_{ds2})^{-1}]
     \qquad
 \end{Equation}
 就方括号内的项做一些整理
 \begin{Equation}&[13]
-    r_{out}=g_{ds4}^{-1}\qty[1+(g_{m1}g_{m4}g_{ds1}^{-1}+g_{bs4}+g_{ds4})(g_{m2}+g_{ds2})^{-1}]
+    R_{out}=g_{ds4}^{-1}\qty[1+(g_{m1}g_{m4}g_{ds1}^{-1}+g_{bs4}+g_{ds4})(g_{m2}+g_{ds2})^{-1}]
 \end{Equation}
 将结果整理如下
 \begin{BoxFormula}[威尔逊电流镜的输出电阻]
     威尔逊电流镜的输出电阻为
     \begin{Equation}
-        r_{out}=g_{ds4}^{-1}\qty[1+(g_{m1}g_{m4}g_{ds1}^{-1}+g_{bs4}+g_{ds4})(g_{m2}+g_{ds2})^{-1}]
+        R_{out}=g_{ds4}^{-1}\qty[1+(g_{m1}g_{m4}g_{ds1}^{-1}+g_{bs4}+g_{ds4})(g_{m2}+g_{ds2})^{-1}]
     \end{Equation}
 \end{BoxFormula}
 
-若忽略些不重要的项，这里$r_{out}$可以近似为$r_{out}=g_{m1}^{\vphantom{-1}}g_{m2}^{-1}g_{m4}^{\vphantom{-1}}g_{ds1}^{-1}g_{ds4}^{-1}$，这表明，威尔逊电流镜具有和共源共栅电流镜一样的$r_{out}=g_{m}g_{ds}^{-2}$量级的输出电阻，验证了分析\xref{fig:威尔逊电流镜--基础型的大信号特性}时的说法。
+若忽略些不重要的项，这里$R_{out}$可以近似为$R_{out}=g_{m1}^{\vphantom{-1}}g_{m2}^{-1}g_{m4}^{\vphantom{-1}}g_{ds1}^{-1}g_{ds4}^{-1}$，这表明，威尔逊电流镜具有和共源共栅电流镜一样的$R_{out}=g_{m}g_{ds}^{-2}$量级的输出电阻，验证了分析\xref{fig:威尔逊电流镜--基础型的大信号特性}时的说法。
 
 \subsection{威尔逊电流镜--改进型}
 威尔逊电流镜的改进方向就是解决$v_{DS1}\neq v_{DS2}$，新增了一个$M_3$管，如\xref{fig:威尔逊电流镜--改进型}所示。有趣的是，这看上去很像\xref{fig:共源共栅电流镜}的共源共栅电流镜，只不过$M_1,M_2$的接法发生了互换
@@ -501,11 +501,11 @@
 在本节结尾，我们做一个总结，以梳理电流镜结构演进中到改善了什么性能。
 
 \begin{Tablex}[电流镜的特性总结]{Xrllll}
-    <电流镜类型&晶体管数&$V_{\min}$&$r_{out}$&$v_{D1}$&$v_{D2}$\\>
+    <电流镜类型&晶体管数&$V_{\min}$&$R_{out}$&$v_{D1}$&$v_{D2}$\\>
     简单电流镜&$2$&$V_{ON}$&$g_{ds}^{-1}$&$V_{ON}+V_T$&$V_{ON}+v_{OUT}$\\
     共源共栅电流镜&$4$&$2V_{ON}+V_T$&$g_{ds}^{-2}g_m^{\vphantom{-1}}$&$V_{ON}+V_T$&$V_{ON}+V_T$\\
     高摆幅共源共栅电流镜--基础型&$4$&$2V_{ON}$&$g_{ds}^{-2}g_m^{\vphantom{-1}}$&$V_{ON}+V_T$&$V_{ON}$\\
     高摆幅共源共栅电流镜--改进型&$5$&$2V_{ON}$&$g_{ds}^{-2}g_m^{\vphantom{-1}}$&$V_{ON}$&$V_{ON}$\\
     威尔逊电流镜--基础型&$3$&$2V_{ON}+V_T$&$g_{ds}^{-2}g_m^{\vphantom{-1}}$&$2V_{ON}+2V_T$&$V_{ON}+V_T$\\
-    威尔逊电流镜--改进型（$r_{out}$未验证）&$4$&$2V_{ON}+V_T$&$g_{ds}^{-2}g_m^{\vphantom{-1}}$&$V_{ON}+V_T$&$V_{ON}+V_T$\\
+    威尔逊电流镜--改进型（$R_{out}$未验证）&$4$&$2V_{ON}+V_T$&$g_{ds}^{-2}g_m^{\vphantom{-1}}$&$V_{ON}+V_T$&$V_{ON}+V_T$\\
 \end{Tablex}

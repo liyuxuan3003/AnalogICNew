@@ -1,7 +1,7 @@
 \section{温度无关的基准}
 在本节，我们来探讨如何设计温度无关的基准。开始之前，既然要探讨温度，我们有必要先了解各类器件（电阻、PN结、MOS管）的特性是如何随温度变化的。随后，我们将会计算\xref{sec:电源无关的基准}中给出的未考虑温度的简单基准的温度特性。这些之后，我们再讨论温度无关的基准的设计。
 
-\subsection{电阻的温度特性}
+\subsection{温度特性--电阻}
 电阻的电阻值$R$会随温度$T$的变化而变化，这通常可以描述为一个指数关系。
 \begin{BoxFormula}[电阻的温度特性]
     电阻的电阻值$R$温度特性为
@@ -48,7 +48,7 @@
 \end{BoxFormula}
 电阻的温度系数$\alpha_R$取决于电阻的制造工艺，如多晶硅电阻$\alpha_R=\SI{1500}{ppm.K^{-1}}$。
 
-\subsection{PN结的温度特性}
+\subsection{温度特性--PN结}
 
 我们知道，PN结正向导通时遵循的电流公式是
 \begin{Equation}
@@ -186,7 +186,7 @@ PN结的温度性质如\xref{fig:PN结的温度性质}，取$I_{s0}=\SI{1e-15}{A
     \end{FigureSub}
 \end{Figure}
 
-\subsection{MOS管的温度特性}
+\subsection{温度特性--MOS管}
 我们知道，MOS管饱和区电流遵循的公式是
 \begin{Equation}
     i_D=\frac{1}{2}K'(W/L)(v_{GS}-V_T)^2
