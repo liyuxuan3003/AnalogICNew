@@ -8,7 +8,7 @@ SetDirectory[NotebookDirectory[]];
 Needs["MaTeX`"];
 
 
-nbFileName="ChapterXXA_01.fig.wls";
+nbFileName="Chapter05A_01.fig.wls";
 nbPDFName="build/"<>StringReplace[nbFileName,"wls"->"pdf"];
 nbPDFNameList=(StringReplace[nbPDFName,".fig"->#<>".fig"]&)/@Alphabet[];
 Export[nbPDFName,""]
@@ -176,7 +176,11 @@ xphim=ArcCos[Sqrt[4 zeta^4+1]-2 zeta^2]
 ff8=FullSimplify[xphim/Pi];
 fig8=Plot[ff8,{zeta,0,1},PlotRange->{-0.025,0.525},PlotStyle->Black,
 FrameTicks->{xTicks[{0,1,0.1},{2,1}],xTicks[{0,0.5,0.1},{2,1}]},
-Evaluate@xFigLabel["\\zeta","\\phi_m"],
+Epilog->{Red,Thickness[0.004],Dashed,Line[{{-1,1/3},{2,1/3}}],Line[{{-1,1/4},{2,1/4}}],
+Text[xLaTeX["\\pi/3",0.7],{0.95,1/3+0.02}],
+Text[xLaTeX["\\pi/4",0.7],{0.95,1/4+0.02}]
+},
+Evaluate@xFigLabel["\\zeta","\\phi_m/\\pi"],
 Evaluate@xFigConfig]
 
 
@@ -192,7 +196,7 @@ xwn=Sqrt[w1 w2(1+Avf0 Fx)];
 FullSimplify[{wp1x,wp2x}//.{zeta->xzeta,wn->xwn}]
 
 
-fig={}
+fig={fig1,fig2,fig3,fig4,fig5,fig6,fig7,fig8}
 
 
 figWithName=Transpose[{fig,nbPDFNameList[[1;;Length[fig]]]}];

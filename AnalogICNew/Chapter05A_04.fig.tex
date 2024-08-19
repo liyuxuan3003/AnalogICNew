@@ -1,0 +1,29 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+    
+\xSetX
+\xValDefine{xL}[-3]
+\xValDefine{xR}[+3]
+\xValPropor{xO}{xL}{xR}[0.5]
+\xValPropor{xRI}{xL}{xO}[0.6]
+\xValPropor{xRO}{xR}{xO}[0.4]
+
+\xSetY
+\xValDefine{yB}[-1.5]
+\xValDefine{yA}[+1.5]
+\xValPropor{yO}{yB}{yA}[0.55]
+\xValPropor{yR}{yB}{yO}[0.6]
+
+\path (xO|-yO) node[op amp] (A) {};
+
+\draw (xL|-A.-) node[left] {$v_{in}$} to[R=$R_1$,o-] (A.-);
+\draw (A.+) -- (xRI|-A.+) -- (xRI|-yR) to[short] (xRI|-yB) node[tlground] {};
+\draw (A.out) to[short,-o] (xR|-A.out) node[right] {$v_{out}$};
+\draw (xRO|-A.out) to[short,*-] (xRO|-yA) to[R=,l_=$R_2$] (xRI|-yA) to[short,-*] (xRI|-A.-);
+
+\xValBorder{xL}[-0.8]{xR}[+0.9]{yB}[-0.5]{yA}[+0.7]*
+
+\end{tikzpicture}
+\end{document}

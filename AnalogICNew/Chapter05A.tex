@@ -1,1 +1,438 @@
 \section{二阶反馈系统}
+
+\subsection{反馈的数学模型}
+\xref{fig:反馈系统的框图}展示了一个反馈系统的信号流图，其中，$A_v(s)$是开环增益，$F$是反馈系数，$A_{in}$是输入端的一个衰减系数，$A_{in}$反映的是实际电路中由于反馈结构的引入使得输入会经过一定的分压才能到达放大器的输入端，我们后面会看到$A_{in}$的存在对于正确建模反馈电路是必须的。
+
+现在我们想要计算的是放大器的闭环增益$A_{vf}(s)=v_{out}(s)/v_{in}(s)$是多少。
+
+\begin{Figure}[反馈系统的框图]
+    \includegraphics[scale=0.8]{build/Chapter05A_02.fig.pdf}
+\end{Figure}
+
+首先，$v_{out}(s)$是$A_{v}(s)$放大$A_{in}v_{in}(s)$和$-Fv_{out}(s)$的结果
+\begin{Equation}
+    v_{out}(s)=A_v(s)[A_{in}v_{in}(s)-Fv_{out}(s)]
+\end{Equation}
+展开整理得到
+\begin{Equation}
+    v_{out}(s)=A_v(s)A_{in}v_{in}(s)-A_v(s)Fv_{out}(s)
+\end{Equation}
+将$v_{out}(s)$的项都移至左侧
+\begin{Equation}
+    v_{out}(s)[1+A_v(s)F]=v_{in}(s)A_v(s)A_{in}
+\end{Equation}
+即得
+\begin{Equation}
+    A_{vf}(s)=\frac{v_{out}(s)}{v_{in}(s)}=\frac{A_v(s)A_{in}}{1+A_v(s)F}
+\end{Equation}
+和之前习惯一致，在低频$s=0$下记$A_{vf}(s)=A_{vf}$且$A_v(s)=A_v$
+\begin{Equation}
+    A_{vf}=\frac{A_vA_{in}}{1+A_vF}
+\end{Equation}
+由于低频下运算放大器的增益$A_v$都是相当大的，因此可以适用深度负反馈近似$A_{v}F\gg 1$
+\begin{Equation}
+    A_{vf}=\frac{A_{in}}{F}
+\end{Equation}
+这里要解释一下为什么低频下才做深度负反馈近似。这是因为$A_{v}$一定很大但$A_{v}(s)$就不一定了，任何放大器的增益都会随着频率增加逐渐减小至单位增益，故$A_{v}(s)$下不应做该近似。
+
+\begin{BoxFormula}[反馈的闭环增益]
+    闭环增益可以表达为
+    \begin{Equation}
+        A_{vf}(s)=\frac{A_v(s)A_{in}}{1+A_v(s)F}
+    \end{Equation}
+    闭环增益在低频下可以适用深度负反馈近似
+    \begin{Equation}
+        A_{vf}=\frac{A_vA_{in}}{1+A_vF}=\frac{A_{in}}{F}
+    \end{Equation}
+\end{BoxFormula}
+请注意！低频/高频、开环/闭环是两个维度，不要搞混$A_{v},A_{v}(s),A_{vf},A_{vf}(s)$之间的关系。
+
+现在我们用如\xref{fig:同相放大器}和\xref{fig:反相放大器}所示的同相放大器和反相放大器来验证一下上述理论。
+\begin{Figure}[典型的运放电路]
+    \begin{FigureSub}[同相放大器]
+        \includegraphics[scale=0.8]{build/Chapter05A_03.fig.pdf}
+    \end{FigureSub}
+    \hspace{0.25cm}
+    \begin{FigureSub}[反相放大器]
+        \includegraphics[scale=0.8]{build/Chapter05A_04.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+1. 同相放大器的闭环增益是
+\begin{Equation}
+    A_{vf}=1+\frac{R_2}{R_1}
+\end{Equation}
+对于反馈系数$F$，输出$v_{out}$经$R_1,R_2$在$R_1$上的分压是反馈电压
+\begin{Equation}
+    F=\frac{R_1}{R_1+R_2}
+\end{Equation}
+对于输入系数$A_{in}$，输入$v_{in}$之间连接到了放大器，故为$1$
+\begin{Equation}
+    A_{in}=1
+\end{Equation}
+根据\xref{fml:反馈的闭环增益}验证结果
+\begin{Equation}
+    A_{vf}=\frac{A_{in}}{F}=\frac{R_1+R_2}{R_1}=1+\frac{R_2}{R_1}
+\end{Equation}
+
+2. 反相放大器的闭环增益是
+\begin{Equation}
+    A_{vf}=-\frac{R_2}{R_1}
+\end{Equation}
+对于反馈系数$F$，输出$v_{out}$经$R_1,R_2$在$R_1$上的分压是反馈电压
+\begin{Equation}
+    F=\frac{R_1}{R_1+R_2}
+\end{Equation}
+对于输入系数$A_{in}$，我们注意到，这里输入无法直接到达放大器了！真正到达放大器的输入电压是$v_{in}$经$R_1,R_2$在$R_2$上的分压，且要取一个负号，考虑到连接的是负输入端
+\begin{Equation}
+    A_{in}=-\frac{R_2}{R_1+R_2}
+\end{Equation}
+根据\xref{fml:反馈的闭环增益}验证结果
+\begin{Equation}
+    A_{vf}=\frac{A_{in}}{F}=-\frac{R_2}{R_1+R_2}\frac{R_1+R_2}{R_1}=-\frac{R_2}{R_1}
+\end{Equation}
+由此也可以看出为什么我们一定要有$A_{in}$项，否则反相放大器将无法适用反馈模型！
+
+\subsection{二阶反馈系统的频域分析}\setpeq{二阶反馈系统的频域分析}
+一阶系统的频域函数是
+\begin{Equation}&[1]
+    A_{v}(s)=\frac{A_v}{(1-s/\omega_{p1})}
+\end{Equation}
+二阶系统的频域函数是
+\begin{Equation}&[2]
+    A_{v}(s)=\frac{A_v}{(1-s/\omega_{p1})(1-s/\omega_{p2})}
+\end{Equation}
+二阶反馈系统本质上仍是二阶系统，当然也可以适用\xrefpeq{2}的表达式，但不同之处在于，通常的极点$\omega_{p1},\omega_{p2}$是一个负的实数，而反馈系统的极点$\omega_{p1},\omega_{p2}$可能具有虚部！因而我们愿意用一种略微不同的形式来表达二阶反馈系统的频域函数，以更好体现反馈将如何影响系统
+\begin{Equation}&[3]
+    A_{vf}(s)=\frac{A_{vf}}{1+2\zeta s/\omega_n+s^2/\omega_n^2}
+\end{Equation}
+这里$\zeta,\omega_n$是待说明含义的参量。我们现在要考虑这样一个问题，假设有一个如\xrefpeq{2}所示的开环的二阶系统，具有$\omega_{p1},\omega_{p2}$的极点和$A(s)$的开环增益，现在按\xref{fig:反馈系统的框图}施加反馈系数和输入系数分别为$F$和$A_{in}$的负反馈，得到的闭环增益$A_{vf}(s)$将是什么？或者说，得到的闭环增益$A_{vf}(s)$如果写成\xrefpeq{3}的形式，其中$\zeta,\omega_n$将是什么形式？新的极点$\omega_{p1}',\omega_{p2}$又会位于哪里？这并不复杂，我们可以从描述$A_{vf}(s)$与$A_v(s)$关系的\xref{fml:反馈的闭环增益}开始
+\begin{Equation}&[4]
+    A_{vf}(s)=\frac{A_v(s)A_{in}}{1+A_v(s)F}
+\end{Equation}
+这里的$A_v(s)$是一个二阶系统，代入\xrefpeq{2}
+\begin{Equation}&[5]
+    A_{vf}(s)=\frac{A_vA_{in}}{(1-s/\omega_{p1})(1-s/\omega_{p2})+A_vF}
+\end{Equation}
+展开得到
+\begin{Equation}&[6]
+    A_{vf}(s)=\frac{A_vA_{in}}{1+A_vF-s(\omega_{p1}+\omega_{p2})\omega_{p1}\omega_{p2}+s^2/\omega_{p1}\omega_{p2}}
+\end{Equation}
+上下同除$1+A_vF$
+\begin{Equation}&[7]
+    \qquad\qquad
+    A_{vf}(s)=\frac{A_vA_{in}/(1+A_vF)}{1-s(\omega_{p1}+\omega_{p2})/[\omega_{p1}\omega_{p2}(1+A_vF)]+s^2/[\omega_{p1}\omega_{p2}(1+A_vF)]}
+    \qquad\qquad
+\end{Equation}
+此时，参照\xref{fml:反馈的闭环增益}，注意到\xrefpeq{7}的分子恰好是$A_{vf}$
+\begin{Equation}&[8]
+    \qquad\qquad
+    A_{vf}(s)=\frac{A_{vf}}{1-s(\omega_{p1}+\omega_{p2})/[\omega_{p1}\omega_{p2}(1+A_vF)]+s^2/[\omega_{p1}\omega_{p2}(1+A_vF)]}
+    \qquad\qquad
+\end{Equation}
+现在我们对比\xrefpeq{3}和\xrefpeq{8}
+\begin{Equation}
+    \frac{2\zeta}{\omega_n}=-\frac{\omega_{p1}+\omega_{p2}}{\omega_{p1}\omega_{p2}(1+A_vF)}\qquad \frac{1}{\omega_n^2}=\frac{1}{\omega_{p1}\omega_{p2}(1+A_vF)}
+\end{Equation}
+求出$\omega_n$
+\begin{Equation}
+    \omega_n=\sqrt{\omega_{p1}\omega_{p2}(1+A_vF)}
+\end{Equation}
+求出$\zeta$
+\begin{Equation}
+    \zeta=-\frac{1}{2}\frac{\omega_{p1}+\omega_{p2}}{\sqrt{\omega_{p1}\omega_{p2}(1+A_vF)}}
+\end{Equation}
+将结论整理如下
+\begin{BoxFormula}[二阶反馈系统的频域特性]
+    二阶反馈系统的频域特性为
+    \begin{Equation}
+        A_{vf}(s)=\frac{A_{vf}}{1+2\zeta s/\omega_n+s^2/\omega_n^2}
+    \end{Equation}
+    其中$\zeta$和$\omega_n$分别为
+    \begin{Equation}
+        \zeta=-\frac{1}{2}\frac{\omega_{p1}+\omega_{p2}}{\sqrt{\omega_{p1}\omega_{p2}(1+A_vF)}}\qquad
+        \omega_n=\sqrt{\omega_{p1}\omega_{p2}(1+A_vF)}
+    \end{Equation}
+\end{BoxFormula}
+现在让我们来分析一下结论，\xref{fig:二阶反馈系统的频域特性--频域特性}展示了不同$\zeta$下$|A_{vf}(s)|$随$s=\j\omega$变化的曲线，这里参数$\zeta$被称为阻尼系数，$\zeta<1$称为欠阻尼，$\zeta>1$称为过阻尼。我们注意到$|A_{vf}(s)|$随$\omega$的变化整体呈现一个低通特性，但是当$\zeta<\sqrt{2}/2=0.707$时在$\omega=\omega_n$处会出现一个尖峰。
+\begin{Figure}[二阶反馈系统的频域特性]
+    \begin{FigureSub}[频域特性;二阶反馈系统的频域特性--频域特性]
+        \includegraphics[scale=0.8]{build/Chapter05A_01a.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[频域特性的最大值;二阶反馈系统的频域特性--频域特性最大值]
+        \includegraphics[scale=0.8]{build/Chapter05A_01b.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+\xref{fig:二阶反馈系统的频域特性--频域特性最大值}展示了峰值随$\zeta$的变化（仅对$\zeta<0.707$有效），可以证明峰值符合以下公式
+\begin{BoxFormula}[二阶反馈系统的频域峰值]
+    二阶反馈系统的频域特性的峰值为
+    \begin{Equation}
+        \max|A_{vf}(s)|=\frac{1}{2\zeta\sqrt{1-\zeta^2}}
+    \end{Equation}
+\end{BoxFormula}
+
+
+不过我们可能更关心的是新极点的位置！根据\xref{fml:二阶反馈系统的频域特性}中$A_{vf}(s)$表达式的分母
+\begin{Equation}
+    1+2\zeta s/\omega_n+s^2/\omega_n^2=0
+\end{Equation}
+两边同乘以$\omega_{n}$，整理得到
+\begin{Equation}
+    s^2+2\zeta\omega_ns+\omega_n^2=0
+\end{Equation}
+这里$s$的两个解分别记为$\omega_{p1}',\omega_{p2}'$，若假设$\zeta<1$，则产生一组共轭复根
+\begin{Gather}
+    \omega_{p1}'=-\omega_n\zeta+\j\omega_n\sqrt{1-\zeta^2}\\
+    \omega_{p2}'=-\omega_n\zeta-\j\omega_n\sqrt{1-\zeta^2}
+\end{Gather}
+
+注意到$\omega_{p1}'$和$\omega_{p2}'$的模实际上就是$\omega_n$
+\begin{Equation}
+    |\omega_{p1}'|=|\omega_{p2}'|=\omega_n
+\end{Equation}
+注意到$\omega_{p1}'$和$\omega_{p2}'$的实部$-\omega_n\zeta$恰是$\omega_{p1},\omega_{p2}$的平均值（考虑\xref{fml:二阶反馈系统的频域特性}中$\zeta,\omega_n$的式子）
+\begin{Equation}
+    \Re\omega_{p1}'=\Re\omega_{p2}'=-\omega_n\zeta=\frac{\omega_{p1}+\omega_{p2}}{2}
+\end{Equation}
+
+\xref{fig:反馈对极点的影响}可视化了$\omega_{p1},\omega_{p2},\omega_{p1}',\omega_{p2}'$的位置，对于一个二阶反馈系统（在欠阻尼$\zeta<1$时）
+\begin{itemize}
+    \item 反馈会使极点变为一对共轭复数。
+    \item 闭环极点$\omega_{p1}',\omega_{p2}'$的实部是开环极点$\omega_{p1},\omega_{p2}$的中间点。
+    \item 闭环极点$\omega_{p1}',\omega_{p2}'$至原点的距离是$\omega_n$，这也是参量$\omega_n$的实际意义。
+\end{itemize}
+\begin{Figure}[反馈对极点的影响]
+    \includegraphics[scale=0.8]{build/Chapter05A_05.fig.pdf}
+\end{Figure}
+
+最后我们再思考一个问题，即$\zeta,\omega_n$关于$\omega_{p1},\omega_{p2},A_v,F$的表达式到底说明了什么。
+
+对于$\omega_n$
+\begin{Equation}
+    \omega_n=\sqrt{\omega_{p1}\omega_{p2}(1+A_vF)}
+\end{Equation}
+若将反馈系数$F$视为$F=1$\footnote{若$A_{in}=1$则$A_{vf}=1/F$，故$F=1$相当于$A_{vf}=1$的电压跟随器。}，则$\omega_n$大约是$\omega_{p1},\omega_{p2}$几何平均的$\sqrt{A_v}$倍，换言之，在闭环下的$\omega_n$要比$|\omega_{p1}|,|\omega_{p2}|$大的多。我们知道，幅频特性中频率每遇到一个极点$|\omega_{p1}|,|\omega_{p2}|$就会增加$\SI{-20}{dB.dec^{-1}}$的下降速率，而对于极点是复数的情况，幅频特性中频率是在遇到极点的模，即$\omega_n$时开始下降。由此可见，反馈令放大器的带宽变大了，这是增益减小换来的。
+
+对于$\zeta$
+\begin{Equation}
+    \zeta=-\frac{1}{2}\frac{\omega_{p1}+\omega_{p2}}{\sqrt{\omega_{p1}\omega_{p2}(1+A_vF)}}
+\end{Equation}
+假设$\omega_{p1}=\omega_{p2}$且$F=1$
+\begin{Equation}
+    \zeta=\frac{1}{\sqrt{A_v}}
+\end{Equation}
+假设$\omega_{p1}\ll\omega_{p2}$且$F=1$
+\begin{Equation}
+    \zeta=\frac{1}{2\sqrt{A_v}}\sqrt{\frac{\omega_{p2}}{\omega_{p1}}}
+\end{Equation}
+这就告诉我们，由于$A_v$很大，通常而言，阻尼系数$\zeta$是非常接近$0$的值，不过，如果能让两个极点$\omega_{p1},\omega_{p2}$相距比较远，阻尼系数$\zeta$亦会因正比于$\sqrt{\omega_{p2}/\omega_{p1}}$变得稍大一些。但总的来说，在模拟集成电路设计的背景下，阻尼系数$\zeta$都是位于$0<\zeta<1$的欠阻尼区间中的。
+
+\subsection{二阶反馈系统的时域分析}\setpeq{二阶反馈系统的时域分析}
+根据\xref{fml:二阶反馈系统的频域特性}
+\begin{Equation}&[1]
+    A_{vf}(s)=\frac{A_{vf}}{1+2\zeta s/\omega_n+s^2/\omega_n^2}
+\end{Equation}
+上下同乘$\omega_n^2$
+\begin{Equation}&[2]
+    A_{vf}(s)=\frac{A_{vf}\omega_n^2}{s^2+2\zeta\omega_ns+\omega_n^2}
+\end{Equation}
+我们现在想求出该系统的阶跃相应，换言之，要求出$A_{vf}(s)$的拉普拉斯逆变换对时间的积分。
+
+我们知道有以下拉普拉斯逆变换关系
+\begin{Equation}&[3]
+    \frac{k}{(s-\alpha)^2+k^2}\to \e^{\alpha t}\sin kt
+\end{Equation}
+而其积分
+\begin{Equation}&[4]
+    \Int[0][t]\e^{\alpha\tau}\sin k\tau\dd{\tau}=\frac{1}{\alpha^2+k^2}\qty[k+\e^{\alpha t}(\alpha\sin kt-k\cos kt)]
+\end{Equation}
+应用辅助角公式
+\begin{Equation}&[5]
+    \Int[0][t]\e^{\alpha\tau}\sin k\tau\dd{\tau}=\frac{1}{\alpha^2+k^2}\qty[k+\e^{\alpha t}\sqrt{a^2+k^2}\sin(kt+\phi)]
+\end{Equation}
+其中$\phi$为
+\begin{Equation}&[6]
+    \phi=-\arctan(\frac{k}{\alpha})
+\end{Equation}
+将\xrefpeq{3}的分母展开
+\begin{Equation}&[7]
+    (s-\alpha)^2+k^2=s^2-2\alpha s+\alpha^2+k^2
+\end{Equation}  
+将\xrefpeq{7}与\xrefpeq{2}的分母比较
+\begin{Equation}&[8]
+    -2\alpha=2\zeta\omega_n\qquad \alpha^2+k^2=\omega_n^2
+\end{Equation}
+故有
+\begin{Equation}&[9]
+    \alpha=-\omega_n\zeta\qquad k=\omega_n\sqrt{1-\zeta^2}
+\end{Equation}
+这样一来，\xrefpeq{2}就可以表示为
+\begin{Equation}&[10]
+    A_{vf}(s)\frac{A_{vf}\omega_n}{\sqrt{1-\zeta^2}}\frac{k}{(s-\alpha)^2+k^2}
+\end{Equation}
+故$A_{vf}(s)$对应的时域阶跃响应$v_{OUT}(t)$是
+\begin{Equation}&[11]
+    v_{OUT}(t)=\frac{A_{vf}\omega_n}{\sqrt{1-\zeta^2}}\frac{1}{\alpha^2+k^2}\qty[k+\e^{\alpha t}\sqrt{\alpha^2+k^2}\sin(kt+\phi)]
+\end{Equation}
+代入\xrefpeq{9}给出的$\alpha$和$k$
+\begin{Equation}&[12]
+    \qquad\qquad
+    v_{OUT}(t)=\frac{A_{vf}\omega_n}{\sqrt{1-\zeta^2}}\frac{1}{\omega_n^2}\qty[\omega_n\sqrt{1-\zeta^2}+\e^{-\omega_n\zeta t}\omega_n\sin(\omega_n\sqrt{1-\zeta}t+\phi)]
+    \qquad\qquad
+\end{Equation}
+化简得到
+\begin{Equation}
+    v_{OUT}(t)=A_{vf}\qty[1+\frac{1}{\sqrt{1-\zeta^2}}\e^{-\omega_n\zeta t}\sin(\omega_n\sqrt{1-\zeta^2}t+\phi)]
+\end{Equation}
+其中$\phi$根据\xrefpeq{6}代入\xrefpeq{9}得到
+\begin{Equation}
+    \phi=-\arctan(\frac{k}{\alpha})=\arctan(\frac{\sqrt{1-\zeta^2}}{\zeta})
+\end{Equation}
+将结论整理如下
+\begin{BoxFormula}[二阶反馈系统的时域特性]
+    二阶反馈系统的时域阶跃响应为
+    \begin{Equation}
+        v_{OUT}(t)=A_{vf}\qty[1+\frac{1}{\sqrt{1-\zeta^2}}\e^{-\omega_n\zeta t}\sin(\omega_n\sqrt{1-\zeta^2}t+\phi)]
+    \end{Equation}
+    其中$\phi$为
+    \begin{Equation}
+        \phi=\arctan(\frac{\sqrt{1-\zeta^2}}{\zeta})
+    \end{Equation}
+\end{BoxFormula}
+上述结论仅适合$\zeta<1$的欠阻尼情形，如前文所述，我们主要关心的是欠阻尼。对于$\zeta>1$的过阻尼情形，需要用另外一组拉普拉斯逆变换，其解将包含双曲正弦函数。或者，如果愿意将这里的$\sin$视为一个复变函数，那么\xref{fml:二阶反馈系统的时域特性}对于欠阻尼$\zeta<1$和过阻尼$\zeta>1$都是成立的。
+
+在\xref{fig:二阶反馈系统的时域特性--时域阶跃响应}中展示了不同$\zeta$下阶跃响应$v_{OUT}(t)$随时间$t$的变化，观察到$\zeta<1$时会发生过冲。请注意，时域冲击响应在$\zeta<1$时的过冲和频域特性在$\zeta<0.707$时会有额外峰值这两件事间没有必然联系，不必过度解读为何两者的$\zeta$的分界线不同。\xref{fig:二阶反馈系统的时域特性--时域阶跃响应的过冲时间}展示了过冲量随$\zeta$的变化，过冲的定义是“峰值$-$终值$/$终值”。\xref{fig:二阶反馈系统的时域特性--时域阶跃响应的过冲时间}展示了过冲发生时间$t_p$随$\zeta$的变化。
+\begin{Figure}[二阶反馈系统的时域特性]
+    \begin{FigureSub}[时域阶跃响应;二阶反馈系统的时域特性--时域阶跃响应]
+        \includegraphics[scale=0.8]{build/Chapter05A_01c.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[时域阶跃响应的过冲量;二阶反馈系统的时域特性--时域阶跃响应的过冲量]
+        \includegraphics[scale=0.8]{build/Chapter05A_01e.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.25cm}
+    \begin{FigureSub}[时域阶跃响应的过冲时间;二阶反馈系统的时域特性--时域阶跃响应的过冲时间]
+        \includegraphics[scale=0.8]{build/Chapter05A_01d.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+我们可以证明过冲和过冲发生时间分别是
+\begin{BoxFormula}[二阶反馈系统的过冲]
+    二阶反馈系统的时域阶跃响应的过冲量为
+    \begin{Equation}
+        v_{OUT}(t_p)/A_{vf}-1=\exp(-\frac{-\pi\zeta}{\sqrt{1-\zeta^2}})
+    \end{Equation}
+    其中过冲时间$t_p$为
+    \begin{Equation}
+        t_p=\frac{\pi}{\omega_n\sqrt{1-\zeta^2}}
+    \end{Equation}
+\end{BoxFormula}
+通过这一小节的研究，我们建立了过冲和$\zeta$的关系，这样一来，对于一个未知的二阶反馈系统，只要能测定其阶跃响应的过冲量，我们就可以反推出其阻尼系数$\zeta$是多少了！
+
+\subsection{相位裕度}
+相位裕度到底是什么？让我们回到\xref{fig:反馈系统的框图}，这里$L_v(s)=A(s)F$称为环路增益，在低频下这当然是一个负反馈（即$-L_v(s)$是负的），然而，我们知道，当频率越过一个极点后，相位会减小$\pi/2$。对于具有两个极点的二阶反馈系统，$-L_v(s)$的相位最终会从$\pi$减小到$0$，这意味着系统会从负反馈转变为正反馈，若此时$|L_v(s)|\geq 1$，那么这种正反馈将会是自激的，这样的系统是不稳定的。因此，相位裕度的定义就应是：当$|L_v(s)|=1$时$-L_v(s)$尚余的相位！
+
+相位裕度通常记为$\phi_m$，现在我们要求的就是$\phi_m$关于$\zeta$的表达式。
+
+根据\xref{fml:反馈的闭环增益}\setpeq{相位裕度}
+\begin{Equation}
+    A_{vf}(s)=\frac{A_v(s)A_{in}}{1+A_{v}(s)F}
+\end{Equation}
+两边同乘$1+A_v(s)F$
+\begin{Equation}
+    A_{vf}(s)+A_{vf}(s)A_v(s)F=A_v(s)A_{in}
+\end{Equation}
+整理得到
+\begin{Equation}
+    A_{vf}(s)+A_{v(s)}F[A_{vf}(s)-A_{in}F^{-1}]=0
+\end{Equation}
+由此就得到了环路增益$L_v(s)$的表达式
+\begin{Equation}
+    L_v(s)=A_{v}(s)F=\frac{A_{vf}(s)}{A_{in}F^{-1}-A_{vf}(s)}
+\end{Equation}
+关于$A_{vf}(s)$代入\xref{fml:二阶反馈系统的频域特性}
+\begin{Equation}
+    L_v(s)=\frac{A_{vf}}{A_{in}F^{-1}(1-2\zeta s/\omega_n+s^2/\omega_n^2)-A_{vf}}
+\end{Equation}
+然而，再次依据\xref{fml:反馈的闭环增益}，有$A_{vf}=A_{in}F^{-1}$，因此
+\begin{Equation}
+    L_v(s)=\frac{1}{-2\zeta s/\omega_n+s^2/\omega_n^2}
+\end{Equation}
+我们记令$|L_v(s)|=1$的$s=\j\omega$中的$\omega$为$\omega_c$，称为截止频率。在上式中代入$s=\j\omega_c$
+\begin{Equation}&[1]
+    L_v(\j\omega_c)=\frac{1}{-\j 2\zeta(\omega_c/\omega_n)-(\omega_c/\omega_n)^2}
+\end{Equation}
+由于
+\begin{Equation}
+    |L_v(\j\omega_c)|=1
+\end{Equation}
+因此
+\begin{Equation}
+    |-\j 2\zeta(\omega_c/\omega_n)-(\omega_c/\omega_n)^2|=1
+\end{Equation}
+即
+\begin{Equation}
+    \sqrt{(\omega_c/\omega_n)^4+4\zeta(\omega_c/\omega_n)^2}=1
+\end{Equation}
+平方得到
+\begin{Equation}
+    (\omega_c/\omega_n)^4+4\zeta(\omega_c/\omega_n)^2-1=0
+\end{Equation}
+解得
+\begin{Equation}
+    (\omega_c/\omega_n)^2=\frac{1}{2}\qty[-4\zeta^2\pm\sqrt{16\zeta^4+4}]
+\end{Equation}
+化简，另外这里显然是取正的
+\begin{Equation}
+    (\omega_c/\omega_n)^2=\sqrt{4\zeta^4+1}-2\zeta^2
+\end{Equation}
+故有
+\begin{Equation}
+    \omega_c=\omega_n\qty[\sqrt{4\zeta^4+1}-2\zeta^2]^{1/2}
+\end{Equation}
+将该结论整理如下
+\begin{BoxFormula}[二阶反馈系统的截止频率]
+    二阶反馈系统的截止频率为
+    \begin{Equation}
+        \omega_c=\omega_n\qty[\sqrt{4\zeta^4+1}-2\zeta^2]^{1/2}
+    \end{Equation}
+\end{BoxFormula}\setpeq{相位裕度}
+按照相位裕度$\phi_m$的定义，它是$-L_v(s)$的相位，当$s=\j\omega_c$时
+\begin{Equation}
+    \phi_m=\arg[-L_v(\j\omega_c)]
+\end{Equation}
+根据\xrefpeq{1}
+\begin{Equation}
+    \phi_m=\arctan\qty(\frac{2\zeta}{\omega_c/\omega_n})
+\end{Equation}
+就$\omega_c$代入\xref{fml:二阶反馈系统的截止频率}
+\begin{Equation}
+    \phi_m=\arctan(\frac{2\zeta}{(\sqrt{4\zeta^4+1}-2\zeta^2)^{1/2}})
+\end{Equation}
+我们可以证明这等价于
+\begin{Equation}
+    \phi_m=\arccos(\sqrt{4\zeta^4+1}-2\zeta^2)
+\end{Equation}
+将该结论整理如下
+\begin{BoxFormula}[二阶反馈系统的相位裕度]
+    二阶反馈系统的相位裕度为
+    \begin{Equation}
+        \phi_m=\arccos(\sqrt{4\zeta^4+1}-2\zeta^2)
+    \end{Equation}
+\end{BoxFormula}
+\xref{fig:二阶系统的相位裕度}、\xref{fig:二阶系统的过冲}、\xref{fig:二阶系统的截止频率}依次展示了相位裕度、过冲、截止频率
+\begin{itemize}
+    \item 表示过冲的\xref{fig:二阶系统的过冲}与先前\xref{fig:二阶反馈系统的时域特性--时域阶跃响应的过冲量}完全相同，只不过纵轴换成了对数轴。
+    \item 相位裕度$\phi_m$通常被认为至少要达到$\pi/4$，最好能达到$\pi/6$。
+    \item 相位裕度$\phi_m$随$\zeta$的增大而增大，过冲则随$\zeta$的增大而减小。
+    \item 相位裕度$\phi_m$可以通过测定阶跃响应的过冲间接确定！
+    \item 截止频率$\omega_c$在$\zeta$接近零时基本等于$\omega_n$，随着$\zeta$的增大$\omega_c$会变得略微小于$\omega_n$。
+\end{itemize}
+
+\begin{Figure}[二阶系统的若干特性]
+    \begin{FigureSub}[二阶系统的相位裕度]
+        \includegraphics[scale=0.8]{build/Chapter05A_01h.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[二阶系统的过冲]
+        \includegraphics[scale=0.8]{build/Chapter05A_01f.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.25cm}
+    \begin{FigureSub}[二阶系统的截止频率]
+        \includegraphics[scale=0.8]{build/Chapter05A_01g.fig.pdf}
+    \end{FigureSub}
+\end{Figure}

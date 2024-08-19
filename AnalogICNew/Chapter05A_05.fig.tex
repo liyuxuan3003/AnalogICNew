@@ -1,0 +1,61 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xSetX
+\xValDefine{xL}[-4]
+\xValDefine{xR}[+4]
+\xValMiddle{xC}{xL}{xR}
+\xValPropor{xPA}{xL}{xC}[0.3]
+\xValPropor{xPB}{xL}{xC}[0.7]
+\xValMiddle{xPC}{xPA}{xPB}
+\xValOffset{xAux}{xC}[0.5]
+\xValMiddle{xAuxC}{xC}{xAux}
+
+\xSetY
+\xValDefine{yB}[-4]
+\xValDefine{yA}[+4]
+\xValMiddle{yC}{yB}{yA}
+\xValPropor{yPA}{yC}{yA}[0.7]
+\xValPropor{yPB}{yC}{yB}[0.7]
+\xValOffset{yAux}{yC}[-0.5]
+\xValOffset{yAuxC}{yAux}{yC}
+
+\draw[thin,-latex] (xL|-yC) -- (xR|-yC) node[above] {$\sigma$};
+\draw[thin,-latex] (xC|-yB) -- (xC|-yA) node[right] {$\j\omega$};
+
+\foreach \p in {xPA|-yC,xPB|-yC}
+{
+    \draw[thick,gray] (\p) -- ++ (+0.1,+0.1);
+    \draw[thick,gray] (\p) -- ++ (+0.1,-0.1);
+    \draw[thick,gray] (\p) -- ++ (-0.1,+0.1);
+    \draw[thick,gray] (\p) -- ++ (-0.1,-0.1);
+}
+
+\foreach \p in {xPC|-yPA,xPC|-yPB}
+{
+    \draw[thick] (\p) -- ++ (+0.1,+0.1);
+    \draw[thick] (\p) -- ++ (+0.1,-0.1);
+    \draw[thick] (\p) -- ++ (-0.1,+0.1);
+    \draw[thick] (\p) -- ++ (-0.1,-0.1);
+}
+
+\path (xPA|-yC) node[below,gray] {$\omega_{p1}$};
+\path (xPB|-yC) node[below,gray] {$\omega_{p2}$};
+
+\path (xPC|-yPA) node[above] {$\omega_{p1}'$};
+\path (xPC|-yPB) node[below] {$\omega_{p2}'$};
+
+\draw[dashed,very thin] (xAux|-yPA) -- (xPC|-yPA) -- (xPC|-yPB) -- (xC|-yPB);
+
+\draw[latex-latex,ultra thin] (xAuxC|-yPA) -- node[right] {$\omega_n\sqrt{1-\zeta^2}$} (xAuxC|-yC);
+
+\draw[latex-latex,ultra thin] (xC|-yAuxC) -- node[below] {$\omega_n\zeta$} (xPC|-yAuxC);
+
+\draw[latex-latex,ultra thin] (xC|-yC) -- node[above right] {$\omega_n$} (xPC|-yPA);
+
+\xValBorder{xL}{xR}{yB}{yA}*
+
+\end{tikzpicture}
+\end{document}
