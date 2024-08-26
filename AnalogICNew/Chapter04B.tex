@@ -80,14 +80,6 @@
 \end{Equation}
 由此可见，$i_{D1},i_{D2}$仅是差模$v_{ID}$的函数，而与共模$v_{IC}$无关。这就论证了尾电流源可以完全抑制共模的影响！而且上述推导中仅涉及了$M_1,M_2$和$M_5$，与负载$M_3,M_4$无关，这就说明尾电流源的有效性是无关负载的。不过还应指出的是，不要指望这里$i_{D1},i_{D2}$的公式就能完整描述差分放大器的大信号特性，因为上述公式的推导过程是建立在所有MOS管均饱和的前提下，故仅在$v_{ID}$位于零附近时成立。当$v_{ID}$在更大尺度上变化时，必有MOS管退出饱和。
 
-理解尾电流源的用途后，现在正式开始分析大信号特性，对于差分放大器，要分为两步
-\begin{itemize}
-    \item 差模特性分析：令$v_{IC}$为一个合适的值，改变$v_{ID}$观察$v_{OUT}$的变化。
-    \item 共模特性分析：令$v_{ID}$为零，改变$v_{IC}$观察$v_{OUT}$的变化。
-\end{itemize}
-
-现在进行差模特性分析，差模的大信号特性仿真如\xref{fig:电流镜负载的差分放大器的差模特性}所示。
-
 \begin{Figure}[电流镜负载的差分放大器的差模特性]
     \begin{FigureSub}[电压特性;电压特性--电流镜差分放大器差模]
         \includegraphics[scale=0.6]{build/Chapter04B_01_0.fig.pdf}
@@ -114,6 +106,14 @@
         \includegraphics[scale=0.6]{build/Chapter04B_01_5.fig.pdf}
     \end{FigureSub}
 \end{Figure}
+
+理解尾电流源的用途后，现在正式开始分析大信号特性，对于差分放大器，要分为两步
+\begin{itemize}
+    \item 差模特性分析：令$v_{IC}$为一个合适的值，改变$v_{ID}$观察$v_{OUT}$的变化。
+    \item 共模特性分析：令$v_{ID}$为零，改变$v_{IC}$观察$v_{OUT}$的变化。
+\end{itemize}
+
+现在进行差模特性分析，差模的大信号特性仿真如\xref{fig:电流镜负载的差分放大器的差模特性}所示。
 
 首先，关于大信号特性的分析，有一个常用的技巧。电路的基本原理指出，两个串联在一起的MOS管上的电流相同。但如果，过驱电压又认为其中某一MOS管上的电流比另一MOS管更大，那么，过驱电压分析认为电流较大的MOS管将工作在线性区！换言之，其实质上没有这么大的电流，只是因为我们误认为其处于饱和区罢了。用“一山不容两虎”可以很精辟的概况该想法：两个串联的MOS管中电流较大的一方将被迫进入线性区以保证串联电流相等。
 
@@ -240,7 +240,6 @@ $M_5$的饱和条件是
         v_{IC}<V_{DD}-V_{ON4}-V_{T4}+V_{T2}\qquad v_{IC}>V_{ON5}+V_{ON2}+V_{T2}
     \end{Equation}
 \end{BoxFormula}
-这里我们也可以写出$V_{IC,\max}$和$V_{IC,\min}$的式子，分别代表共模输入下令所有管饱和的最高和最低的共模电平，这个概念被称为共模输入范围（Input Common-mode Range, ICMR）。
 
 \begin{Figure}[电流镜负载的差分放大器的共模特性]
     \begin{FigureSub}[电压特性;电压特性--电流镜差分放大器共模]
@@ -269,6 +268,7 @@ $M_5$的饱和条件是
     \end{FigureSub}
 \end{Figure}
 
+这里我们也可以写出$V_{IC,\max}$和$V_{IC,\min}$的式子，分别代表共模输入下令所有管饱和的最高和最低的共模电平，这个概念被称为共模输入范围（Input Common-mode Range, ICMR）。
 \begin{BoxFormula}[电流镜负载差分放大器--共模--饱和输入电压范围--最大值]
     电流镜负载差分放大器，在共模下，当所有管饱和时，输入电压的最大值是
     \begin{Equation}
@@ -302,8 +302,6 @@ $M_5$的饱和条件是
     \item 差分放大器中，由于节点众多，可以预期的是直接列写方程将导致无比复杂的结果，以至于对结果进行近似都成为一件很困难的事情。因此，有必要根据差模和共模的各自特性，分别先对电路进行不同的简化。换言之，这里不仅要对电路的计算结果做近似，还要对电路本身做近似，而且这种近似还要根据差模和共模的特性分别选定，是不同的。
 \end{itemize}
 
-第一步，我们分析差模，差模下输入$v_{in1}=+v_{id}/2$而$v_{in2}=-v_{id}/2$。差模下的核心近似假设是令$v_p=0$，换言之，在差模小信号下我们不考虑尾电流源$M_5$的影响，认为两侧的电路是直接交流接地。这是合理的，从\xref{fig:电压特性--电流镜差分放大器差模}中我们看到$v_P$在$v_{ID}=0$附近基本是平直的，这意味着小信号下应当可以近似$v_p=0$。另外，可以预期取$v_p=0$的近似对简化电路分析相当有效，因为忽略尾电流源$M_5$可以令两侧支路的$M_1,M_3$和$M_2,M_4$变成两个“基本”相互独立的部分，称“基本”是因为$M_3$和$M_4$仍然构成电流镜，故两侧支路势必还是会相互影响。
-
 \begin{Figure}[电流镜负载差分放大器的小信号电路]
     \begin{FigureSub}[差模增益;差模增益--电流镜负载差分]
         \includegraphics[scale=0.8]{build/Chapter04B_08.fig.pdf}
@@ -318,6 +316,8 @@ $M_5$的饱和条件是
         \includegraphics[scale=0.8]{build/Chapter04B_11.fig.pdf}
     \end{FigureSub}
 \end{Figure}
+第一步，我们分析差模，差模下输入$v_{in1}=+v_{id}/2$而$v_{in2}=-v_{id}/2$。差模下的核心近似假设是令$v_p=0$，换言之，在差模小信号下我们不考虑尾电流源$M_5$的影响，认为两侧的电路是直接交流接地。这是合理的，从\xref{fig:电压特性--电流镜差分放大器差模}中我们看到$v_P$在$v_{ID}=0$附近基本是平直的，这意味着小信号下应当可以近似$v_p=0$。另外，可以预期取$v_p=0$的近似对简化电路分析相当有效，因为忽略尾电流源$M_5$可以令两侧支路的$M_1,M_3$和$M_2,M_4$变成两个“基本”相互独立的部分，称“基本”是因为$M_3$和$M_4$仍然构成电流镜，故两侧支路势必还是会相互影响。
+
 差模增益的小信号电路如\xref{fig:差模增益--电流镜负载差分}所示，列出$v_{out1},v_{out2}$处的方程\setpeq{差模增益--电流镜负载差分}
 \begin{Gather}
     g_{m1}v_{gs1}+g_{ds1}v_{ds1}+g_{m3}v_{gs3}+g_{ds3}v_{ds3}=0\xlabelpeq{1}\\
@@ -567,6 +567,10 @@ $M_5$的饱和条件是
 \end{Figure}
 \xref{fig:电流镜负载差分放大器的电容分布}中，注意到尾电流源$M_5$再次被忽略，这是因为频率特性的分析主要也是针对差模增益而言，因此可以适用计算差模增益的近似，另外如果不做该近似又要考虑电容将过于复杂。
 
+\begin{Figure}[电流镜负载差分放大器的等效电容分布]
+    \includegraphics[scale=0.8]{build/Chapter04B_16.fig.pdf}
+\end{Figure}
+
 通过观察，我们注意到所有电容可以划分为以下七类，如\xref{fig:电流镜负载差分放大器的等效电容分布}所示
 \begin{itemize}
     \item 输入节点电容$C_{in1},C_{in2}$，即$v_{in1},v_{in2}$和地之间的电容。
@@ -574,10 +578,6 @@ $M_5$的饱和条件是
     \item 输出和输入间的跨接电容$C_{m1},C_{m2}$，即$v_{in1},v_{in2}$分别与$v_{out1},v_{out2}$间的电容。
     \item 输出和输出间的跨接电容$C_{m,out}$，即$v_{out1}$和$v_{out2}$之间的电容。
 \end{itemize}
-
-\begin{Figure}[电流镜负载差分放大器的等效电容分布]
-    \includegraphics[scale=0.8]{build/Chapter04B_16.fig.pdf}
-\end{Figure}
 
 \begin{BoxFormula}[电流镜负载差分放大器--电容]
     电流镜负载差分放大器中，电容$C_{in1},C_{in2},C_{out1},C_{out2},C_{m1},C_{m2},C_{m,out}$分别为
@@ -1101,87 +1101,160 @@ $M_5$的饱和条件是
     功率&$P_{diss}$&$\leq 1$&\si{mW}\\
 \end{Tablex}
 
-接下来我们可以开始设计了，这里的设计参量是$I_{SS},I_{REF}$以及各管的$(W/L)$。
+以下是与设计指标有关的方程
+\begin{Gather}
+    A_v=g_{m2}(g_{ds2}+g_{ds4})^{-1}\\
+    V_{IC,\min}=V_{ON2}+V_{ON5}+V_{T2}\\
+    V_{IC,\max}=V_{DD}-V_{ON4}\\
+    f_{\SI{-3}{dB}}=(g_{ds2}+g_{ds4})/(2\pi C_L)\\
+    \te{SR}=I_{D5}C_L^{-1}\\
+    P_{diss}=I_{D5}V_{DD}
+\end{Gather}
+在使用$f_{\SI{-3}{dB}}$时需要展开到$I_{D5}$上
+\begin{Equation}
+    f_{\SI{-3}{dB}}=(\lambda_{2}I_{D2}+\lambda_{4}I_{D4})/(2\pi C_L)=(\lambda_{2}+\lambda_{4})I_{D5}/(4\pi C_L)
+\end{Equation}
+以下是与电路结构有关的方程，其中我们设定$I_{REF}=I_{D5}$
+\begin{Gather}
+    I_{D2}=I_{D4}=I_{D5}/2\\
+    I_{D6}=I_{D5}\\
+    V_{ON6}=V_{ON5}\\
+    M_1=M_2\\
+    M_3=M_4
+\end{Gather}
+这里$M_1=M_2$和$M_3=M_4$的含义是，由于差分放大器的对称性要求，左侧$M_1,M_3$的所有变量（$W/L,I_D,V_{ON},g_m,g_{ds}$）均与右侧$M_2,M_4$完全相同。介于不涉及$M_1,M_3$的计算，制定设计流程不用考虑$M_1,M_3$的变量计算，只需要在最后列写设计结果时照抄$M_2,M_4$即可。
 
-根据$P_{diss}=I_{SS}V_{DD}\leq\SI{1}{mW}$，以及$V_{DD}=\SI{5}{V}$，可确定
-\begin{Equation}
-    I_{SS}\leq 200\si{uA}
-\end{Equation}
-根据$\te{SR}=I_{SS}/C_L\geq\SI{10}{V.us^{-1}}$，以及$C_L=\SI{5}{pF}$，可确定
-\begin{Equation}
-    I_{SS}\geq 50\si{uA}
-\end{Equation}
-根据$f_{-3\si{dB}}=1/(2\pi R_{out}C_L)\geq\SI{100}{kHz}$，并注意到
-\begin{Equation}
-    \qquad
-    f_{-3\si{dB}}=\frac{1}{2\pi R_{out}C_L}=\frac{1}{2\pi(g_{ds2}+g_{ds4})^{-1}C_L}=\frac{1}{2\pi(\lambda_n I_{SS}/2+\lambda_p I_{SS}/2)^{-1}C_L}
-    \qquad
-\end{Equation}
-再结合$C_L=\SI{5}{pF}$，可确定
-\begin{Equation}
-    I_{SS}\geq\SI{70}{mA}
-\end{Equation}
+我们现在开始构建设计流程，如\xref{tab:差分放大器的设计流程}所示
+\begin{enumerate}
+    \item 根据$P_{diss},\te{SR},f_{\SI{-3}{dB}}$折中确定$I_{D5}$，随后求出各管$I_D$和$g_{ds}$。
+    \item 应用$V_{IC,\max}=V_{DD}-V_{ON4}$解出$V_{ON4}$，至此$M_4$完备。
+    \item 应用$A_{v}=g_{m2}(g_{ds2}+g_{ds4})^{-1}$和已知的$g_{ds2},g_{ds4}$解出$g_{m2}$，至此$M_2$完备。
+    \item 应用$V_{IC,\min}=V_{ON2}+V_{ON5}+V_{T2}$和已知的$V_{ON2}$解出$V_{ON5}$，至此$M_5$完备。
+    \item 计算$V_{ON6}=V_{ON5}$，由于$M_6,M_5$的$V_{ON},I_D$均相同故可照抄其他参数，至此$M_6$完备。
+\end{enumerate}
 
-我们不妨取一中间值
-\begin{Equation}
-    I_{SS}=\SI{100}{uA}
-\end{Equation}
-我们不妨将$I_{REF}$定为与$I_{SS}$一致
-\begin{Equation}
-    I_{REF}=\SI{100}{uA}
-\end{Equation}
+\begin{Table}[差分放大器的设计流程]{p{2cm}p{\textwidth-4cm-6\tabcolsep}>{\raggedleft\arraybackslash}p{2cm}}
+    <计算步骤&计算式&结果\\>
+    01&$I_{D5}=P_{diss}V_{DD}^{-1}$&$\leq\SI{200}{uA}$\\
+    &$I_{D5}=\te{SR}\cdot C_L$&$\geq\SI{50}{uA}$\\
+    &$I_{D5}=4\pi f_{-\SI{3}{dB}}C_L/(\lambda_2+\lambda_4)$&$\geq\SI{70}{uA}$\\
+    &$I_{D5}$取范围内合适值&$\SI{100}{uA}$\\
+    &$I_{D2}=I_{D5}/2$&$\SI{50}{uA}$\\
+    &$I_{D4}=I_{D5}/2$&$\SI{50}{uA}$\\
+    &$I_{D6}=I_{D5}$&$\SI{100}{uA}$\\
+    &$g_{ds5}=\lambda_5I_{D5}$&$\SI{4.0}{uS}$\\
+    &$g_{ds2}=\lambda_2I_{D2}$&$\SI{2.0}{uS}$\\
+    &$g_{ds4}=\lambda_4I_{D4}$&$\SI{2.5}{uS}$\\
+    &$g_{ds6}=\lambda_6I_{D6}$&$\SI{4.0}{uS}$\\ \hlinelig
+    02&$V_{ON4}=V_{DD}-V_{IC,\max}$&$\SI{0.50}{V}$\\
+    &$W_4/L_4=2I_{D4}/K_4'V_{ON4}^2$&$\SI{8.00}{}$\\
+    &$g_{m4}=2I_{D4}/V_{ON4}$&$\SI{200}{uS}$\\ \hlinelig
+    03&$g_{m2}=A_v(g_{ds2}+g_{ds4})$&$\SI{450}{uS}$\\
+    &$W_2/L_2=\sqrt{2I_{D2}K_2'/g_{m2}^2}$&$\SI{18.41}{}$\\
+    &$V_{ON2}=2I_{D2}/g_{m2}$&$\SI{0.22}{V}$\\  \hlinelig
+    04&$V_{ON5}=V_{IC,\min}-V_{ON2}-V_{T2}$&$\SI{0.08}{V}$\\
+    &$W_5/L_5=2I_{D5}/K_5'V_{ON5}^2$&$\SI{300.56}{}$\\
+    &$g_{m5}=2I_{D5}/V_{ON5}$&$\SI{2571}{uS}$\\ \hlinelig
+    05&$V_{ON6}=V_{ON5}$&$\SI{0.08}{V}$\\
+    &$W_6/L_6=W_5/L_5$&$\SI{300.56}{}$\\
+    &$g_{m6}=g_{m5}$&$\SI{2571}{uS}$\\
+\end{Table}
 
-
-根据\xref{fml:电流镜负载差分放大器--共模--饱和输入电压范围--最大值}给出的$V_{IC,\max}$（忽略$M_2$的体效应则$V_{T2}=V_{T4}$可以约掉）
-\begin{Equation}
-    V_{IC,\max}=V_{DD}-V_{ON4}=V_{DD}-\sqrt{\frac{I_{SS}}{K_p'(W_4/L_4)}}=\SI{4.5}{V}
-\end{Equation}
-解得$M_4$的宽长比
-\begin{Equation}
-    (W_4/L_4)=8.00
-\end{Equation}
-进而可求出$M_4$的过驱电压
-\begin{Equation}
-    V_{ON4}=\sqrt{\frac{I_{SS}}{K_p'(W_4/L_4)}}=\SI{0.50}{V}
-\end{Equation}
-
-根据\xref{fml:电流镜负载差分放大器--右侧输出--差模增益}给出的$A_{vd2}=A_{v}$
-\begin{Equation}
-    A_{v}=g_{m2}(g_{ds2}+g_{ds4})^{-1}=\frac{\sqrt{K_n'(W_2/L_2)I_{SS}}}{\lambda_n I_{SS}/2+\lambda_p I_{SS}/2}=100
-\end{Equation}
-解得$M_2$的宽长比
-\begin{Equation}
-    (W_2/L_2)=18.41
-\end{Equation}
-进而可求出$M_2$的过驱电压
-\begin{Equation}
-    V_{ON2}=\sqrt{\frac{I_{SS}}{K_n'(W_2/L_2)}}=\SI{0.22}{V}
-\end{Equation}
-根据\xref{fml:电流镜负载差分放大器--共模--饱和输入电压范围--最小值}给出的$V_{IC,\min}$
-\begin{Equation}
-    \qquad\qquad
-    V_{IC,\min}=V_{ON2}+V_{ON5}+V_{T2}=V_{ON2}+V_{T2}+\sqrt{\frac{2I_{SS}}{K_n'(W_5/L_5)}}=\SI{1.0}{V}
-    \qquad\qquad
-\end{Equation}
-解得$M_5$的宽长比
-\begin{Equation}
-    (W_5/L_5)=300.56
-\end{Equation}
-进而可求出$M_5$的过驱电压
-\begin{Equation}
-    V_{ON5}=\sqrt{\frac{2I_{SS}}{K_n'(W_5/L_5)}}=\SI{0.08}{V}
-\end{Equation}
-至此，我们确定了$M_2,M_4,M_5$。最后，由于差分放大器的对称性，$M_1,M_2$及$M_3,M_4$具有相同的尺寸和过驱电压，另外由于我们前面令$I_{REF}=I_{SS}$，因此$M_6$和$M_5$也是完全相同的。
-
-
-\begin{Tablex}[差分放大器的设计结果]{lXr}
-    <设计参量&设计结果&备注\\>
-    $I_{SS}$&$\SI{100}{uA}$\\
-    $I_{REF}$&$\SI{100}{uA}$\\
-    $(W_1/L_1)$&$18.41$&$V_{ON1}=\SI{0.22}{V}$\\
-    $(W_2/L_2)$&$18.41$&$V_{ON2}=\SI{0.22}{V}$\\
-    $(W_3/L_3)$&$8.00$&$V_{ON3}=\SI{0.50}{V}$\\
-    $(W_4/L_4)$&$8.00$&$V_{ON4}=\SI{0.50}{V}$\\
-    $(W_5/L_5)$&$300.56$&$V_{ON5}=\SI{0.08}{V}$\\
-    $(W_6/L_6)$&$300.56$&$V_{ON6}=\SI{0.08}{V}$\\
+我们将设计结果整理在\xref{tab:差分放大器的设计结果}中
+\begin{Tablex}[差分放大器的设计结果]{Xccccc}
+<MOS管&$W/L$&$I_D$&$V_{ON}$&$g_m$&$g_{ds}$\\>
+$M_1$&18.41&\SI{50}{uA}&\SI{0.22}{V}&\SI{450}{uS}&\SI{2.0}{uS}\\
+$M_2$&18.41&\SI{50}{uA}&\SI{0.22}{V}&\SI{450}{uS}&\SI{2.0}{uS}\\
+$M_3$&8.00&\SI{50}{uA}&\SI{0.50}{V}&\SI{200}{uS}&\SI{2.5}{uS}\\
+$M_4$&8.00&\SI{50}{uA}&\SI{0.50}{V}&\SI{200}{uS}&\SI{2.5}{uS}\\
+$M_5$&300.56&\SI{100}{uA}&\SI{0.08}{V}&\SI{2571}{uS}&\SI{4.0}{uS}\\
+$M_6$&300.56&\SI{100}{uA}&\SI{0.08}{V}&\SI{2571}{uS}&\SI{4.0}{uS}\\
 \end{Tablex}
+
+% \newpage
+
+% 接下来我们可以开始设计了，这里的设计参量是$I_{SS},I_{REF}$以及各管的$(W/L)$。
+
+% 根据$P_{diss}=I_{SS}V_{DD}\leq\SI{1}{mW}$，以及$V_{DD}=\SI{5}{V}$，可确定
+% \begin{Equation}
+%     I_{SS}\leq 200\si{uA}
+% \end{Equation}
+% 根据$\te{SR}=I_{SS}/C_L\geq\SI{10}{V.us^{-1}}$，以及$C_L=\SI{5}{pF}$，可确定
+% \begin{Equation}
+%     I_{SS}\geq 50\si{uA}
+% \end{Equation}
+% 根据$f_{-3\si{dB}}=1/(2\pi R_{out}C_L)\geq\SI{100}{kHz}$，并注意到
+% \begin{Equation}
+%     \qquad
+%     f_{-3\si{dB}}=\frac{1}{2\pi R_{out}C_L}=\frac{1}{2\pi(g_{ds2}+g_{ds4})^{-1}C_L}=\frac{1}{2\pi(\lambda_n I_{SS}/2+\lambda_p I_{SS}/2)^{-1}C_L}
+%     \qquad
+% \end{Equation}
+% 再结合$C_L=\SI{5}{pF}$，可确定
+% \begin{Equation}
+%     I_{SS}\geq\SI{70}{mA}
+% \end{Equation}
+
+% 我们不妨取一中间值
+% \begin{Equation}
+%     I_{SS}=\SI{100}{uA}
+% \end{Equation}
+% 我们不妨将$I_{REF}$定为与$I_{SS}$一致
+% \begin{Equation}
+%     I_{REF}=\SI{100}{uA}
+% \end{Equation}
+
+
+% 根据\xref{fml:电流镜负载差分放大器--共模--饱和输入电压范围--最大值}给出的$V_{IC,\max}$（忽略$M_2$的体效应则$V_{T2}=V_{T4}$可以约掉）
+% \begin{Equation}
+%     V_{IC,\max}=V_{DD}-V_{ON4}=V_{DD}-\sqrt{\frac{I_{SS}}{K_p'(W_4/L_4)}}=\SI{4.5}{V}
+% \end{Equation}
+% 解得$M_4$的宽长比
+% \begin{Equation}
+%     (W_4/L_4)=8.00
+% \end{Equation}
+% 进而可求出$M_4$的过驱电压
+% \begin{Equation}
+%     V_{ON4}=\sqrt{\frac{I_{SS}}{K_p'(W_4/L_4)}}=\SI{0.50}{V}
+% \end{Equation}
+
+% 根据\xref{fml:电流镜负载差分放大器--右侧输出--差模增益}给出的$A_{vd2}=A_{v}$
+% \begin{Equation}
+%     A_{v}=g_{m2}(g_{ds2}+g_{ds4})^{-1}=\frac{\sqrt{K_n'(W_2/L_2)I_{SS}}}{\lambda_n I_{SS}/2+\lambda_p I_{SS}/2}=100
+% \end{Equation}
+% 解得$M_2$的宽长比
+% \begin{Equation}
+%     (W_2/L_2)=18.41
+% \end{Equation}
+% 进而可求出$M_2$的过驱电压
+% \begin{Equation}
+%     V_{ON2}=\sqrt{\frac{I_{SS}}{K_n'(W_2/L_2)}}=\SI{0.22}{V}
+% \end{Equation}
+% 根据\xref{fml:电流镜负载差分放大器--共模--饱和输入电压范围--最小值}给出的$V_{IC,\min}$
+% \begin{Equation}
+%     \qquad\qquad
+%     V_{IC,\min}=V_{ON2}+V_{ON5}+V_{T2}=V_{ON2}+V_{T2}+\sqrt{\frac{2I_{SS}}{K_n'(W_5/L_5)}}=\SI{1.0}{V}
+%     \qquad\qquad
+% \end{Equation}
+% 解得$M_5$的宽长比
+% \begin{Equation}
+%     (W_5/L_5)=300.56
+% \end{Equation}
+% 进而可求出$M_5$的过驱电压
+% \begin{Equation}
+%     V_{ON5}=\sqrt{\frac{2I_{SS}}{K_n'(W_5/L_5)}}=\SI{0.08}{V}
+% \end{Equation}
+% 至此，我们确定了$M_2,M_4,M_5$。最后，由于差分放大器的对称性，$M_1,M_2$及$M_3,M_4$具有相同的尺寸和过驱电压，另外由于我们前面令$I_{REF}=I_{SS}$，因此$M_6$和$M_5$也是完全相同的。
+
+
+% \begin{Tablex}[差分放大器的设计结果]{lXr}
+%     <设计参量&设计结果&备注\\>
+%     $I_{SS}$&$\SI{100}{uA}$\\
+%     $I_{REF}$&$\SI{100}{uA}$\\
+%     $(W_1/L_1)$&$18.41$&$V_{ON1}=\SI{0.22}{V}$\\
+%     $(W_2/L_2)$&$18.41$&$V_{ON2}=\SI{0.22}{V}$\\
+%     $(W_3/L_3)$&$8.00$&$V_{ON3}=\SI{0.50}{V}$\\
+%     $(W_4/L_4)$&$8.00$&$V_{ON4}=\SI{0.50}{V}$\\
+%     $(W_5/L_5)$&$300.56$&$V_{ON5}=\SI{0.08}{V}$\\
+%     $(W_6/L_6)$&$300.56$&$V_{ON6}=\SI{0.08}{V}$\\
+% \end{Tablex}
+

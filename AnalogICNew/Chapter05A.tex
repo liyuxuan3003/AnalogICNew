@@ -1,6 +1,4 @@
-\section{二阶反馈系统}
-
-\subsection{反馈的数学模型}
+\section{反馈的数学模型}
 \xref{fig:反馈系统的框图}展示了一个反馈系统的信号流图，其中，$A_v(s)$是开环增益，$F$是反馈系数，$A_{in}$是输入端的一个衰减系数，$A_{in}$反映的是实际电路中由于反馈结构的引入使得输入会经过一定的分压才能到达放大器的输入端，我们后面会看到$A_{in}$的存在对于正确建模反馈电路是必须的。
 
 现在我们想要计算的是放大器的闭环增益$A_{vf}(s)=v_{out}(s)/v_{in}(s)$是多少。
@@ -92,7 +90,7 @@
 \end{Equation}
 由此也可以看出为什么我们一定要有$A_{in}$项，否则反相放大器将无法适用反馈模型！
 
-\subsection{二阶反馈系统的频域分析}\setpeq{二阶反馈系统的频域分析}
+\section{二阶反馈系统的频域分析}\setpeq{二阶反馈系统的频域分析}
 一阶系统的频域函数是
 \begin{Equation}&[1]
     A_{v}(s)=\frac{A_v}{(1-s/\omega_{p1})}
@@ -226,7 +224,7 @@
 \end{Equation}
 这就告诉我们，由于$A_v$很大，通常而言，阻尼系数$\zeta$是非常接近$0$的值，不过，如果能让两个极点$\omega_{p1},\omega_{p2}$相距比较远，阻尼系数$\zeta$亦会因正比于$\sqrt{\omega_{p2}/\omega_{p1}}$变得稍大一些。但总的来说，在模拟集成电路设计的背景下，阻尼系数$\zeta$都是位于$0<\zeta<1$的欠阻尼区间中的。
 
-\subsection{二阶反馈系统的时域分析}\setpeq{二阶反馈系统的时域分析}
+\section{二阶反馈系统的时域分析}\setpeq{二阶反馈系统的时域分析}
 根据\xref{fml:二阶反馈系统的频域特性}
 \begin{Equation}&[1]
     A_{vf}(s)=\frac{A_{vf}}{1+2\zeta s/\omega_n+s^2/\omega_n^2}
@@ -300,6 +298,18 @@
 \end{BoxFormula}
 上述结论仅适合$\zeta<1$的欠阻尼情形，如前文所述，我们主要关心的是欠阻尼。对于$\zeta>1$的过阻尼情形，需要用另外一组拉普拉斯逆变换，其解将包含双曲正弦函数。或者，如果愿意将这里的$\sin$视为一个复变函数，那么\xref{fml:二阶反馈系统的时域特性}对于欠阻尼$\zeta<1$和过阻尼$\zeta>1$都是成立的。
 
+我们可以证明过冲和过冲发生时间分别是
+\begin{BoxFormula}[二阶反馈系统的过冲]
+    二阶反馈系统的时域阶跃响应的过冲量为
+    \begin{Equation}
+        v_{OUT}(t_p)/A_{vf}-1=\exp(-\frac{-\pi\zeta}{\sqrt{1-\zeta^2}})
+    \end{Equation}
+    其中过冲时间$t_p$为
+    \begin{Equation}
+        t_p=\frac{\pi}{\omega_n\sqrt{1-\zeta^2}}
+    \end{Equation}
+\end{BoxFormula}
+
 在\xref{fig:二阶反馈系统的时域特性--时域阶跃响应}中展示了不同$\zeta$下阶跃响应$v_{OUT}(t)$随时间$t$的变化，观察到$\zeta<1$时会发生过冲。请注意，时域冲击响应在$\zeta<1$时的过冲和频域特性在$\zeta<0.707$时会有额外峰值这两件事间没有必然联系，不必过度解读为何两者的$\zeta$的分界线不同。\xref{fig:二阶反馈系统的时域特性--时域阶跃响应的过冲时间}展示了过冲量随$\zeta$的变化，过冲的定义是“峰值$-$终值$/$终值”。\xref{fig:二阶反馈系统的时域特性--时域阶跃响应的过冲时间}展示了过冲发生时间$t_p$随$\zeta$的变化。
 \begin{Figure}[二阶反馈系统的时域特性]
     \begin{FigureSub}[时域阶跃响应;二阶反馈系统的时域特性--时域阶跃响应]
@@ -312,21 +322,10 @@
         \includegraphics[scale=0.8]{build/Chapter05A_01d.fig.pdf}
     \end{FigureSub}
 \end{Figure}
-我们可以证明过冲和过冲发生时间分别是
-\begin{BoxFormula}[二阶反馈系统的过冲]
-    二阶反馈系统的时域阶跃响应的过冲量为
-    \begin{Equation}
-        v_{OUT}(t_p)/A_{vf}-1=\exp(-\frac{-\pi\zeta}{\sqrt{1-\zeta^2}})
-    \end{Equation}
-    其中过冲时间$t_p$为
-    \begin{Equation}
-        t_p=\frac{\pi}{\omega_n\sqrt{1-\zeta^2}}
-    \end{Equation}
-\end{BoxFormula}
 通过这一小节的研究，我们建立了过冲和$\zeta$的关系，这样一来，对于一个未知的二阶反馈系统，只要能测定其阶跃响应的过冲量，我们就可以反推出其阻尼系数$\zeta$是多少了！
 
-\subsection{相位裕度}
-相位裕度到底是什么？让我们回到\xref{fig:反馈系统的框图}，这里$L_v(s)=A(s)F$称为环路增益，在低频下这当然是一个负反馈（即$-L_v(s)$是负的），然而，我们知道，当频率越过一个极点后，相位会减小$\pi/2$。对于具有两个极点的二阶反馈系统，$-L_v(s)$的相位最终会从$\pi$减小到$0$，这意味着系统会从负反馈转变为正反馈，若此时$|L_v(s)|\geq 1$，那么这种正反馈将会是自激的，这样的系统是不稳定的。因此，相位裕度的定义就应是：当$|L_v(s)|=1$时$-L_v(s)$尚余的相位！
+\section{相位裕度}
+相位裕度到底是什么？让我们回到\xref{fig:反馈系统的框图}，这里$L_v(s)=A_v(s)F$称为环路增益，在低频下这当然是一个负反馈（即$-L_v(s)$是负的），然而，我们知道，当频率越过一个极点后，相位会减小$\pi/2$。对于具有两个极点的二阶反馈系统，$-L_v(s)$的相位最终会从$\pi$减小到$0$，这意味着系统会从负反馈转变为正反馈，若此时$|L_v(s)|\geq 1$，那么这种正反馈将会是自激的，这样的系统是不稳定的。因此，相位裕度的定义就应是：当$|L_v(s)|=1$时$-L_v(s)$尚余的相位！
 
 相位裕度通常记为$\phi_m$，现在我们要求的就是$\phi_m$关于$\zeta$的表达式。
 
@@ -385,14 +384,25 @@
 故有
 \begin{Equation}
     \omega_c=\omega_n\qty[\sqrt{4\zeta^4+1}-2\zeta^2]^{1/2}
-\end{Equation}
+\end{Equation}\goodbreak
 将该结论整理如下
 \begin{BoxFormula}[二阶反馈系统的截止频率]
     二阶反馈系统的截止频率为
     \begin{Equation}
         \omega_c=\omega_n\qty[\sqrt{4\zeta^4+1}-2\zeta^2]^{1/2}
     \end{Equation}
-\end{BoxFormula}\setpeq{相位裕度}
+\end{BoxFormula}
+\begin{Figure}[二阶系统的若干特性]
+    \begin{FigureSub}[二阶系统的相位裕度]
+        \includegraphics[scale=0.8]{build/Chapter05A_01h.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[二阶系统的过冲]
+        \includegraphics[scale=0.8]{build/Chapter05A_01f.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.25cm}
+    \begin{FigureSub}[二阶系统的截止频率]
+        \includegraphics[scale=0.8]{build/Chapter05A_01g.fig.pdf}
+    \end{FigureSub}
+\end{Figure}\setpeq{相位裕度}
 按照相位裕度$\phi_m$的定义，它是$-L_v(s)$的相位，当$s=\j\omega_c$时
 \begin{Equation}
     \phi_m=\arg[-L_v(\j\omega_c)]
@@ -420,19 +430,10 @@
 \begin{itemize}
     \item 表示过冲的\xref{fig:二阶系统的过冲}与先前\xref{fig:二阶反馈系统的时域特性--时域阶跃响应的过冲量}完全相同，只不过纵轴换成了对数轴。
     \item 相位裕度$\phi_m$通常被认为至少要达到$\pi/4$，最好能达到$\pi/6$。
-    \item 相位裕度$\phi_m$随$\zeta$的增大而增大，过冲则随$\zeta$的增大而减小。
-    \item 相位裕度$\phi_m$可以通过测定阶跃响应的过冲间接确定！
+    \item 相位裕度$\phi_m$随$\zeta$的增大而增大，过冲则随$\zeta$的增大而减小，两者的变化是相反的。
+    % \item 相位裕度$\phi_m$可以通过测定阶跃响应的过冲间接确定！
     \item 截止频率$\omega_c$在$\zeta$接近零时基本等于$\omega_n$，随着$\zeta$的增大$\omega_c$会变得略微小于$\omega_n$。
 \end{itemize}
 
-\begin{Figure}[二阶系统的若干特性]
-    \begin{FigureSub}[二阶系统的相位裕度]
-        \includegraphics[scale=0.8]{build/Chapter05A_01h.fig.pdf}
-    \end{FigureSub}
-    \begin{FigureSub}[二阶系统的过冲]
-        \includegraphics[scale=0.8]{build/Chapter05A_01f.fig.pdf}
-    \end{FigureSub}\\ \vspace{0.25cm}
-    \begin{FigureSub}[二阶系统的截止频率]
-        \includegraphics[scale=0.8]{build/Chapter05A_01g.fig.pdf}
-    \end{FigureSub}
-\end{Figure}
+
+这里一个重要的想法是：相位裕度可以通过测定阶跃响应的过冲间接确定！

@@ -1,0 +1,350 @@
+\section{两级运算放大器的补偿原理}
+
+\subsection{相位裕度}
+运算放大器和过去单级放大器最大的不同之处在于其需要在深度负反馈的条件下使用，这一特殊使用背景是运算放大器真正的困难所在！因为反馈会导致一些我们未曾考虑的新问题。
+
+\xref{fig:反馈的框图}展示了一个负反馈系统，$A_v(s)$是运放的开环增益，$F$是反馈系数，$A_{in}$是反馈结构在输入附带造成的衰减，如果对$A_{in}$感到困惑，可以简单的认为$A_{in}=1$。现在我们考虑这样一个问题，这里的环路增益（输入经过放大和反馈回路再回到输入时的增益）为$A_v(s)F$，考虑到叠加时的负号，反馈的相位是$\pi+\arg A_v(s)F$，通常而言反馈系数$F$为正，则反馈相位就是$\pi+\arg A_v(s)$。这里的两级运放具有两个极点，我们知道，频率每经过一个极点相位就会产生$-\pi/2$的相移，因而，频率较高时$A_v(s)$就会具有$-\pi$的相移，这对于开环使用并没有什么影响，但在闭环下，这就意味着，随着频率的增加反馈的相位将从$\pi$逐渐减小至$0$，换言之，反馈的类型会从负反馈变为正反馈！倘若反馈的相位降低至$0$时反馈的模值$|A_v(s)F|$还高于$1$，这意味着这种正反馈是自激的（输出会在高频下振荡），这样的系统是不稳定的。
+
+\begin{Figure}[反馈的框图]
+    \includegraphics[scale=0.8]{build/Chapter05A_02.fig.pdf}
+\end{Figure}
+
+% 相位裕度$\phi_m$是度量稳定性的一个量。
+
+从上述讨论中看出，由负反馈转变为正反馈是不可避免的，只要保证反馈的模值$|A_v(s)F|$在相位归零前先行低于单位增益就可以了，因为导致不稳定的并不是正反馈而是存在自激的正反馈。对于运算放大器的设计，我们并不清楚反馈系数$F$会在使用时被设置为多少，因此，我们要考虑$F=1$最坏情况（此时输出完全被反馈至输入），故要考察的模值$|A_v(s)F|=|A_v(s)|$。
+
+相位裕度$\phi_m$是度量稳定性的一个量。相位裕度$\phi_m$的定义就是：当模值$|A_v(s)|$降低到单位增益时相位$\pi+\arg A_v(s)$还剩余多少？我们将单位增益处$s=\j\omega$的频率$\omega$称为单位增益带宽，记作$\te{GB}$。因此，总结起来说，相位裕度$\phi_m$就是单位增益带宽$\te{GB}$处反馈的相位！
+
+相位裕度$\phi_m$要多少才比较合适呢？较常用的是下面两个值
+\begin{itemize}
+    \item $\phi_m=\pi/4$认为是保持稳定的最小相位裕度。
+    \item $\phi_m=\pi/3$认为是一个较合适的相位裕度。
+\end{itemize}
+有关二阶反馈系统和相位裕度的更多讨论，参见\xref{ap:二阶反馈系统}的内容。
+
+% 上述提到的单位增益带宽可以
+
+现在我们考虑一个问题，两级运放的相位裕度大概有多少？我们可以做一个估计，如\xref{fig:补偿前两级运放的频率响应}所示，对于两级运算放大器，典型情况下其极点$\omega_{p1},\omega_{p2}$都远离原点且相互之间比较接近，不妨假设$\omega_{p2}$比$\omega_{p1}$高两个数量级，同时，假设运放的开环增益$A_v$是$\num{1e4}=\SI{80}{dB}$。
+
+复习一下极点对幅频和相频的近似影响有助于我们下面的讨论
+\begin{itemize}
+    \item 幅频特性在每经过一个极点后，增加$\SI{-20}{dB.dec^{-1}}$的下降速率。
+    \item 相频特性在每个极点前后$\SI{1}{dec}$的范围内产生$-\pi/2$的相移，在极点处为$-\pi/4$的相移。
+\end{itemize}
+现在回到\xref{fig:补偿前两级运放的频率响应}，总共$\SI{80}{dB}$的增益，在$|\omega_{p1}|$和$|\omega_{p2}|$之间的$\SI{2}{dec}$以$\SI{-20}{dB.dec^{-1}}$的速率衰减掉一半，在$|\omega_{p2}|$后$\SI{1}{dec}$内以$\SI{-40}{dB.dec^{-1}}$的速率衰减至$\SI{0}{dB}$，换言之，这里单位增益带宽$\te{GB}$位于$|\omega_{p2}|$后的一个数量级处，而此时，相位由于频率经过$|\omega_{p1}|$和$|\omega_{p2}|$且已到达$|\omega_{p2}|$后一个数量级，刚好由$\pi$减至零。这意味着，两级运放的相位裕度$\phi_m=0$！这是极不好的，相位裕度为零代表不稳定。当然上述只是一个估测，若增益更小些或极点间的距离更远一些，相位裕度可以略大于零，但总的来说，无补偿的两级运放的相位裕度是远远不够的。
+\begin{Figure}[补偿前两级运放的频率响应]
+    \includegraphics[scale=0.8]{build/Chapter05B_06.fig.pdf}
+\end{Figure}
+从上述分析过程中可见，增益一定时，假若我们能通过某种方式增大两个$\omega_{p1},\omega_{p2}$极点间的距离，令$\te{GB}$出现在$|\omega_{p2}|$之前，那就能获得更大的相位裕度。这就是下一小节要讨论的补偿。
+
+\subsection{米勒补偿的概念}
+补偿就是指通过一些方式增大运放的相位裕度$\phi_m$，最基本的补偿方式就是米勒补偿，对于两级运算放大器，米勒补偿将在第二级的输入和输出间增加一个$C_c$电容，如\xref{fig:使用米勒补偿的两级运放的小信号电路}所示。
+% 米勒补偿中“米勒”就是指这种补偿方式基于米勒定理。依照米勒定理，跨接电容$C_c$会在中间节点产生一个$G_{m2}R_2C_c$的米勒等效电容，使主极点$\omega_{p1}$减小，增大了极点间距离，按\xref{subsec:相位裕度}末的讨论这有利于相位裕度。不过，实际上$C_c$电容对$\omega_{p1},\omega_{p2}$都有影响，还会引入一个新的零点$\omega_{z1}$，因此在上述近似分析后我们还是有必要列方程仔细计算一下米勒补偿的影响。
+
+列出$v_c$和$v_{out}$处的方程
+\begin{Gather}
+    G_{m1}v_{in}+sC_1v_c+R_1^{-1}v_c+sC_c(v_c-v_{out})=0\\
+    G_{m2}v_c+sC_2v_{out}+R_2^{-1}v_{out}+sC_c(v_{out}-v_c)=0
+\end{Gather}
+应用Mathematica解得
+\begin{Equation}
+    A_v(s)=\frac{G_{m1}G_{m2}R_1R_2[1-sG_{m2}^{-1}C_c]}{1+a_1s+a_2s^2}
+\end{Equation}
+其中$a_1,a_2$分别是
+\begin{Gather}
+    a_1=R_1(C_1+C_c)+R_2(C_2+C_c)+G_{m2}R_1R_2C_c\\
+    a_2=R_1R_2[C_1C_2+C_1C_c+C_2C_c]
+\end{Gather}
+对于$a_1$，很明显最后一项远大于前两项，因为其包含一个增益$G_{m2}R_2$
+\begin{Equation}
+    a_1=G_{m2}R_1R_2C_c
+\end{Equation}
+对于$a_2$，假定$C_c,C_2\gg C_1$，则可以只保留$C_2C_c$项
+\begin{Equation}
+    a_2=R_1R_2C_2C_c
+\end{Equation}
+极点$\omega_{p1},\omega_{p2}$为
+\begin{Gather}
+    \omega_{p1}=-\frac{1}{a_1}=-G_{m2}^{-1}R_1^{-1}R_2^{-1}C_c^{-1}\\
+    \omega_{p2}=-\frac{a_1}{a_2}=-G_{m2}C_2^{-1}
+\end{Gather}
+零点$\omega_{z1}$为
+\begin{Equation}
+    \omega_{z1}=G_{m2}C_c^{-1}
+\end{Equation}
+
+\begin{Figure}[使用米勒补偿的两级运放的小信号电路]
+    \includegraphics[scale=0.8]{build/Chapter05B_04.fig.pdf}
+\end{Figure}
+
+将零极点整理如下
+\begin{BoxFormula}[两级运放--米勒补偿--零极点]
+    两级运放，使用米勒补偿，零极点为
+    \begin{Gather}
+        \omega_{p1}=-G_{m2}^{-1}R_1^{-1}R_2^{-1}C_c^{-1}\\
+        \omega_{p2}=-G_{m2}C_2^{-1}\\
+        \omega_{z1}=G_{m2}C_c^{-1}
+    \end{Gather}
+\end{BoxFormula}
+我们可以解读一下结果
+\begin{itemize}
+    \item 极点$\omega_{p1}$由$\omega_{p1}=-R_1^{-1}C_1^{-1}$变化到$-G_{m2}^{-1}R_1^{-1}R_2^{-1}C_c^{-1}$，相当于第一级放大器的输出极点处的电容由$C_1$变为了$G_{m2}R_2C_c$的米勒电容，显然，米勒补偿后$\omega_{p1}$显著减小了。
+    \item 极点$\omega_{p2}$由$\omega_{p2}=-R_2^{-1}C_2^{-1}$变化到$\omega_{p2}=-G_{m2}C_2^{-1}$，根据\xref{fml:两级运放--等效跨导和输出电阻}的结论，我们知道$R_2^{-1}=g_{ds6}+g_{ds7}$而$G_{m2}=g_{m6}$，依据$g_m\gg g_{ds}$的关系，米勒补偿后$\omega_{p2}$事实上也增大了。这一结果可以这样直观理解，在高频下，跨接电容$C_c$可以视为短接的，这样一来当计算第二级的输出电阻（即$v_c=0$）时，原本$M_6,M_7$都相当于是电流源，现在$M_6$由于$C_c$短路变成了二极管，故第二级输出电阻就从$(g_{ds6}+g_{ds7})^{-1}$变为了$g_{m6}^{-1}$即$G_{m2}^{-1}$。
+    \item 零点$\omega_{z1}=G_{m2}C_c^{-1}$是新增的。我们在\xref{subsec:直观分析--频率特性}就曾提及跨接电容会导致零点，这里可以给出一个定性的解释：从$v_{c}$至$v_{out}$原先存在一个经$M_6,M_7$反相放大的通路，而跨接电容$C_c$引入后，使$v_c$至$v_{out}$在高频下能经电容$C_c$导通，这是正相的。在某个特别的频率下，经$C_c$的正相通路和经$M_6,M_7$的反相通路会在输出相互抵消，这就是零点！
+\end{itemize}
+
+总的来说，米勒补偿使$\omega_{p1}$更小使$\omega_{p2}$更大，按照\xref{subsec:相位裕度}末尾的观点，增大$\omega_{p1},\omega_{p2}$间的距离有利于更大的相位裕度，因为$\te{GB}$会相对$\omega_{p2}$前移从而使得频率达到$\te{GB}$时$\omega_{p2}$产生的相移比原来更小。这也就是米勒补偿实现“补偿”的原理。同时，米勒补偿还会引入一个不期望零点$\omega_{z1}$，因为$\omega_{z1}$作为一个右半平面零点与左半平面极点一样都会令相位产生$-\pi/2$的相移，这对相位裕度不利。然而，只要$\omega_{z1}$远大于我们关心的频率，它就基本不会产生影响。
+
+\xref{fig:补偿后两级运放的频率响应}直观展示了米勒补偿的影响，忽略$\omega_{z1}$的影响，假设米勒补偿使极点$\omega_{p1},\omega_{p2}$分别比原来减小和增加了$\SI{1}{dec}$，这使得$\te{GB}$恰好落在了$|\omega_{p2}|$处，从而获得了$\phi_m=\pi/4$的相位裕度。
+\begin{Figure}[补偿后两级运放的频率响应]
+    \includegraphics[scale=0.8]{build/Chapter05B_07.fig.pdf}
+\end{Figure}
+
+至此我们已经定性理解了米勒补偿的影响，现在进行定量的分析，我们要回答这样一个问题，若要实现特定的相位裕度，如$\phi_{m}=\pi/4$或$\phi_m=\pi/3$，需要满足什么条件？为此，首先要确定单位增益带宽$\te{GB}$的表达式，假若$|\omega_{p2}|\geq\te{GB}$那么$\te{GB}$的形式就比较简单，有
+\begin{Equation}
+    \te{GB}=A_v\cdot|\omega_{p1}|
+\end{Equation}
+根据\xref{fml:两级运放--增益}和\xref{fml:两级运放--米勒补偿--零极点}
+\begin{Equation}
+    \te{GB}=G_{m1}G_{m2}R_1R_2\cdot G_{m2}^{-1}R_1^{-1}R_2^{-1}C_c^{-1}
+\end{Equation}
+化简得到
+\begin{Equation}
+    \te{GB}=G_{m1}C_c^{-1}
+\end{Equation}
+\begin{BoxFormula}[两级运放--米勒补偿--单位增益带宽]
+    两级运放，使用米勒补偿，单位增益带宽为
+    \begin{Equation}
+        \te{GB}=G_{m1}C_c^{-1}
+    \end{Equation}
+\end{BoxFormula}
+
+相位和频率间的数学关系是由反正切函数表示的，具体而言
+\begin{Equation}
+    \qquad\qquad\quad
+    \arg A_v(s)=-\arctan(\frac{\omega}{|\omega_{p1}|})-\arctan(\frac{\omega}{|\omega_{p2}|})-\arctan(\frac{\omega}{|\omega_{z1}|})
+    \qquad\qquad\quad
+\end{Equation}
+相位裕度$\phi_m=\pi+\arg A_v(s)$且取$\omega=\te{GB}$
+\begin{Equation}
+    \phi_m=\pi-\arctan(\frac{\te{GB}}{|\omega_{p1}|})-\arctan(\frac{\te{GB}}{|\omega_{p2}|})-\arctan(\frac{\te{GB}}{|\omega_{z1}|})
+\end{Equation}
+由于$\te{GB}/|\omega_{p1}|=A_v$且$A_v$很大，故$\arctan(\te{GB}/|\omega_{p1}|)=\pi/2$，因此
+\begin{Equation}
+    \phi_m=\pi/2-\arctan(\frac{\te{GB}}{|\omega_{p2}|})-\arctan(\frac{\te{GB}}{|\omega_{z1}|})
+\end{Equation}
+我们不妨用$k_{p2},k_{z1}$分别表示$|\omega_{p2}|,|\omega_{z1}|$相对$\te{GB}$的倍数
+\begin{Equation}
+    |\omega_{p2}|=k_{p2}\te{GB}\qquad
+    |\omega_{z1}|=k_{z1}\te{GB}
+\end{Equation}
+我们知道零点$\omega_{z1}$的存在对相位裕度是不利的，为了减轻其影响，我们至少令$|\omega_{z1}|$比$\te{GB}$高一个数量级，即$|\omega_{z1}|=10\te{GB}$或$k_{z1}=10$。在此基础上，对于一个期望的相位裕度$\phi_m$，我们都可以找到一个所需的$k_{p2}$使之成立，特别的，对于最关心的$\phi_m=\pi/4$和$\phi_m=\pi/3$
+\begin{BoxFormula}[两级运放--米勒补偿--相位裕度和极点频率]
+    若要求$\phi_m=\pi/4$，对于$k_{z1}=10$，则应有
+    \begin{Equation}
+        |\omega_{p2}|=1.22\te{GB}\qquad k_{p2}=1.22
+    \end{Equation}
+    若要求$\phi_m=\pi/3$，对于$k_{z1}=10$，则应有
+    \begin{Equation}
+        |\omega_{p2}|=2.22\te{GB}\qquad k_{p2}=2.22
+    \end{Equation}
+\end{BoxFormula}
+在\xref{fig:在米勒补偿下相位裕度和极点的关系}中，绘制了$k_{p2}$关于$\phi_m$的曲线，其中$k_{z1}$取定为$k_{z1}=10$。
+
+% 这里有一点要说明，前面我们在讨论\xref{fig:补偿前两级运放的频率响应}和\xref{fig:补偿后两级运放的频率响应}时认为极点和零点对相位的影响局限在其前后一个数量级的频率内，那为何这里已经令$|\omega_{z1}|=10\te{GB}$高出一个数量级了，还是会对相位有影响。具体而言，为何$\phi_m=\pi/4$的是$|\omega_{p2}|=1.22\te{GB}$而不是$|\omega_{p2}|=1.00\te{GB}$？这是因为零极点对相位的影响局限在前后一个数量级只是一种近似，准确的关系要用$\arctan$函数描述，超出一个数量级
+
+现在我们已经知道在$k_{z1}=10$下对于一定的相位裕度$\phi_m$需要令$k_{p2}$取多少了，接下来，我们想知道这样一件事，跨接电容$C_c$要取什么样的值，可以保证一个特定的$k_{p2}$值的出现？
+
+\begin{Figure}[在米勒补偿下相位裕度和极点的关系]
+    \includegraphics[scale=0.8]{build/Chapter05B_01a.fig.pdf}
+\end{Figure}
+
+根据$|\omega_{p2}|=k_{p2}\te{GB}$，代入\xref{fml:两级运放--米勒补偿--零极点}和\xref{fml:两级运放--米勒补偿--单位增益带宽}\setpeq{米勒补偿下相位裕度和极点的关系}
+\begin{Equation}&[1]
+    G_{m2}C_2^{-1}=k_{p2}G_{m1}C_c^{-1}
+\end{Equation}
+求出$C_c$
+\begin{Equation}&[2]
+    C_c=k_{p2}G_{m1}G_{m2}^{-1}C_2
+\end{Equation}
+根据$|\omega_{z1}|=k_{z1}\te{GB}$，代入\xref{fml:两级运放--米勒补偿--零极点}和\xref{fml:两级运放--米勒补偿--单位增益带宽}
+\begin{Equation}&[3]
+    G_{m2}C_c^{-1}=k_{z1}G_{m1}C_c^{-1}
+\end{Equation}
+注意到$C_c$可以被约掉
+\begin{Equation}&[4]
+    G_{m2}=k_{z1}G_{m1}
+\end{Equation}
+这意味着，若要满足$|\omega_{z1}|=k_{z1}\te{GB}$的约束，两级运放中第一级和第二级的跨导$G_{m1},G_{m2}$不是完全自由的！后者需要是前者的$k_{z1}$即$10$倍。如果将$k_{z1}=G_{m1}^{-1}G_{m2}$代入\xrefpeq{1}中
+\begin{Equation}
+    C_c=k_{p2}k_{z1}^{-1}C_2
+\end{Equation}
+我们将结论整理如下
+\begin{BoxFormula}[两级运放--米勒补偿--跨接电容]
+    若要保证$|\omega_{p2}|=k_{p2}\te{GB}$，则跨接电容$C_c$需要满足
+    \begin{Equation}
+        C_c=k_{p2}G_{m1}G_{m2}^{-1}C_2
+    \end{Equation}
+    若要保证$|\omega_{z1}|=k_{z1}\te{GB}$，则两级跨导$G_{m1},G_{m2}$需要满足关系
+    \begin{Equation}
+        G_{m2}=k_{z1}G_{m1}
+    \end{Equation}
+\end{BoxFormula}
+
+\subsection{米勒补偿和调零电阻}
+通过\xref{subsec:米勒补偿的概念}，我们看到零点的引入不利于相位裕度，在这一小节，我们试图在米勒补偿的基础上找到一种方法，消除零点的影响。如\xref{fig:使用米勒补偿和调零电阻的两级运放的小信号电路}，在跨接电容$C_c$上串联一个调零电阻$R_z$。
+
+\begin{Figure}[使用米勒补偿和调零电阻的两级运放的小信号电路]
+    \includegraphics[scale=0.8]{build/Chapter05B_05.fig.pdf}
+\end{Figure}
+
+这里$C_c$与$R_z$串联的导纳是
+\begin{Equation}
+    sC_c\parallel R_z^{-1}=sC_c(1+sC_cR_z)^{-1}
+\end{Equation}
+列出$v_c$和$v_{out}$处的方程
+\begin{Gather}
+    G_{m1}v_{in}+sC_1v_c+R_1^{-1}v_c+sC_c(1+sC_cR_z)^{-1}(v_c-v_{out})=0\\
+    \qquad\qquad\qquad G_{m2}v_c+sC_2v_{out}+R_2^{-1}v_{out}+sC_c(1+sC_cR_z)^{-1}(v_{out}-v_c)=0\qquad\qquad\qquad
+\end{Gather}
+应用Mathematica解得
+\begin{Equation}
+    A_v(s)=\frac{G_{m1}G_{m2}R_1R_2[1-s(G_{m2}^{-1}C_c-R_zC_c)]}{1+a_1s+a_2s^2+a_3s^3}
+\end{Equation}
+其中$a_1,a_2,a_3$分别是
+\begin{Gather}
+    a_1=R_1(C_1+C_c)+R_2(C_2+C_c)+R_2C_c+G_{m2}R_1R_2R_c\\
+    a_2=R_1R_2(C_1C_2+C_1C_c+C_2C_c)+R_zC_c(R_1C_1+R_2C_2)\\
+    a_3=R_1R_2R_zC_1C_2C_c
+\end{Gather}
+这里的分母出现了三次项！但没有关系，我们仍然可以使用类似的近似方法
+\begin{Equation}
+    \omega_{p1}=-\frac{1}{a_1}\qquad
+    \omega_{p2}=-\frac{a_1}{a_2}\qquad
+    \omega_{p3}=-\frac{a_2}{a_3}
+\end{Equation}
+对于$a_1$，和之前一样，最后一项远大于其他项
+\begin{Equation}
+    a_1=G_{m2}R_1R_2C_c
+\end{Equation}
+对于$a_2$，仍然可以近似为
+\begin{Equation}
+    a_2=R_1R_2C_2C_c
+\end{Equation}
+对于$a_3$，没什么可近似的
+\begin{Equation}
+    a_3=R_1R_2R_zC_1C_2C_c
+\end{Equation}
+极点$\omega_{p1},\omega_{p2},\omega_{p3}$为
+\begin{Gather}
+    \omega_{p1}=-\frac{1}{a_1}=-G_{m2}^{-1}R_1^{-1}R_2^{-1}C_c^{-1}\\
+    \omega_{p2}=-\frac{a_1}{a_2}=-G_{m2}C_2^{-1}\\
+    \omega_{p3}=-\frac{a_2}{a_3}=-R_z^{-1}C_1^{-1}
+\end{Gather}
+零点$\omega_{z1}$为
+\begin{Equation}
+    \omega_{z1}=(G_{m2}^{-1}C_c-R_zC_c)^{-1}
+\end{Equation}
+由此可见，调零电阻$R_z$使$\omega_{z1}=(G_{m2}^{-1}C_c)^{-1}$变为了$\omega_{z1}=(G_{m2}^{-1}C_c-R_zC_c)^{-1}$，这就使得通过调整$R_z$的大小可以影响零点的位置。除此之外，还引入了一个新极点$\omega_{p3}=-R_z^{-1}C_1^{-1}$。
+\begin{BoxFormula}[两级运放--调零电阻--零极点]
+    两级运放，使用带有调零电阻的米勒补偿，零极点为
+    \begin{Gather}
+        \omega_{p1}=-G_{m2}^{-1}R_1^{-1}R_2^{-1}C_c^{-1}\\
+        \omega_{p2}=-G_{m2}C_2^{-1}\\
+        \omega_{p3}=-R_z^{-1}C_1^{-1}\\
+        \omega_{z1}=(G_{m2}^{-1}C_c-R_zC_c)^{-1}
+    \end{Gather}
+\end{BoxFormula}
+
+现在我们开始调零，关于$\omega_{z1}$的处理，我们有两种思路
+\begin{enumerate}
+    \item 令$\omega_{z1}$变为无穷大，从而使该零点完全不影响频率特性。
+    \item 令$\omega_{z1}=\omega_{p2}$，即将$\omega_{z1}$从一个右半平面零点变为一个左半平面零点，且令其恰好位于极点$\omega_{p2}$处。这样做是更好的，因为左半平面零点是可以增加相位的！将$\omega_{z1}$置于$\omega_{p2}$处可以使后者对相位的影响被抵消，这样一来对相位的有影响的就只有$\omega_{p1}$和$\omega_{p3}$了。
+\end{enumerate}
+对于第一种情况，根据\xref{fml:两级运放--调零电阻--零极点}
+\begin{Equation}
+    (G_{m2}^{-1}C_c-R_zC_c)^{-1}=0
+\end{Equation}
+很容易解得
+\begin{Equation}
+    R_z=G_{m2}^{-1}
+\end{Equation}
+对于第二种情况，根据\xref{fml:两级运放--调零电阻--零极点}
+\begin{Equation}
+    (G_{m2}^{-1}C_c-R_zC_c)^{-1}=-G_{m2}C_2^{-1}
+\end{Equation}
+两边一起取倒数
+\begin{Equation}
+    G_{m2}^{-1}C_c-R_zC_c=-G_{m2}^{-1}C_2
+\end{Equation}
+这就解得
+\begin{Equation}
+    R_z=G_{m2}^{-1}(1+C_c^{-1}C_2)
+\end{Equation}
+整理如下
+\begin{BoxFormula}[两级运放--调零电阻的设置]
+    若要令$\omega_{z1}$为无穷大，调零电阻$R_z$应设置为
+    \begin{Equation}
+        R_z=G_{m2}^{-1}
+    \end{Equation}
+    若要令$\omega_{z1}=\omega_{p2}$，调零电阻$R_z$应设置为
+    \begin{Equation}
+        R_z=G_{m2}^{-1}(1+C_c^{-1}C_2)
+    \end{Equation}
+\end{BoxFormula}
+
+接下来我们考虑$\omega_{z1}=\omega_{p2}$相互抵消的背景下，$\omega_{p1},\omega_{p3}$对相位裕度的影响
+\begin{Equation}
+    \phi_m=\pi-\arctan(\frac{\te{GB}}{|\omega_{p1}|})-\arctan(\frac{\te{GB}}{|\omega_{p3}|})
+\end{Equation}
+和之前一样，第一项近似为$\pi/2$
+\begin{Equation}
+    \phi_m=\pi/2-\arctan(\frac{\te{GB}}{|\omega_{p3}|})
+\end{Equation}
+我们同样用$k_{p3}$分别表示$|\omega_{p3}|$相对$\te{GB}$的倍数
+\begin{Equation}
+    |\omega_{p3}|=k_{p3}\te{GB}
+\end{Equation}
+这里$\omega_{p3}$有些类似于无调零电阻时的$\omega_{p2}$，但这一次，不再有零点的影响了。
+\begin{BoxFormula}[两级运放--调零电阻--相位裕度和极点频率]
+    若要求$\phi_m=\pi/4$，且调零电阻保证$\omega_{z1}=\omega_{p2}$，则应有
+    \begin{Equation}
+        |\omega_{p3}|=1.00\te{GB}\qquad k_{p3}=1.00
+    \end{Equation}
+    若要求$\phi_m=\pi/3$，且调零电阻保证$\omega_{z1}=\omega_{p2}$，则应有
+    \begin{Equation}
+        |\omega_{p2}|=1.73\te{GB}\qquad k_{p2}=1.73
+    \end{Equation}
+\end{BoxFormula}
+在\xref{fig:在使用调零电阻的米勒补偿下相位裕度和极点的关系}中，绘制了$k_{p3}$关于$\phi_m$的曲线。
+\begin{Figure}[在使用调零电阻的米勒补偿下相位裕度和极点的关系]
+    \includegraphics[scale=0.8]{build/Chapter05B_08a.fig.pdf}
+\end{Figure}
+
+根据$|\omega_{p3}|=k_{p3}\te{GB}$，代入\xref{fml:两级运放--调零电阻--相位裕度和极点频率}和\xref{fml:两级运放--米勒补偿--单位增益带宽}
+\begin{Equation}
+    R_z^{-1}C_1^{-1}=k_{p3}G_{m1}C_c^{-1}
+\end{Equation}
+代入\xref{fml:两级运放--调零电阻的设置}中$\omega_{z1}=\omega_{p2}$下的$R_z$
+\begin{Equation}
+    G_{m2}(1+C_c^{-1}C_2)^{-1}C_1^{-1}=k_{p3}G_{m1}C_c^{-1}
+\end{Equation}
+假设$C_2\gg C_c$，忽略左侧括号内的$1$
+\begin{Equation}
+    G_{m2}C_cC_2^{-1}C_1^{-1}=k_{p3}G_{m1}C_c^{-1}
+\end{Equation}
+整理得到
+\begin{Equation}
+    C_c^2=k_{p3}G_{m1}G_{m2}^{-1}C_1C_2
+\end{Equation}
+即
+\begin{Equation}
+    C_c=\sqrt{k_{p3}G_{m1}G_{m2}^{-1}C_1C_2}
+\end{Equation}
+我们将结果整理如下
+\begin{BoxFormula}[两级运放--调零电阻--跨接电容]
+    若要保证$|\omega_{p3}|=k_{p3}\te{GB}$，则跨接电容$C_c$需要满足
+    \begin{Equation}
+        C_c=\sqrt{k_{p3}G_{m1}G_{m2}^{-1}C_1C_2}
+    \end{Equation}
+\end{BoxFormula}

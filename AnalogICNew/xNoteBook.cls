@@ -119,6 +119,13 @@
     {\chapterold[#2]{#3}}%
     \label{chap:#2}%
 }%
+\NewDocumentCommand{\chapappendix}{sO{#3}m}%
+{%
+    \IfBooleanTF{#1}%
+    {\chapterold*{#3}}%
+    {\chapterold[#2]{#3}}%
+    \label{ap:#2}%
+}%
 
 %设定section格式
 \titleformat{\section}[block]
@@ -172,6 +179,7 @@
 %预先重定义章节层次标签在引用时的格式
 \newcommand{\xreftextpart}[1]{第\ref*{part:#1}部分}
 \newcommand{\xreftextchap}[1]{第\ref*{chap:#1}章}
+\newcommand{\xreftextap}[1]{附录\CJKsetecglue{}\ref*{ap:#1}}
 \newcommand{\xreftextsec}[1]{第\CJKsetecglue{}\ref*{sec:#1}节}
 \newcommand{\xreftextsubsec}[1]{第\CJKsetecglue{}\ref*{subsec:#1}小节}
 

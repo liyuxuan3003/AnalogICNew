@@ -8,7 +8,7 @@ SetDirectory[NotebookDirectory[]];
 Needs["MaTeX`"];
 
 
-nbFileName="Chapter05B_01.fig.wls";
+nbFileName="Chapter05B_08.fig.wls";
 nbPDFName="build/"<>StringReplace[nbFileName,"wls"->"pdf"];
 nbPDFNameList=(StringReplace[nbPDFName,".fig"->#<>".fig"]&)/@Alphabet[];
 Export[nbPDFName,""]
@@ -68,10 +68,7 @@ k=10^(3);
 M=10^(6);
 
 
-eq=phim==Pi-Pi/2-ArcTan[1/pwp2]-ArcTan[1/pwz1];
-
-
-xpwz1=10;
+eq=phim==Pi-Pi/2-ArcTan[1/pwp2];
 
 
 xpwp2=pwp2//.Solve[eq//.{pwz1->xpwz1},{pwp2},Assumptions->{0<phim}][[1]]
@@ -83,11 +80,11 @@ ff1pnt=N[{{1/4,ff1//.{x->1/4}},{1/3,ff1//.{x->1/3}}}]
 
 fig1=Plot[ff1,{x,0,0.5},PlotRange->{-0.2,3.2},PlotStyle->Black,
 Epilog->{xPoint[ff1pnt],
-Text[xLaTeX["|\\omega_{p2}|=1.22\\mathrm{GB} (\\phi_m=\\pi/4)",0.7],ff1pnt[[1]]+{0.10,0}],
-Text[xLaTeX["|\\omega_{p2}|=2.22\\mathrm{GB} (\\phi_m=\\pi/3)",0.7],ff1pnt[[2]]+{0.09,0}]
+Text[xLaTeX["|\\omega_{p3}|=1.00\\mathrm{GB} (\\phi_m=\\pi/4)",0.7],ff1pnt[[1]]+{0.10,0}],
+Text[xLaTeX["|\\omega_{p3}|=1.73\\mathrm{GB} (\\phi_m=\\pi/3)",0.7],ff1pnt[[2]]+{0.09,0}]
 },
 FrameTicks->{xTicks[{0,0.5,0.1},{2,1}],xTicks[{0,3,0.5},{2,1}]},
-Evaluate@xFigLabel["\\phi_m/\\pi","k_{p2}=\\omega_{p2}/\\mathrm{GB}"],
+Evaluate@xFigLabel["\\phi_m/\\pi","k_{p3}=\\omega_{p3}/\\mathrm{GB}"],
 Evaluate@xFigConfig]
 
 

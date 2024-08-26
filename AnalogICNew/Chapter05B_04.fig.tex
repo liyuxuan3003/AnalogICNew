@@ -1,0 +1,45 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xSetX
+\xValDefine{xC}[0]
+\xValOffset{xAR}{xC}[-1.5]
+\xValOffset{xAC}{xAR}[-1.5]
+\xValOffset{xAL}{xAC}[-1.5]
+\xValOffset{xL}{xAL}[-2.5]
+\xValOffset{xBL}{xC}[1.5]
+\xValOffset{xBC}{xBL}[1.5]
+\xValOffset{xBR}{xBC}[1.5]
+\xValOffset{xR}{xBR}[1.5]
+
+\xSetY
+\xValDefine{yB}[-1.25]
+\xValDefine{yA}[+1.25]
+
+\draw (xL|-yB) to[short,o-o] (xR|-yB);
+\draw (xL|-yA) node[ocirc] {};
+\draw (xAL|-yA) -- (xAR|-yA);
+\draw (xBL|-yA) -- (xBR|-yA);
+\draw (xBR|-yA) to[short,-o] (xR|-yA);
+
+\draw (xAL|-yA) to[cI,l_=$G_{m1}v_{in}$,-*] (xAL|-yB);
+\draw (xAC|-yA) to[C,l_=$C_1$,*-*] (xAC|-yB);
+\draw (xAR|-yA) to[R,l_=$R_1$,-*] (xAR|-yB) node[ground] {};
+
+\draw (xBL|-yA) to[cI,l_=$G_{m2}v_{c}$,-*] (xBL|-yB);
+\draw (xBC|-yA) to[C,l_=$C_2$,*-*] (xBC|-yB);
+\draw (xBR|-yA) to[R,l_=$R_2$,*-*] (xBR|-yB);
+
+\draw (xAR|-yA) to[C=$C_c$,*-*] (xBL|-yA);
+
+\xDrawVoltage{B}(xL|-yA)(xL|-yB)[$v_{in}$]
+\xDrawVoltage{B}(xR|-yA)(xR|-yB)[$v_{out}$]
+
+\draw (xAR|-yA) node[above] {$v_c$};
+
+\xValBorder{xL}[-0.65]{xR}[+0.7]{yB}[-0.8]{yA}[1.0]*
+
+\end{tikzpicture}
+\end{document}

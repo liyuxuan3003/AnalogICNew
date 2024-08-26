@@ -1,0 +1,97 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+    
+\xSetX
+\xValDefine{xL}[-4]
+\xValDefine{xR}[+4]
+\xValDefine{xPA}[-1]
+\xValOffset{xPAL}{xPA}[-1]
+\xValOffset{xPAR}{xPA}[+1]
+\xValOffset{xPALX}{xPAL}[-1]
+\xValDefine{xPB}[1]
+\xValOffset{xPBL}{xPB}[-1]
+\xValOffset{xPBR}{xPB}[+1]
+\xValOffset{xPBRX}{xPBR}[+1]
+\xValOffset{xPBX}{xPBR}[0.25]
+
+\xSetY
+\xValDefine{yC}[0]
+\xValOffset{yAbsBorB}{yC}[0.3]
+\xValOffset{yAbsBorA}{yAbsBorB}[5]
+\xValOffset{yAbsB}{yAbsBorB}[0.5]
+\xValOffset{yAbsA}{yAbsBorA}[-0.5]
+\xValMiddle{yAbsC}{yAbsA}{yAbsB}
+
+\xValOffset{yArgBorA}{yC}[-0.3]
+\xValOffset{yArgBorB}{yArgBorA}[-5]
+\xValOffset{yArgA}{yArgBorA}[-0.5]
+\xValOffset{yArgB}{yArgBorB}[0.5]
+\xValMiddle{yArgC}{yArgA}{yArgB}
+\xValMiddle{yArgPA}{yArgA}{yArgC}
+\xValMiddle{yArgPB}{yArgB}{yArgC}
+
+\draw[thin,gray] (xL|-yAbsBorB) rectangle (xR|-yAbsBorA);
+\draw[thin,gray] (xL|-yArgBorB) rectangle (xR|-yArgBorA);
+
+\foreach \y in {yAbsA,yAbsB,yAbsC,yArgA,yArgB,yArgC,yArgPA,yArgPB}
+{
+    \draw[thin,gray,dotted] (xL|-\y) -- (xR|-\y);
+}
+
+\foreach \y/\t in {yAbsA/$A_{v}$,yAbsB/$\SI{0}{dB}$,yArgA/$1.00\pi$,yArgPA/$0.75\pi$,yArgC/$0.50\pi$,yArgPB/$0.25\pi$,yArgB/$0.00\pi$}
+{
+    \path (xR|-\y) node[right] {\tiny \t};
+}
+
+\foreach \x in {xPAL,xPBR}
+{
+    \draw[thin,gray,dotted] (\x|-yAbsBorA) -- (\x|-yAbsBorB);
+    \draw[thin,gray,dotted] (\x|-yArgBorA) -- (\x|-yArgBorB);
+}
+
+% \foreach \x in {xPAL,xPAR,xPBL,xPBR}
+% {
+%     \draw[thin,gray,dotted] (\x|-yArgA) -- (\x|-yArgB);
+% }
+
+\draw[very thick,gray,dashed] (xL|-yAbsA) -- (xPA|-yAbsA) -- (xPB|-yAbsC) -- (xPBR|-yAbsB) -- (xPBX|-yAbsBorB);
+
+\draw[very thick] (xL|-yAbsA) -- (xPAL|-yAbsA) -- node[below left,pos=0.3] {\small $\SI{-20}{dB.dec^{-1}}$} (xPBR|-yAbsB) -- (xPBX|-yAbsBorB);
+
+\draw[very thick,gray,dashed] (xL|-yArgA) -- (xPAL|-yArgA) -- (xPBR|-yArgB)--(xR|-yArgB);
+\draw[very thick] (xL|-yArgA) -- (xPALX|-yArgA) -- (xPA|-yArgC) -- (xPB|-yArgC) -- (xPBRX|-yArgB) -- (xR|-yArgB);
+
+\draw[thin] (xPALX|-yArgPA) -- +(0,0.1);
+\draw[thin] (xPALX|-yArgPA) -- +(0,-0.1);
+\draw[thin] (xPA|-yArgPA) -- +(0,0.1);
+\draw[thin] (xPA|-yArgPA) -- +(0,-0.1);
+\draw[thin,latex-latex] (xPALX|-yArgPA) -- node[below] {\small $\SI{1}{dec}$} (xPAL|-yArgPA);
+\draw[thin,latex-latex] (xPAL|-yArgPA) -- node[below] {\small $\SI{1}{dec}$} (xPA|-yArgPA);
+
+\draw[thin] (xPB|-yArgPB) -- +(0,0.1);
+\draw[thin] (xPB|-yArgPB) -- +(0,-0.1);
+\draw[thin] (xPBRX|-yArgPB) -- +(0,0.1);
+\draw[thin] (xPBRX|-yArgPB) -- +(0,-0.1);
+\draw[thin,latex-latex] (xPB|-yArgPB) -- node[below] {\small $\SI{1}{dec}$} (xPBR|-yArgPB);
+\draw[thin,latex-latex] (xPBR|-yArgPB) -- node[below] {\small $\SI{1}{dec}$} (xPBRX|-yArgPB);
+
+\path (xPA|-yC) node[gray] {$|\omega_{p1}|$};
+\path (xPB|-yC) node[gray] {$|\omega_{p2}|$};
+\path (xPAL|-yC) node {$|\omega_{p1}|$};
+\path (xPBR|-yC) node {$|\omega_{p2}|$};
+
+\path (xL|-yAbsC) node[left] {\rotatebox{90}{$|A_v(s)|$}};
+\path (xL|-yArgC) node[left] {\rotatebox{90}{$\pi+\arg A_v(s)$}};
+
+\path (xPAL|-yAbsA) node[ocirc] {};
+\path (xPBR|-yAbsB) node[ocirc] {} node[above right] {$\te{GB}$};
+
+\path (xPAL|-yArgPA) node[ocirc] {};
+\path (xPBR|-yArgPB) node[ocirc] {} node[above right] {$\phi_m=\pi/4$};
+
+\xValBorder{xL}[-1]{xR}[+1]{yArgBorB}{yAbsBorA}*
+
+\end{tikzpicture}
+\end{document}

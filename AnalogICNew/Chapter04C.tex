@@ -435,127 +435,225 @@ $M_3$的电流方程如下，代入得到
     \includegraphics[scale=0.8]{build/Chapter04C_10.fig.pdf}
 \end{Figure}
 
-在本小节，我们就通过\xref{fig:共源共栅放大器的设计}所示的电路，以共源共栅放大器为例了解设计的基本流程。注意到这里的\xref{fig:共源共栅放大器的设计}和\xref{fig:共源共栅放大器}有一些不同，这是因为，在实际的电路中$V_{G2},V_{G3}$这样的偏置电压是通过电流镜结构偏置，换言之$V_{G2},V_{G3}$并不是一个设计参量，它们由$M_4,M_5$和$I_{REF}$产生。
+在本小节，我们就通过\xref{fig:共源共栅放大器的设计}所示的电路，以共源共栅放大器为例了解设计的基本思想。注意到这里的\xref{fig:共源共栅放大器的设计}和\xref{fig:共源共栅放大器}有一些不同，这是因为，在实际的电路中$V_{G2},V_{G3}$这样的偏置电压是通过电流镜结构偏置，换言之$V_{G2},V_{G3}$并不是一个设计参量，它们由$M_4,M_5$和$I_{REF}$产生。
 
-在\xref{tab:共源共栅放大器的设计指标}中，我们给出了设计指标
+在\xref{tab:共源共栅放大器的设计指标}中，我们给出了一组设计指标
 \begin{Tablex}[共源共栅放大器的设计指标]{lXrrr}
     <设计指标&符号&数值&单位\\>
     电源电压&$V_{DD}$&$=5$&\si{V}\\
+    负载电容&$C_L$&$=5$&\si{pF}\\
     增益&$A_v$&$=-50$&--\\
     最小饱和输出电压&$V_{OUT,\min}$&$=1.5$&\si{V}\\
     最大饱和输出电压&$V_{OUT,\max}$&$=4.0$&\si{V}\\
-    摆率（在$C_L=\SI{5}{pF}$负载上）&$\te{SR}$&$\geq 10$&\si{V.us^{-1}}\\
+    摆率&$\te{SR}$&$\geq 10$&\si{V.us^{-1}}\\
     功率&$P_{diss}$&$\leq 1$&\si{mW}\\
 \end{Tablex}
 这里需要解释的是功率$P_{diss}$和摆率$\te{SR}$的概念，它们分别定义如下
 \begin{BoxDefinition}[功率]
     功率$P_{diss}$的定义为
     \begin{Equation}
-        P_{diss}=I_{SS} V_{DD}
+        P_{diss}=I_{D} V_{DD}
     \end{Equation}
 \end{BoxDefinition}
 \begin{BoxDefinition}[摆率]
     摆率$\te{SR}$的定义为
     \begin{Equation}
-        \te{SR}=I_{SS}/C_L
+        \te{SR}=I_{D}C_L^{-1}
     \end{Equation}
 \end{BoxDefinition}
-其中$I_{SS}$是放大器自$V_{DD}$至地的总电流，这里有$I_{D1}=I_{D2}=I_{D3}=I_{SS}$成立。另外应指出的是，摆率$\te{SR}=I_{SS}/C_L$反映的其实是放大器在一定电容负载上的开关速度，因此，其大小是和负载电容有关的，故说明摆率$\te{SR}$时，必须要加上该摆率$\te{SR}$对应负载电容$C_L$的大小。
+其中$I_{D}$是放大器自$V_{DD}$至地的总电流，这里有$I_{D1}=I_{D2}=I_{D3}=I_{D}$成立。另外应指出的是，摆率$\te{SR}=I_{D}C_L^{-1}$反映的其实是放大器在一定电容负载上的开关速度，因此，其大小是和负载电容有关的，故说明摆率$\te{SR}$时，必须要加上该摆率$\te{SR}$对应负载电容$C_L$的大小。
 
-接下来我们可以开始设计了，这里的设计参量是$I_{SS},I_{REF}$以及各管的$(W/L)$。
+现在我们开始进行设计，这可以为两步
+\begin{enumerate}
+    \item 列出方程，包括与设计指标有关的方程和与电路结构有关的方程。
+    \item 找到一条设计流程，能让我们根据上述方程逐一确定各管的参数。
+\end{enumerate}
 
-根据$P_{diss}=I_{SS}V_{DD}\leq\SI{1}{mW}$，以及$V_{DD}=\SI{5}{V}$，可确定
-\begin{Equation}
-    I_{SS}\leq 200\si{uA}
-\end{Equation}
-根据$\te{SR}=I_{SS}/C_L\geq\SI{10}{V.us^{-1}}$，以及$C_L=\SI{5}{pF}$，可确定
-\begin{Equation}
-    I_{SS}\geq 50\si{uA}
-\end{Equation}
-我们不妨取一中间值
-\begin{Equation}
-    I_{SS}=100\si{uA}
-\end{Equation}
+以下是与设计指标有关的方程
+\begin{Gather}
+    A_v=-g_{m1}g_{ds3}^{-1}\\
+    V_{OUT,\min}=V_{ON1}+V_{ON2}\\
+    V_{OUT,\max}=V_{DD}-V_{ON3}\\
+    \te{SR}=I_{D1}C_L^{-1}\\
+    P_{diss}=I_{D1}V_{DD}
+\end{Gather}
+以下是与电路结构有关的方程，其中我们设定$I_{REF}=I_{D1}$
+\begin{Gather}
+    I_{D1}=I_{D2}=I_{D3}\\
+    I_{D4}=I_{D1}\\
+    I_{D5}=I_{D1}\\
+    V_{ON4}=V_{ON1}+V_{ON2}\\
+    V_{ON5}=V_{ON3}
+\end{Gather}
 
-在设计中，结果是不唯一的，例如这里指标对$I_{SS}$的约束只是一个范围，可自由裁量。
+我们知道，一个MOS管有$(W/L),I_D,V_{ON},g_{m},g_{ds}$等变量，除了$g_{ds}=\lambda I_D$是和$I_D$简单相关的量，在剩余四个变量中任意确定两个，其实就可以完全确定一个MOS管的所有变量！
 
-根据\xref{fml:共源共栅放大器--饱和输出电压范围--最大值}给出的$V_{OUT,\max}$
-\begin{Equation}
-    V_{OUT,\max}=V_{DD}-V_{ON3}=V_{DD}-\sqrt{\frac{2I_{SS}}{K_p'(W_3/L_3)}}=\SI{4.0}{V}
-\end{Equation}
-解得$M_3$的宽长比
-\begin{Equation}
-    (W_3/L_3)=4.00
-\end{Equation}
-进而可求出$M_3$的过驱电压
-\begin{Equation}
-    V_{ON3}=\sqrt{\frac{2I_{SS}}{K_p'(W_3/L_3)}}=\SI{1.0}{V}
-\end{Equation}
-这里$M_5$与$M_3$的过驱电压相同
-\begin{Equation}
-    V_{ON5}=V_{ON3}=\SI{1.0}{V}
-\end{Equation}
-根据\xref{fml:并联MOS管的特性关系}，这里$(W_5/L_5)$将取决于$I_{REF}$的取值
-\begin{Equation}
-    \frac{(W_5/L_5)}{(W_3/L_3)}=\frac{I_{REF}}{I_{SS}}
-\end{Equation}
-这里$I_{REF}$尚没有约束，不妨令$I_{REF}$和$I_{SS}$相同
-\begin{Equation}
-    I_{REF}=\SI{100}{uA}
-\end{Equation}
-这样$M_5$的宽长比就和$M_3$一致
-\begin{Equation}
-    (W_5/L_5)=4.00
-\end{Equation}
-根据\xref{fml:共源共栅放大器--输出节点--电压增益}给出的$A_v$
-\begin{Equation}
-    A_v=-g_{m1}g_{ds3}^{-1}=-\frac{\sqrt{2K_n'(W_1/L_1)I_{SS}}}{\lambda_p I_{SS}}=-50
-\end{Equation}
-解得$M_1$的宽长比
-\begin{Equation}
-    (W_1/L_1)=2.94
-\end{Equation}
-进而可求出$M_1$的过驱电压
-\begin{Equation}
-    V_{ON1}=\sqrt{\frac{2I_{SS}}{K_n'(W_1/L_1)}}=\SI{0.8}{V}
-\end{Equation}
-根据\xref{fml:共源共栅放大器--饱和输出电压范围--最小值}给出的$V_{OUT,\min}$
-\begin{Equation}
-    V_{OUT,\min}=V_{ON1}+V_{ON2}=V_{ON1}+\sqrt{\frac{2I_{SS}}{K_n'(W_2/L_2)}}=\SI{1.5}{V}
-\end{Equation}
-解得$M_2$的宽长比
-\begin{Equation}
-    (W_2/L_2)=3.71
-\end{Equation}
-进而可求出$M_2$的过驱电压
-\begin{Equation}
-    V_{ON2}=\sqrt{\frac{2I_{SS}}{K_n'(W_1/L_1)}}=\SI{0.7}{V}
-\end{Equation}
+基于此，我们编制了如\xref{tab:MOS管变量转换速算表}所示的速算表，它展示了$(W/L),I_D,V_{ON},g_m$之间的转换关系以及独立的$g_{ds}$的公式。使用方法如下，例如对于$I_D$这一行标识为“无$g_m$”一列的单元格的内容$K'(W/L)V_{ON}^2/2$，它展示的是$I_D$关于$(W/L),I_D,V_{ON},g_m$中除了$g_m$和$I_D$自身外的另外两个变量$(W/L),V_{ON}$的转换式。也因此$I_D$这一行“无$I_D$”一列的单元格是空白的。
 
-现在的问题是为$M_2$提供偏置的$M_4$，尽管两者电流相同，但是两者的过驱电压不同
-\begin{Equation}
-    V_{ON4}=V_{ON1}+V_{ON2}=\SI{1.5}{V}
-\end{Equation}
-故两者的宽长比并不相同，根据\xref{fml:并联MOS管的特性关系}
-\begin{Equation}
-    \frac{(W_4/L_4)}{(W_2/L_2)}=\frac{V_{ON2}^2}{V_{ON4}^2}
-\end{Equation}
-解得$M_4$的宽长比
-\begin{Equation}
-    (W_4/L_4)=0.81
-\end{Equation}
-至此，我们就完成了设计，将求得的所有的设计参量记录在\xref{tab:共源共栅放大器的设计结果}中。
-
-
-\begin{Tablex}[共源共栅放大器的设计结果]{lXr}
-    <设计参量&设计结果&备注\\>
-    $I_{SS}$&$\SI{100}{uA}$\\
-    $I_{REF}$&$\SI{100}{uA}$\\
-    $(W_1/L_1)$&$2.94$&$V_{ON1}=\SI{0.8}{V}$\\
-    $(W_2/L_2)$&$3.71$&$V_{ON2}=\SI{0.7}{V}$\\
-    $(W_3/L_3)$&$4.00$&$V_{ON3}=\SI{1.0}{V}$\\
-    $(W_4/L_4)$&$0.81$&$V_{ON4}=\SI{1.5}{V}$\\
-    $(W_5/L_5)$&$4.00$&$V_{ON5}=\SI{1.0}{V}$\\
+\begin{Tablex}[MOS管变量转换速算表]{Xp{2.75cm}p{2.75cm}p{2.75cm}p{2.75cm}}
+    <变量&无$I_D$&无$V_{ON}$&无$W/L$&无$g_m$\\>
+    $I_D$&--&$g_m^2/2K'(W/L)$&$g_mV_{ON}/2$&$K'(W/L)V_{ON}^2/2$\\
+    $V_{ON}$&$g_m/K'(W/L)$&--&$2I_D/g_m$&$\sqrt{2I_D/K'(W/L)}$\\
+    $W/L$&$g_m/K'V_{ON}$&$g_m^2/2K'I_D$&--&$2I_{D}/K'V_{ON}^2$\\
+    $g_m$&$K'(W/L)V_{ON}$&$\sqrt{2I_DK'(W/L)}$&$2I_D/V_{ON}$&--\\
+    $g_{ds}$&\mc{4}(c){$\lambda I_D$}\\
 \end{Tablex}
 
-需要指出的是，这里完成的设计距离实际还有一定距离。首先，我们定出的宽长比都不是整数，这是不现实的，应当就近取整并检验。其次，我们并没有考虑体效应对阈值电压的计算，这可能会使结果偏离预期。因此，一个好的设计需要在手工计算结果的基础上通过仿真不断调试。
+我们在设计中还会用到部分MOS管的参数，这里将它们罗列在\xref{tab:MOS管的常用参数参考值}
+
+\begin{Tablex}[MOS管的常用参数参考值]{XXrrr}
+    <参数&记号&NMOS数值&PMOS数值&单位\\>
+    阈值电压&$V_{T}$&$0.7$&$0.7$&\si{V}\\
+    跨导增益&$K'$&$110$&$50$&\si{uA.V^{-2}}\\
+    沟长调制系数&$\lambda$&$0.04$&$0.05$&\si{V^{-1}}\\
+\end{Tablex}
+
+我们现在开始构建设计流程，如\xref{tab:共源共栅放大器的设计流程}所示
+\begin{enumerate}
+    \item 根据$P_{diss}$和$\te{SR}$确定$I_{D1}$的上下限，并取一个折中的值，随后，由于$M_1,M_2,M_3$串联且$M_4,M_5$上的$I_{REF}$被设定与放大器中电流相同，因此所有MOS管的$I_D$均是相同的。接下来计算各MOS管的$g_{ds}$，尽管只有$g_{ds3}$之后会被$A_v=-g_{m1}g_{ds3}^{-1}$用到，出于程序性我们仍然求出了全部。应指出，由于各MOS管$I_D$的确定，后续对于某一MOS管只要确定其$W/L,V_{ON},g_m$中任意的一个变量，该MOS管的变量信息就完备了。
+    \item 应用$V_{OUT,\max}=V_{DD}-V_{ON3}$解出$V_{ON3}$，至此$M_3$完备。
+    \item 应用$A_{v}=-g_{m1}g_{ds3}^{-1}$和已知的$g_{ds3}$解出$g_{m1}$，至此$M_1$完备。
+    \item 应用$V_{OUT,\min}=V_{ON1}+V_{ON2}$和已知的$V_{ON1}$解出$V_{ON2}$，至此$M_2$完备。
+    \item 计算$V_{ON4}=V_{ON1}+V_{ON2}$，至此$M_4$完备。
+    \item 计算$V_{ON5}=V_{ON3}$，由于$M_5,M_3$的$V_{ON},I_D$均相同故可照抄其他参数，至此$M_5$完备。
+\end{enumerate}
+\begin{TableLong}[共源共栅放大器的设计流程]{p{2cm}p{\textwidth-4cm-6\tabcolsep}>{\raggedleft\arraybackslash}p{2cm}}
+    <计算步骤&计算式&结果\\>
+    01&$I_{D1}=P_{diss}V_{DD}^{-1}$&$\leq\SI{200}{uA}$\\
+    &$I_{D1}=\te{SR}\cdot C_L$&$\geq\SI{50}{uA}$\\
+    &$I_{D1}$取范围内合适值&$\SI{100}{uA}$\\
+    &$I_{D2}=I_{D1}$&$\SI{100}{uA}$\\*
+    &$I_{D3}=I_{D1}$&$\SI{100}{uA}$\\*
+    &$I_{D4}=I_{D1}$&$\SI{100}{uA}$\\*
+    &$I_{D5}=I_{D1}$&$\SI{100}{uA}$\\
+    &$g_{ds1}=\lambda_1I_{D1}$&$\SI{4.0}{uS}$\\*
+    &$g_{ds2}=\lambda_2I_{D2}$&$\SI{4.0}{uS}$\\*
+    &$g_{ds3}=\lambda_3I_{D3}$&$\SI{5.0}{uS}$\\*
+    &$g_{ds4}=\lambda_4I_{D4}$&$\SI{4.0}{uS}$\\*
+    &$g_{ds5}=\lambda_5I_{D5}$&$\SI{5.0}{uS}$\\ \hlinelig
+    02&$V_{ON3}=V_{DD}-V_{OUT,\max}$&$\SI{1.00}{V}$\\*
+    &$W_3/L_3=2I_{D3}/K_3'V_{ON3}^2$&$\SI{4.00}{}$\\*
+    &$g_{m3}=2I_{D3}/V_{ON3}$&$\SI{200}{uS}$\\ \hlinelig
+    03&$g_{m1}=-A_vg_{ds3}$&$\SI{250}{uS}$\\*
+    &$W_1/L_1=\sqrt{2I_{D1}K_1'/g_{m1}^2}$&$\SI{2.84}{}$\\*
+    &$V_{ON1}=2I_{D1}/g_{m1}$&$\SI{0.80}{V}$\\  \hlinelig
+    04&$V_{ON2}=V_{OUT,\min}-V_{ON1}$&$\SI{0.70}{V}$\\*
+    &$W_2/L_2=2I_{D2}/K_2'V_{ON2}^2$&$\SI{3.71}{}$\\*
+    &$g_{m2}=2I_{D2}/V_{ON2}$&$\SI{286}{uS}$\\ \hlinelig
+    05&$V_{ON4}=V_{ON1}+V_{ON2}$&$\SI{1.50}{V}$\\*
+    &$W_4/L_4=2I_{D4}/K_4'V_{ON4}^2$&$\SI{0.81}{}$\\*
+    &$g_{m4}=2I_{D4}/V_{ON4}$&$\SI{133}{uS}$\\ \hlinelig
+    06&$V_{ON5}=V_{ON3}$&$\SI{1.00}{V}$\\*
+    &$W_5/L_5=W_3/L_3$&$\SI{4.00}{}$\\*
+    &$g_{m5}=g_{m3}$&$\SI{200}{uS}$\\
+\end{TableLong}
+
+我们将设计结果整理在\xref{tab:共源共栅放大器的设计结果}中
+\begin{Tablex}[共源共栅放大器的设计结果]{Xccccc}
+<MOS管&$W/L$&$I_D$&$V_{ON}$&$g_m$&$g_{ds}$\\>
+$M_1$&2.94&\SI{100}{uA}&\SI{0.80}{V}&\SI{250}{uS}&\SI{4.0}{uS}\\
+$M_2$&3.71&\SI{100}{uA}&\SI{0.70}{V}&\SI{286}{uS}&\SI{4.0}{uS}\\
+$M_3$&4.00&\SI{100}{uA}&\SI{1.00}{V}&\SI{200}{uS}&\SI{5.0}{uS}\\
+$M_4$&0.81&\SI{100}{uA}&\SI{1.50}{V}&\SI{133}{uS}&\SI{4.0}{uS}\\
+$M_5$&4.00&\SI{100}{uA}&\SI{1.00}{V}&\SI{200}{uS}&\SI{5.0}{uS}\\
+\end{Tablex}
+
+% \newpage
+
+% 接下来我们可以开始设计了，这里的设计参量是$I_{SS},I_{REF}$以及各管的$(W/L)$。
+
+% 根据$P_{diss}=I_{SS}V_{DD}\leq\SI{1}{mW}$，以及$V_{DD}=\SI{5}{V}$，可确定
+% \begin{Equation}
+%     I_{SS}\leq 200\si{uA}
+% \end{Equation}
+% 根据$\te{SR}=I_{SS}/C_L\geq\SI{10}{V.us^{-1}}$，以及$C_L=\SI{5}{pF}$，可确定
+% \begin{Equation}
+%     I_{SS}\geq 50\si{uA}
+% \end{Equation}
+% 我们不妨取一中间值
+% \begin{Equation}
+%     I_{SS}=100\si{uA}
+% \end{Equation}
+
+% 在设计中，结果是不唯一的，例如这里指标对$I_{SS}$的约束只是一个范围，可自由裁量。
+
+% 根据\xref{fml:共源共栅放大器--饱和输出电压范围--最大值}给出的$V_{OUT,\max}$
+% \begin{Equation}
+%     V_{OUT,\max}=V_{DD}-V_{ON3}=V_{DD}-\sqrt{\frac{2I_{SS}}{K_p'(W_3/L_3)}}=\SI{4.0}{V}
+% \end{Equation}
+% 解得$M_3$的宽长比
+% \begin{Equation}
+%     (W_3/L_3)=4.00
+% \end{Equation}
+% 进而可求出$M_3$的过驱电压
+% \begin{Equation}
+%     V_{ON3}=\sqrt{\frac{2I_{SS}}{K_p'(W_3/L_3)}}=\SI{1.0}{V}
+% \end{Equation}
+% 这里$M_5$与$M_3$的过驱电压相同
+% \begin{Equation}
+%     V_{ON5}=V_{ON3}=\SI{1.0}{V}
+% \end{Equation}
+% 根据\xref{fml:并联MOS管的特性关系}，这里$(W_5/L_5)$将取决于$I_{REF}$的取值
+% \begin{Equation}
+%     \frac{(W_5/L_5)}{(W_3/L_3)}=\frac{I_{REF}}{I_{SS}}
+% \end{Equation}
+% 这里$I_{REF}$尚没有约束，不妨令$I_{REF}$和$I_{SS}$相同
+% \begin{Equation}
+%     I_{REF}=\SI{100}{uA}
+% \end{Equation}
+% 这样$M_5$的宽长比就和$M_3$一致
+% \begin{Equation}
+%     (W_5/L_5)=4.00
+% \end{Equation}
+% 根据\xref{fml:共源共栅放大器--输出节点--电压增益}给出的$A_v$
+% \begin{Equation}
+%     A_v=-g_{m1}g_{ds3}^{-1}=-\frac{\sqrt{2K_n'(W_1/L_1)I_{SS}}}{\lambda_p I_{SS}}=-50
+% \end{Equation}
+% 解得$M_1$的宽长比
+% \begin{Equation}
+%     (W_1/L_1)=2.84
+% \end{Equation}
+% 进而可求出$M_1$的过驱电压
+% \begin{Equation}
+%     V_{ON1}=\sqrt{\frac{2I_{SS}}{K_n'(W_1/L_1)}}=\SI{0.8}{V}
+% \end{Equation}
+% 根据\xref{fml:共源共栅放大器--饱和输出电压范围--最小值}给出的$V_{OUT,\min}$
+% \begin{Equation}
+%     V_{OUT,\min}=V_{ON1}+V_{ON2}=V_{ON1}+\sqrt{\frac{2I_{SS}}{K_n'(W_2/L_2)}}=\SI{1.5}{V}
+% \end{Equation}
+% 解得$M_2$的宽长比
+% \begin{Equation}
+%     (W_2/L_2)=3.71
+% \end{Equation}
+% 进而可求出$M_2$的过驱电压
+% \begin{Equation}
+%     V_{ON2}=\sqrt{\frac{2I_{SS}}{K_n'(W_1/L_1)}}=\SI{0.7}{V}
+% \end{Equation}
+
+% 现在的问题是为$M_2$提供偏置的$M_4$，尽管两者电流相同，但是两者的过驱电压不同
+% \begin{Equation}
+%     V_{ON4}=V_{ON1}+V_{ON2}=\SI{1.5}{V}
+% \end{Equation}
+% 故两者的宽长比并不相同，根据\xref{fml:并联MOS管的特性关系}
+% \begin{Equation}
+%     \frac{(W_4/L_4)}{(W_2/L_2)}=\frac{V_{ON2}^2}{V_{ON4}^2}
+% \end{Equation}
+% 解得$M_4$的宽长比
+% \begin{Equation}
+%     (W_4/L_4)=0.81
+% \end{Equation}
+% 至此，我们就完成了设计，将求得的所有的设计参量记录在\xref{tab:共源共栅放大器的设计结果}中。
+
+
+% \begin{Tablex}[共源共栅放大器的设计结果]{lXr}
+%     <设计参量&设计结果&备注\\>
+%     $I_{SS}$&$\SI{100}{uA}$\\
+%     $I_{REF}$&$\SI{100}{uA}$\\
+%     $(W_1/L_1)$&$2.94$&$V_{ON1}=\SI{0.8}{V}$\\
+%     $(W_2/L_2)$&$3.71$&$V_{ON2}=\SI{0.7}{V}$\\
+%     $(W_3/L_3)$&$4.00$&$V_{ON3}=\SI{1.0}{V}$\\
+%     $(W_4/L_4)$&$0.81$&$V_{ON4}=\SI{1.5}{V}$\\
+%     $(W_5/L_5)$&$4.00$&$V_{ON5}=\SI{1.0}{V}$\\
+% \end{Tablex}
+
+% 需要指出的是，这里完成的设计距离实际还有一定距离。首先，我们定出的宽长比都不是整数，这是不现实的，应当就近取整并检验。其次，我们并没有考虑体效应对阈值电压的计算，这可能会使结果偏离预期。因此，一个好的设计需要在手工计算结果的基础上通过仿真不断调试。
