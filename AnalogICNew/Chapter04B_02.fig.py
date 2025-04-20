@@ -66,7 +66,8 @@ def SpiceRunner(dirBuild):
     return runner
 
 def SpiceNetlist(fileName):
-    netlist=SpiceEditor(fileName+".fig.asc")
+    LTspice.create_netlist(fileName+".fig.asc")
+    netlist=SpiceEditor(fileName+".fig.net")
     return netlist
 
 def SpiceDelNet(fileName):
