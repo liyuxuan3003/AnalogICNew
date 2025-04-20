@@ -1,6 +1,2 @@
 build
-模拟集成电路艾伦参考资料
-*.pdf
-*.log
-*.raw
-*.plt
+.vscode
